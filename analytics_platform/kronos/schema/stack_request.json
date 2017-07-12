@@ -1,0 +1,13 @@
+{
+    "request_id": "some UUID",
+    "content": {
+        "ecosystem": "maven|npm",
+        "dependencies": {
+            "package": "version",
+            "package": "version",
+            "package": "version"
+        }
+    },
+    "user_category": ""
+}
+

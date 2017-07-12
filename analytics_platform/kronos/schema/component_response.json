@@ -1,0 +1,21 @@
+{
+    "request_id": "some UUID",
+    "response_code": "",
+    "response_message": "",
+    "recommendation": [
+        {
+            "action": "Consider alternate packages",
+            "alternate_packages": [
+                "vertx-postgresql-embedded-db"
+            ],
+            "confidence": 0.6
+        },
+        {
+            "action": "Consider companion packages",
+            "confidence": 0.9,
+            "companion_packages": [
+                "vertx-mongo-client"
+            ]
+        }
+    ]
+}

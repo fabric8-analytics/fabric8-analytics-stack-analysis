@@ -1,0 +1,9 @@
+{
+    "request_id": "some UUID",
+    "content": {
+        "ecosystem": "maven|npm",
+        "name": "spell checked package name",
+        "version": "original package version"
+    },
+    "user_category": ""
+}

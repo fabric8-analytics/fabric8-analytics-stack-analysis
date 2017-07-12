@@ -1,0 +1,25 @@
+{
+    "request_id": "some UUID",
+    "response_code": "",
+    "response_message": "",
+    "intent": "",
+    "recommendation": [
+        {
+            "action": "add package",
+            "confidence": 0.6,
+            "recommended_package": "prod-utils@3.3.3"
+        },
+        {
+            "action": "Change package",
+            "original_package": "examples-utils@3.3.3",
+            "confidence": 0.6,
+            "recommended_package": "prod-utils@3.3.3"
+        },
+        {
+            "action": "Change version",
+            "original_package": "vertx-web@0.1.2",
+            "confidence": 0.9,
+            "recommended_package": "vertx-web@3.1.2"
+        }
+    ]
+}
