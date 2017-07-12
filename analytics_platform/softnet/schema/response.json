@@ -1,0 +1,9 @@
+{
+  "request_id": "some UUID",
+  "response_code": "",
+  "response_message": "",
+  "component_classes": {
+    "component_class1": 0.9,
+    "component_class2": 0.8
+  }
+}

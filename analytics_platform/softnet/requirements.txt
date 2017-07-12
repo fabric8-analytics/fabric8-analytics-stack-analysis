@@ -1,0 +1,16 @@
+cython==0.25.2
+xgboost
+joblib
+networkx
+wheel
+nose
+flask
+numpy==1.13.0
+gunicorn==19.7.1
+flask-cors==3.0.2
+uuid
+boto==2.46.1
+boto3==1.4.4
+scipy==0.19.0
+botocore==1.5.32
+pandas
