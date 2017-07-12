@@ -1,0 +1,42 @@
+[
+  {
+    "ecosystem": "pypi",
+    "package_topic_map": {
+      "pytest-pep8": [
+        "plugin",
+        "pytest",
+        "pep8"
+      ],
+      "service_identity": [
+        "plugin",
+        "security",
+        "cryptography",
+        "indentity"
+      ]
+    }
+  },
+  {
+    "ecosystem": "maven",
+    "package_topic_map": {
+      "backports.ssl-match-hostname": [
+        "secure",
+        "socket layer",
+        "server",
+        "client",
+        "security",
+        "encryption"
+      ]
+    }
+  },
+  {
+    "ecosystem": "npm",
+    "package_topic_map": {}
+  },
+  {
+    "ecosystem": "ruby",
+    "package_topic_map": {
+      "service_identity": [
+      ]
+    }
+  }
+]
