@@ -1,0 +1,59 @@
+FROM centos:7
+MAINTAINER Sarah Masud <smasud@redhat.com>
+
+ENV	SPARK_HOME=/usr/local/spark
+ENV	JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.131-3.b12.el7_3.x86_64/jre
+ENV	PATH=/usr/local/maven/bin:$JAVA_HOME/bin:$SPARK_HOME/bin:/usr/local/scala/bin:$PATH
+ENV PYTHONPATH=/
+
+RUN yum install -y epel-release && \
+    yum install -y python-pip python-devel gcc && \
+    yum install -y zip tar wget && \
+    yum clean all && \
+    yum install -y java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64 && \
+    wget https://downloads.lightbend.com/scala/2.12.2/scala-2.12.2.tgz && \
+    tar -xvf scala-2.12.2.tgz && \
+    mv scala-2.12.2 /usr/local/scala && \
+    wget https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz && \
+    tar -xvf spark-2.1.1-bin-hadoop2.7.tgz && \
+    mv spark-2.1.1-bin-hadoop2.7 /usr/local/spark && \
+    source ~/.bashrc && \
+    source /etc/profile && \
+    wget http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar && \
+    mv hadoop-aws-2.7.3.jar /usr/local/spark
+
+RUN yum -y install nss_wrapper gettext
+
+EXPOSE 8080
+
+# --------------------------------------------------------------------------------------------------
+# install python packages
+# --------------------------------------------------------------------------------------------------
+COPY ./analytics_platform/janus/requirements.txt /
+RUN pip install -r /requirements.txt && rm /requirements.txt
+
+
+# --------------------------------------------------------------------------------------------------
+# copy src code and scripts into root dir /
+# the rest_api.py code assumes this dir structure
+# --------------------------------------------------------------------------------------------------
+COPY ./analytics_platform/janus/deployment/rest_api.py /rest_api.py
+COPY ./analytics_platform/janus/scripts/bootstrap_action.sh /
+COPY ./analytics_platform /analytics_platform
+COPY ./util /util
+COPY ./analytics_platform/janus/src/config.py.template /analytics_platform/janus/src/config.py
+
+# --------------------------------------------------------------------------------------------------
+# add passwd template
+# --------------------------------------------------------------------------------------------------
+COPY ./analytics_platform/janus/scripts/passwd.template /tmp/passwd.template
+
+RUN zip -r /training.zip /analytics_platform /util
+RUN chmod 777 /training.zip 
+
+# --------------------------------------------------------------------------------------------------
+# add entrypoint for the container
+# --------------------------------------------------------------------------------------------------
+ADD ./analytics_platform/janus/scripts/entrypoint.sh /bin/entrypoint.sh
+
+ENTRYPOINT ["/bin/entrypoint.sh"]
