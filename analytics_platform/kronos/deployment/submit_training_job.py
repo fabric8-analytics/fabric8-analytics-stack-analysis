@@ -17,7 +17,7 @@ from analytics_platform.kronos.src import config
 COMPONENT_PREFIX = "kronos"
 
 
-def submit_job(input_bootstrap_file, input_src_code_file):
+def submit_job(input_bootstrap_file, input_src_code_file, training_data_url):
     str_cur_time = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
 
     # S3 bucket/key, where the input spark job ( src code ) will be uploaded
@@ -140,8 +140,11 @@ def submit_job(input_bootstrap_file, input_src_code_file):
                 'ActionOnFailure': 'CANCEL_AND_WAIT',
                 'HadoopJarStep': {
                     'Jar': 'command-runner.jar',
-                    'Args': ['spark-submit', '--py-files', '/home/hadoop/' + s3_key,
-                             '/home/hadoop/analytics_platform/kronos/src/offline_training.py']
+                    'Args': ['spark-submit',
+                             '--py-files',
+                             '/home/hadoop/' + s3_key,
+                             '/home/hadoop/analytics_platform/kronos/src/offline_training.py',
+                             training_data_url]
                 }
             }
         ],
@@ -152,28 +155,15 @@ def submit_job(input_bootstrap_file, input_src_code_file):
 
     output = {}
     if response.get('ResponseMetadata').get('HTTPStatusCode') == 200:
-        output['status'] = 'Success'
-        output['message'] = "Done! The cluster was submitted successfully! Job flow id is " + response.get('JobFlowId')
+
+        output['training_job_id'] = response.get('JobFlowId')
+        output['status'] = 'work_in_progress'
+        output[
+            'status_description'] = "The training is in progress. Please check the given training job after some time."
     else:
+        output['training_job_id'] = "Error"
         output['status'] = 'Error'
-        output['message'] = "Error! The job/cluster could not be created!"
+        output['status_description'] = "Error! The job/cluster could not be created!"
         print response
 
     return output
-
-
-if __name__ == "__main__":
-    # Gather input arguments
-    if len(sys.argv) < 3:
-        usage = sys.argv[0] + " <bootstrap_file> <src_code_file> \n"
-        example = sys.argv[0] + " bootstrap_action.sh gen_ref_stacks.py \n"
-        print("Error: Insufficient arguments!")
-        print("Usage: " + usage)
-        print("Example: " + example)
-        sys.exit(1)
-
-    bootstrap_file = sys.argv[1]
-    src_code_file = sys.argv[2]
-    report = submit_job(bootstrap_file, src_code_file)
-    print report.get('status')
-    print report.get('message')
