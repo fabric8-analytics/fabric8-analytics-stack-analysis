@@ -13,7 +13,7 @@ if sys.version_info.major == 2:
     reload(sys)
     sys.setdefaultencoding('UTF8')
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 app = Flask(__name__)
 CORS(app)
 
