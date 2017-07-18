@@ -1,12 +1,11 @@
+import sys
 import time
 
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.src.kronos_constants import *
 from analytics_platform.kronos.src.kronos_pomegranate import KronosPomegranate
-from util.data_store.local_filesystem import LocalFileSystem
-from util.data_store.s3_data_store import S3DataStore
 from analytics_platform.kronos.src.kronos_util import trunc_string_at
-import sys
+from util.data_store.s3_data_store import S3DataStore
 
 
 def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, additional_path):
@@ -23,15 +22,7 @@ def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, addit
     return eco_to_kronos_dependency_dict
 
 
-def load_eco_to_kronos_dependency_dict_local():
-    input_data_store = LocalFileSystem('analytics_platform/data/tusharma-kronos-data')
-    eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
-        input_kronos_dependency_data_store=input_data_store)
-
-    return eco_to_kronos_dependency_dict
-
-
-def load_eco_to_kronos_dependency_dict_s3(bucket_name,additional_path):
+def load_eco_to_kronos_dependency_dict_s3(bucket_name, additional_path):
     input_data_store = S3DataStore(src_bucket_name=bucket_name,
                                    access_key=config.AWS_S3_ACCESS_KEY_ID,
                                    secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
@@ -112,16 +103,6 @@ def train_and_save_kronos_list_s3(training_data_url):
                                output_data_store=output_data_store, additional_path=additional_path)
 
 
-def train_and_save_kronos_list_local():
-    input_kronos_dependency_data_store = LocalFileSystem('analytics_platform/data/tusharma-kronos-data')
-    input_cooccurrence_matrix_data_store = LocalFileSystem('analytics_platform/data/tusharma-kronos-data')
-    output_data_store = LocalFileSystem('analytics_platform/data/tusharma-kronos-data')
-
-    train_and_save_kronos_list(input_kronos_dependency_data_store=input_kronos_dependency_data_store,
-                               input_co_occurrence_data_store=input_cooccurrence_matrix_data_store,
-                               output_data_store=output_data_store)
-
-
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         training_data_url = "s3://perf-gsk-data/python/machine-learning"
@@ -135,6 +116,5 @@ if __name__ == "__main__":
     t0 = time.time()
 
     train_and_save_kronos_list_s3(training_data_url=training_data_url)
-    # train_and_save_kronos_list_local()
 
     print(time.time() - t0)
