@@ -22,7 +22,7 @@ class TestCooccurrenceMatrixGenerator(TestCase):
         self.assertTrue(output_data_store is not None)
 
         eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
-            input_kronos_dependency_data_store=input_data_store)
+            input_kronos_dependency_data_store=input_data_store,additional_path="")
         self.assertTrue(eco_to_kronos_dependency_dict is not None)
 
         manifest_filenames = input_data_store.list_files("data_input_manifest_file_list")

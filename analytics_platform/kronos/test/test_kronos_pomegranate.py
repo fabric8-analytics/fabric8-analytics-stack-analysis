@@ -24,11 +24,11 @@ class TestKronosPomegranate(TestCase):
         self.assertTrue(output_data_store is not None)
 
         eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
-            input_kronos_dependency_data_store=input_data_store)
+            input_kronos_dependency_data_store=input_data_store,additional_path="")
         self.assertTrue(eco_to_kronos_dependency_dict is not None)
 
         user_eco_to_cooccurrence_matrix_dict = load_user_eco_to_co_occerrence_matrix_dict(
-            input_co_occurrence_data_store=input_data_store)
+            input_co_occurrence_data_store=input_data_store,additional_path="")
         self.assertTrue(user_eco_to_cooccurrence_matrix_dict is not None)
 
         for user_category in user_eco_to_cooccurrence_matrix_dict.keys():
@@ -50,7 +50,7 @@ class TestKronosPomegranate(TestCase):
         output_data_store = LocalFileSystem("analytics_platform/kronos/test/data/output-score-data")
         self.assertTrue(output_data_store is not None)
 
-        user_eco_kronos_dict = load_user_eco_to_kronos_model_dict(input_kronos_data_store=input_data_store)
+        user_eco_kronos_dict = load_user_eco_to_kronos_model_dict(input_kronos_data_store=input_data_store,additional_path="")
 
         self.assertTrue(user_eco_kronos_dict is not None)
 
