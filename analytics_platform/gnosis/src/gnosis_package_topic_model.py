@@ -52,7 +52,7 @@ class GnosisPackageTopicModel(AbstractGnosis):
                 formatted_package = package.lower()
                 formatted_topic_list = [GNOSIS_PTM_TOPIC_PREFIX + x.lower() for x in topic_list]
                 distinct_formatted_topic_list = list(set(formatted_topic_list))
-                package_to_topic_dict[package] = distinct_formatted_topic_list
+                package_to_topic_dict[formatted_package] = distinct_formatted_topic_list
 
                 for formatted_topic in distinct_formatted_topic_list:
                     if formatted_topic not in topic_to_package_dict:
