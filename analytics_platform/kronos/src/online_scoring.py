@@ -2,7 +2,6 @@ from analytics_platform.kronos.src import config
 from analytics_platform.kronos.src.kronos_constants import *
 from analytics_platform.kronos.src.kronos_pomegranate import KronosPomegranate
 from analytics_platform.kronos.src.kronos_util import *
-from util.data_store.local_filesystem import LocalFileSystem
 from util.data_store.s3_data_store import S3DataStore
 
 
@@ -33,12 +32,6 @@ def load_user_eco_to_kronos_model_dict(input_kronos_data_store, additional_path)
                 (user_category, ecosystem)]
         user_eco_to_kronos_model_dict[user_category] = eco_to_kronos_model_dict
 
-    return user_eco_to_kronos_model_dict
-
-
-def load_user_eco_to_kronos_model_dict_local():
-    input_data_store = LocalFileSystem('analytics_platform/data/tusharma-kronos-data')
-    user_eco_to_kronos_model_dict = load_user_eco_to_kronos_model_dict(input_kronos_data_store=input_data_store)
     return user_eco_to_kronos_model_dict
 
 
@@ -252,5 +245,3 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
 
         response_json_list.append(prediction_result_dict)
     return response_json_list
-
-
