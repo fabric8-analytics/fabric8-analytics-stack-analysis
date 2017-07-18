@@ -83,15 +83,6 @@ def generate_and_save_kronos_dependency_s3(training_data_url):
                                         output_data_store=output_data_store, additional_path=additional_path)
 
 
-def generate_and_save_kronos_dependency_local():
-    input_gnosis_data_store = LocalFileSystem("./analytics_platform/data/tusharma-softnet-data")
-    input_package_topic_data_store = LocalFileSystem("./analytics_platform/data/tusharma-gnosis-data")
-    output_data_store = LocalFileSystem("./analytics_platform/data/tusharma-kronos-data")
-    generate_and_save_kronos_dependency(input_gnosis_data_store=input_gnosis_data_store,
-                                        input_package_topic_data_store=input_package_topic_data_store,
-                                        output_data_store=output_data_store)
-
-
 def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store, input_manifest_data_store,
                                             output_data_store, additional_path):
     eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
@@ -137,21 +128,9 @@ def generate_and_save_cooccurrence_matrices_s3(training_data_url):
                                             output_data_store=output_data_store, additional_path=additional_path)
 
 
-def generate_and_save_cooccurrence_matrices_local():
-    input_kronos_dependency_data_store = LocalFileSystem("./analytics_platform/data/tusharma-kronos-data")
-
-    input_manifest_data_store = LocalFileSystem("./analytics_platform/data/tusharma-gnosis-data")
-
-    output_data_store = LocalFileSystem("./analytics_platform/data/tusharma-kronos-data")
-
-    generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store=input_kronos_dependency_data_store,
-                                            input_manifest_data_store=input_manifest_data_store,
-                                            output_data_store=output_data_store)
-
-
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        training_data_url = "s3://perf-gsk-data/python/machine-learning/hihi"
+        training_data_url = "s3://dev-stack-analysis-data/python/github"
         print("no env")
     else:
         training_data_url = sys.argv[1]
@@ -163,11 +142,9 @@ if __name__ == '__main__':
 
     print("kronos dependency generation started.")
     generate_and_save_kronos_dependency_s3(training_data_url=training_data_url)
-    # generate_and_save_kronos_dependency_local()
     print("kronos dependency generation ended.")
     print("cooccurrence matrix generation started.")
     generate_and_save_cooccurrence_matrices_s3(training_data_url=training_data_url)
-    # generate_and_save_cooccurrence_matrices_local()
     print("cooccurrence matrix generation ended.")
 
     print(time.time() - t0)
