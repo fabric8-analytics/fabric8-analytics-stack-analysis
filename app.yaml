@@ -1,0 +1,42 @@
+name: kronos
+containers:
+- image: surajd/kronos:latest
+  imagePullPolicy: Always
+  envFrom:
+  - configMapRef:
+      name: kronos
+  env:
+  - name: AWS_S3_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: aws-stack-analysis
+        key: AWS_S3_ACCESS_KEY_ID
+  - name: AWS_S3_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: aws-stack-analysis
+        key: AWS_S3_SECRET_ACCESS_KEY
+  health:
+    httpGet:
+      path: /
+      port: 6006
+    initialDelaySeconds: 2
+    timeoutSeconds: 15
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 4
+  command:
+  - /bin/entrypoint.sh
+services:
+- ports:
+  - port: 6006
+configMaps:
+- data:
+    AWS_KRONOS_BUCKET: "tusharma-kronos-data"
+    AWS_GNOSIS_BUCKET: "tusharma-gnosis-data"
+    AWS_SOFTNET_BUCKET: "tusharma-softnet-data"
+    DEPLOYMENT_PREFIX: "DEV"
+    SERVICE_PORT: "6006"
+    SERVICE_TIMEOUT: "900"
+
