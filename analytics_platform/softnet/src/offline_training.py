@@ -4,11 +4,24 @@ from util.data_store.s3_data_store import S3DataStore
 from analytics_platform.softnet.src import config
 from util.data_store.local_filesystem import LocalFileSystem
 from analytics_platform.softnet.src.softnet_constants import *
+import sys
+import time
 
 
-def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store):
+def trunc_string_at(s, d, n1, n2):
+    """Returns s truncated at the n'th occurrence of the delimiter, d"""
+    if n2 > 0:
+        result = d.join(s.split(d, n2)[n1:n2])
+    else:
+        result = d.join(s.split(d, n2)[n1:])
+        if not result.endswith("/"):
+            result += "/"
+    return result
+
+
+def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, additional_path):
     eco_to_kronos_dependency_dict = dict()
-    kd_filenames = input_kronos_dependency_data_store.list_files(KD_OUTPUT_FOLDER)
+    kd_filenames = input_kronos_dependency_data_store.list_files(additional_path + KD_OUTPUT_FOLDER)
     for kd_filename in kd_filenames:
         ecosystem = kd_filename.split("/")[-1].split(".")[0].split("_")[-1]
         kronos_dependency_obj = KronosDependencyGenerator.load(data_store=input_kronos_dependency_data_store,
@@ -18,10 +31,11 @@ def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store):
     return eco_to_kronos_dependency_dict
 
 
-def generate_and_save_kronos_dependency(input_gnosis_data_store, input_package_topic_data_store, output_data_store):
-    gnosis_ref_arch_json = input_gnosis_data_store.read_json_file(filename=GNOSIS_RA_OUTPUT_PATH)
+def generate_and_save_kronos_dependency(input_gnosis_data_store, input_package_topic_data_store, output_data_store,
+                                        additional_path):
+    gnosis_ref_arch_json = input_gnosis_data_store.read_json_file(filename=additional_path + GNOSIS_RA_OUTPUT_PATH)
     gnosis_ref_arch_dict = dict(gnosis_ref_arch_json)
-    package_topic_json = input_package_topic_data_store.read_json_file(GNOSIS_PTM_OUTPUT_PATH)
+    package_topic_json = input_package_topic_data_store.read_json_file(additional_path + GNOSIS_PTM_OUTPUT_PATH)
     package_topic_dict = dict(package_topic_json)
 
     eco_to_package_topic_dict = package_topic_dict[GNOSIS_PTM_PACKAGE_TOPIC_MAP]
@@ -43,26 +57,30 @@ def generate_and_save_kronos_dependency(input_gnosis_data_store, input_package_t
     for ecosystem in eco_to_kronos_dependency_dict.keys():
         kronos_dependency_obj = eco_to_kronos_dependency_dict[ecosystem]
         filename = KD_OUTPUT_FOLDER + "/" + KD_BASE_FILENAME
-        filename_formatted = filename.replace(".", "_" + ecosystem + ".")
+        filename_formatted = additional_path + filename.replace(".", "_" + ecosystem + ".")
         kronos_dependency_obj.save(data_store=output_data_store, filename=filename_formatted)
 
 
-def generate_and_save_kronos_dependency_s3():
-    input_gnosis_data_store = S3DataStore(src_bucket_name=config.AWS_SOFTNET_BUCKET,
+def generate_and_save_kronos_dependency_s3(training_data_url):
+    input_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
+    output_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
+    additional_path = trunc_string_at(training_data_url, "/", 3, -1)
+
+    input_gnosis_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                           access_key=config.AWS_S3_ACCESS_KEY_ID,
                                           secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
-    input_package_topic_data_store = S3DataStore(src_bucket_name=config.AWS_GNOSIS_BUCKET,
+    input_package_topic_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                                  access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                  secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
-    output_data_store = S3DataStore(src_bucket_name=config.AWS_KRONOS_BUCKET,
+    output_data_store = S3DataStore(src_bucket_name=output_bucket_name,
                                     access_key=config.AWS_S3_ACCESS_KEY_ID,
                                     secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
     generate_and_save_kronos_dependency(input_gnosis_data_store=input_gnosis_data_store,
                                         input_package_topic_data_store=input_package_topic_data_store,
-                                        output_data_store=output_data_store)
+                                        output_data_store=output_data_store, additional_path=additional_path)
 
 
 def generate_and_save_kronos_dependency_local():
@@ -75,15 +93,14 @@ def generate_and_save_kronos_dependency_local():
 
 
 def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store, input_manifest_data_store,
-                                            output_data_store):
+                                            output_data_store, additional_path):
     eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
-        input_kronos_dependency_data_store=input_kronos_dependency_data_store)
+        input_kronos_dependency_data_store=input_kronos_dependency_data_store, additional_path=additional_path)
 
-    manifest_filenames = input_manifest_data_store.list_files(MANIFEST_FILEPATH)
-
+    manifest_filenames = input_manifest_data_store.list_files(additional_path + MANIFEST_FILEPATH)
 
     for manifest_filename in manifest_filenames:
-        user_category = manifest_filename.split("/")[1]
+        user_category = manifest_filename.split("/")[-2]
         manifest_content_json_list = input_manifest_data_store.read_json_file(filename=manifest_filename)
         for manifest_content_json in manifest_content_json_list:
             manifest_content_dict = dict(manifest_content_json)
@@ -95,26 +112,29 @@ def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store, 
             output_filename = COM_OUTPUT_FOLDER + "/" + str(
                 user_category) + "/" + "cooccurrence_matrix" + "_" + str(
                 ecosystem) + ".json"
-            cooccurrence_matrix_obj.save(data_store=output_data_store, filename=output_filename)
+            cooccurrence_matrix_obj.save(data_store=output_data_store, filename=additional_path + output_filename)
 
 
+def generate_and_save_cooccurrence_matrices_s3(training_data_url):
+    input_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
+    output_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
+    additional_path = trunc_string_at(training_data_url, "/", 3, -1)
 
-def generate_and_save_cooccurrence_matrices_s3():
-    input_kronos_dependency_data_store = S3DataStore(src_bucket_name=config.AWS_KRONOS_BUCKET,
+    input_kronos_dependency_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                                      access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                      secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
-    input_manifest_data_store = S3DataStore(src_bucket_name=config.AWS_GNOSIS_BUCKET,
+    input_manifest_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                             access_key=config.AWS_S3_ACCESS_KEY_ID,
                                             secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
-    output_data_store = S3DataStore(src_bucket_name=config.AWS_KRONOS_BUCKET,
+    output_data_store = S3DataStore(src_bucket_name=output_bucket_name,
                                     access_key=config.AWS_S3_ACCESS_KEY_ID,
                                     secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
     generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store=input_kronos_dependency_data_store,
                                             input_manifest_data_store=input_manifest_data_store,
-                                            output_data_store=output_data_store)
+                                            output_data_store=output_data_store, additional_path=additional_path)
 
 
 def generate_and_save_cooccurrence_matrices_local():
@@ -130,19 +150,24 @@ def generate_and_save_cooccurrence_matrices_local():
 
 
 if __name__ == '__main__':
-    import time
+    if len(sys.argv) < 2:
+        training_data_url = "s3://perf-gsk-data/python/machine-learning/hihi"
+        print("no env")
+    else:
+        training_data_url = sys.argv[1]
+        print("env")
 
-    print(config.AWS_GNOSIS_BUCKET)
+    print(training_data_url)
 
     t0 = time.time()
 
-    print("kronos dependency started.")
-    generate_and_save_kronos_dependency_s3()
-    #generate_and_save_kronos_dependency_local()
-    print("kronos dependency ended.")
+    print("kronos dependency generation started.")
+    generate_and_save_kronos_dependency_s3(training_data_url=training_data_url)
+    # generate_and_save_kronos_dependency_local()
+    print("kronos dependency generation ended.")
     print("cooccurrence matrix generation started.")
-    generate_and_save_cooccurrence_matrices_s3()
-    #generate_and_save_cooccurrence_matrices_local()
+    generate_and_save_cooccurrence_matrices_s3(training_data_url=training_data_url)
+    # generate_and_save_cooccurrence_matrices_local()
     print("cooccurrence matrix generation ended.")
 
     print(time.time() - t0)
