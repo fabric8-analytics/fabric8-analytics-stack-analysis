@@ -176,7 +176,9 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                 ecosystem = eco_to_package_list_json.get(MANIFEST_ECOSYSTEM)
                 list_of_package_list = eco_to_package_list_json.get(MANIFEST_PACKAGE_LIST)
                 for package_list in list_of_package_list:
-                    topic_list = cls.get_topic_list_for_package_list(package_list, ecosystem, eco_to_package_topic_dict)
+                    package_list_lowercase = [x.lower() for x in package_list]
+                    topic_list = cls.get_topic_list_for_package_list(package_list_lowercase, ecosystem,
+                                                                     eco_to_package_topic_dict)
                     list_of_topic_list.append(topic_list)
         transactions = sc.parallelize(list_of_topic_list)
         transactions.cache()
@@ -195,6 +197,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         for fi in result:
             if len(fi.items) > min_intent_topic_count:
                 gnosis_intent_component_class_dict["".join(fi.items)] = fi.items
+
         return gnosis_intent_component_class_dict
 
     @classmethod
