@@ -160,9 +160,13 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
 
     output = {}
     if response.get('ResponseMetadata').get('HTTPStatusCode') == 200:
-        output['status'] = 'Success'
-        output['message'] = "Done! The cluster was submitted successfully! Job flow id is " + response.get('JobFlowId')
+
+        output['training_job_id'] = response.get('JobFlowId')
+        output['status'] = 'work_in_progress'
+        output[
+            'status_description'] = "The training is in progress. Please check the given training job after some time."
     else:
+        output['training_job_id'] = "Error"
         output['status'] = 'Error'
         output['message'] = "Error! The job/cluster could not be created!"
         print response
