@@ -5,12 +5,14 @@ from analytics_platform.kronos.src.kronos_constants import *
 from analytics_platform.kronos.src.kronos_pomegranate import KronosPomegranate
 from util.data_store.local_filesystem import LocalFileSystem
 from util.data_store.s3_data_store import S3DataStore
+from analytics_platform.kronos.src.kronos_util import trunc_string_at
+import sys
 
 
-def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store):
+def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, additional_path):
     eco_to_kronos_dependency_dict = dict()
 
-    filenames = input_kronos_dependency_data_store.list_files(KD_OUTPUT_FOLDER)
+    filenames = input_kronos_dependency_data_store.list_files(additional_path + KD_OUTPUT_FOLDER)
     for filename in filenames:
         ecosystem = filename.split("/")[-1].split(".")[0].split("_")[-1]
         kronos_dependency_json = input_kronos_dependency_data_store.read_json_file(
@@ -29,24 +31,24 @@ def load_eco_to_kronos_dependency_dict_local():
     return eco_to_kronos_dependency_dict
 
 
-def load_eco_to_kronos_dependency_dict_s3():
-    input_data_store = S3DataStore(src_bucket_name=config.AWS_KRONOS_BUCKET,
+def load_eco_to_kronos_dependency_dict_s3(bucket_name,additional_path):
+    input_data_store = S3DataStore(src_bucket_name=bucket_name,
                                    access_key=config.AWS_S3_ACCESS_KEY_ID,
                                    secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
     eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
-        input_kronos_dependency_data_store=input_data_store)
+        input_kronos_dependency_data_store=input_data_store, additional_path=additional_path)
 
     return eco_to_kronos_dependency_dict
 
 
-def load_user_eco_to_co_occerrence_matrix_dict(input_co_occurrence_data_store):
-    com_filenames = input_co_occurrence_data_store.list_files(COM_OUTPUT_FOLDER)
+def load_user_eco_to_co_occerrence_matrix_dict(input_co_occurrence_data_store, additional_path):
+    com_filenames = input_co_occurrence_data_store.list_files(additional_path + COM_OUTPUT_FOLDER)
 
     temp_user_eco_to_co_occurrence_matrix_dict = dict()
     user_category_list = list()
     ecosystem_list = list()
     for com_filename in com_filenames:
-        user_category = com_filename.split("/")[1]
+        user_category = com_filename.split("/")[-2]
         if user_category not in user_category_list:
             user_category_list.append(user_category)
         ecosystem = com_filename.split("/")[-1].split(".")[0].split("_")[-1]
@@ -69,12 +71,12 @@ def load_user_eco_to_co_occerrence_matrix_dict(input_co_occurrence_data_store):
 
 
 def train_and_save_kronos_list(input_kronos_dependency_data_store, input_co_occurrence_data_store,
-                               output_data_store):
+                               output_data_store, additional_path):
     eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
-        input_kronos_dependency_data_store=input_kronos_dependency_data_store)
+        input_kronos_dependency_data_store=input_kronos_dependency_data_store, additional_path=additional_path)
 
     user_eco_to_cooccurrence_matrix_dict = load_user_eco_to_co_occerrence_matrix_dict(
-        input_co_occurrence_data_store=input_co_occurrence_data_store)
+        input_co_occurrence_data_store=input_co_occurrence_data_store, additional_path=additional_path)
 
     for user_category in user_eco_to_cooccurrence_matrix_dict.keys():
         eco_to_cooccurrence_matrix_dict = user_eco_to_cooccurrence_matrix_dict[user_category]
@@ -85,25 +87,29 @@ def train_and_save_kronos_list(input_kronos_dependency_data_store, input_co_occu
                                                    package_occurrence_df=cooccurrence_matrix_df)
             filename = KRONOS_OUTPUT_FOLDER + "/" + str(user_category) + "/" + "kronos" + "_" + str(
                 ecosystem) + ".json"
-            kronos_model.save(data_store=output_data_store, filename=filename)
+            kronos_model.save(data_store=output_data_store, filename=additional_path + filename)
 
 
-def train_and_save_kronos_list_s3():
-    input_kronos_dependency_data_store = S3DataStore(src_bucket_name=config.AWS_KRONOS_BUCKET,
+def train_and_save_kronos_list_s3(training_data_url):
+    input_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
+    output_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
+    additional_path = trunc_string_at(training_data_url, "/", 3, -1)
+
+    input_kronos_dependency_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                                      access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                      secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
-    input_cooccurrence_matrix_data_store = S3DataStore(src_bucket_name=config.AWS_KRONOS_BUCKET,
+    input_cooccurrence_matrix_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                                        access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                        secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
-    output_data_store = S3DataStore(src_bucket_name=config.AWS_KRONOS_BUCKET,
+    output_data_store = S3DataStore(src_bucket_name=output_bucket_name,
                                     access_key=config.AWS_S3_ACCESS_KEY_ID,
                                     secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
     train_and_save_kronos_list(input_kronos_dependency_data_store=input_kronos_dependency_data_store,
                                input_co_occurrence_data_store=input_cooccurrence_matrix_data_store,
-                               output_data_store=output_data_store)
+                               output_data_store=output_data_store, additional_path=additional_path)
 
 
 def train_and_save_kronos_list_local():
@@ -117,9 +123,18 @@ def train_and_save_kronos_list_local():
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        training_data_url = "s3://perf-gsk-data/python/machine-learning"
+        print("no env")
+    else:
+        training_data_url = sys.argv[1]
+        print("env")
+
+    print(training_data_url)
+
     t0 = time.time()
 
-    train_and_save_kronos_list_s3()
+    train_and_save_kronos_list_s3(training_data_url=training_data_url)
     # train_and_save_kronos_list_local()
 
     print(time.time() - t0)
