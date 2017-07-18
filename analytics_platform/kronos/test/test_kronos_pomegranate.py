@@ -58,17 +58,18 @@ class TestKronosPomegranate(TestCase):
                                                                           folderpath="data_kronos_dependency")
         self.assertTrue(eco_to_kronos_dependency_dict is not None)
 
-        user_request = [{"ecosystem": "pypi", "user_persona": "1", "package_list": [
+        user_request = [{"ecosystem": "pypi", "comp_package_count_threshold": 10,
+            "alt_package_count_threshold": 1,
+            "outlier_probability_threshold": 0.61,
+            "unknown_packages_ratio_threshold": 0.4, "package_list": [
             "p1",
             "p2",
             "p3",
-            "p4", "p6"
+            "np1"
         ]}]
 
         response = score_eco_user_package_dict(user_request, user_eco_kronos_dict=user_eco_kronos_dict,
-                                               eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict,
-                                               comp_package_count_threshold=10, alt_package_count_threshold=5,
-                                               outlier_threshold=0.61)
+                                               eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict)
         self.assertTrue(response is not None)
 
         output_data_store.write_json_file(filename="response.json", contents=response)
