@@ -168,7 +168,7 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
     else:
         output['training_job_id'] = "Error"
         output['status'] = 'Error'
-        output['message'] = "Error! The job/cluster could not be created!"
+        output['status_description'] = "Error! The job/cluster could not be created!"
         print response
 
     return output
