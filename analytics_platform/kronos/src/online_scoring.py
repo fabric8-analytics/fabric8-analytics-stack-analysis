@@ -207,7 +207,6 @@ def get_alternate_packages_for_packages(similar_package_dict, package_names, alt
 
 
 def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_kronos_dependency_dict):
-    time.sleep(100)
     comp_package_count_threshold = KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_VALUE
     alt_package_count_threshold = KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_VALUE
     outlier_probability_threshold = KRONOS_OUTLIER_PROBABILITY_THRESHOLD_VALUE
