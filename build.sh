@@ -9,5 +9,3 @@ docker push docker.io/surajd/kronos:latest
 echo 'deploy secret'
 oc apply -f secret.yaml
 
-echo 'deploying the application'
-kedge apply -f app.yaml

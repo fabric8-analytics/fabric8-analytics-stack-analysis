@@ -28,10 +28,8 @@ docker push docker.io/surajd/kronos:latest
 oc apply -f secret.yaml
 ```
 
-- Deploy app using kedge
-
-Make sure you have [kedge installed](https://github.com/kedgeproject/kedge#installation).
+- Deploy app using `oc`
 
 ```bash
-kedge apply -f app.yaml
+oc apply -f kronos-os.yaml
 ```
