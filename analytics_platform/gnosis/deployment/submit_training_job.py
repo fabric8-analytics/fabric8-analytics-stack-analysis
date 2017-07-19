@@ -14,11 +14,11 @@ import boto3
 from time import gmtime, strftime
 from analytics_platform.gnosis.src import config
 
-
 COMPONENT_PREFIX = "gnosis"
 
 
-def submit_job(input_bootstrap_file, input_src_code_file):
+def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_min_support_count,
+               fp_intent_topic_count_threshold, fp_num_partition):
     str_cur_time = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
 
     # S3 bucket/key, where the input spark job ( src code ) will be uploaded
@@ -51,7 +51,7 @@ def submit_job(input_bootstrap_file, input_src_code_file):
                               aws_secret_access_key=config.AWS_S3_SECRET_ACCESS_KEY,
                               region_name='us-east-1')
     response = emr_client.run_job_flow(
-        Name=config.DEPLOYMENT_PREFIX + "_"+COMPONENT_PREFIX+"_" + str_cur_time,
+        Name=config.DEPLOYMENT_PREFIX + "_" + COMPONENT_PREFIX + "_" + str_cur_time,
         LogUri=s3_log_uri,
         ReleaseLabel='emr-5.2.1',
         Instances={
@@ -112,38 +112,46 @@ def submit_job(input_bootstrap_file, input_src_code_file):
             }
         ],
         Steps=[
-        {
-            'Name': 'Setup Debugging',
-            'ActionOnFailure': 'TERMINATE_CLUSTER',
-            'HadoopJarStep': {
-                'Jar': 'command-runner.jar',
-                'Args': ['state-pusher-script']
+            {
+                'Name': 'Setup Debugging',
+                'ActionOnFailure': 'TERMINATE_CLUSTER',
+                'HadoopJarStep': {
+                    'Jar': 'command-runner.jar',
+                    'Args': ['state-pusher-script']
+                }
+            },
+            {
+                'Name': 'setup - copy files',
+                'ActionOnFailure': 'CANCEL_AND_WAIT',
+                'HadoopJarStep': {
+                    'Jar': 'command-runner.jar',
+                    'Args': ['aws', 's3', 'cp', s3_uri, '/home/hadoop/']
+                }
+            },
+            {
+                'Name': 'setup - unzip files',
+                'ActionOnFailure': 'CANCEL_AND_WAIT',
+                'HadoopJarStep': {
+                    'Jar': 'command-runner.jar',
+                    'Args': ['unzip', '/home/hadoop/' + s3_key, '-d', '/home/hadoop']
+                }
+            },
+            {
+                'Name': 'Run Spark',
+                'ActionOnFailure': 'CANCEL_AND_WAIT',
+                'HadoopJarStep': {
+                    'Jar': 'command-runner.jar',
+                    'Args': ['spark-submit',
+                             '--py-files',
+                             '/home/hadoop/' + s3_key,
+                             '/home/hadoop/analytics_platform/gnosis/src/offline_training.py',
+                             training_data_url,
+                             fp_min_support_count,
+                             fp_intent_topic_count_threshold,
+                             fp_num_partition
+                             ]
+                }
             }
-        },
-        {
-            'Name': 'setup - copy files',
-            'ActionOnFailure': 'CANCEL_AND_WAIT',
-            'HadoopJarStep': {
-                'Jar': 'command-runner.jar',
-                'Args': ['aws', 's3', 'cp', s3_uri, '/home/hadoop/']
-            }
-        },
-        {
-            'Name': 'setup - unzip files',
-            'ActionOnFailure': 'CANCEL_AND_WAIT',
-            'HadoopJarStep': {
-                'Jar': 'command-runner.jar',
-                'Args': ['unzip', '/home/hadoop/' + s3_key, '-d',  '/home/hadoop']
-            }
-        },
-        {
-            'Name': 'Run Spark',
-            'ActionOnFailure': 'CANCEL_AND_WAIT',
-            'HadoopJarStep': {
-                'Jar': 'command-runner.jar',
-                'Args': ['spark-submit', '--py-files', '/home/hadoop/' + s3_key, '/home/hadoop/analytics_platform/gnosis/src/offline_training.py']
-            }
-        }
         ],
         VisibleToAllUsers=True,
         JobFlowRole='EMR_EC2_DefaultRole',
@@ -152,28 +160,16 @@ def submit_job(input_bootstrap_file, input_src_code_file):
 
     output = {}
     if response.get('ResponseMetadata').get('HTTPStatusCode') == 200:
-        output['status'] = 'Success'
-        output['message'] = "Done! The cluster was submitted successfully! Job flow id is " + response.get('JobFlowId')
+
+        output['training_job_id'] = response.get('JobFlowId')
+        output['status'] = 'work_in_progress'
+        output[
+            'status_description'] = "The training is in progress. Please check the given training job after some time."
     else:
+        output['training_job_id'] = "Error"
         output['status'] = 'Error'
-        output['message'] = "Error! The job/cluster could not be created!"
+        output['status_description'] = "Error! The job/cluster could not be created!"
         print response
 
     return output
 
-
-if __name__ == "__main__":
-    # Gather input arguments
-    if len(sys.argv) < 3:
-        usage = sys.argv[0] + " <bootstrap_file> <src_code_file> \n"
-        example = sys.argv[0] + " bootstrap_action.sh gen_ref_stacks.py \n"
-        print("Error: Insufficient arguments!")
-        print("Usage: " + usage)
-        print("Example: " + example)
-        sys.exit(1)
-
-    bootstrap_file = sys.argv[1]
-    src_code_file = sys.argv[2]
-    report = submit_job(bootstrap_file, src_code_file)
-    print report.get('status')
-    print report.get('message')

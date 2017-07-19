@@ -2,7 +2,7 @@ import logging
 import sys
 
 import flask
-from flask import Flask
+from flask import Flask,request
 from flask_cors import CORS
 
 from analytics_platform.softnet.deployment.submit_training_job import submit_job
@@ -21,12 +21,14 @@ def heart_beat():
     return flask.jsonify({"status": "ok"})
 
 
-@app.route('/api/v1/softnet_training', methods=['POST'])
+@app.route('/api/v1/schemas/softnet_training', methods=['POST'])
 def train_and_save_softnet():
     app.logger.info("Submitting the training job")
+    input_json = request.get_json()
+    training_data_url = input_json.get("training_data_url")
 
     response = submit_job(input_bootstrap_file='/bootstrap_action.sh',
-                          input_src_code_file='/tmp/training.zip')
+                          input_src_code_file='/tmp/training.zip',training_data_url=training_data_url)
     return flask.jsonify(response)
 
 

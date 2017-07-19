@@ -24,11 +24,11 @@ class TestKronosPomegranate(TestCase):
         self.assertTrue(output_data_store is not None)
 
         eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
-            input_kronos_dependency_data_store=input_data_store)
+            input_kronos_dependency_data_store=input_data_store,additional_path="")
         self.assertTrue(eco_to_kronos_dependency_dict is not None)
 
         user_eco_to_cooccurrence_matrix_dict = load_user_eco_to_co_occerrence_matrix_dict(
-            input_co_occurrence_data_store=input_data_store)
+            input_co_occurrence_data_store=input_data_store,additional_path="")
         self.assertTrue(user_eco_to_cooccurrence_matrix_dict is not None)
 
         for user_category in user_eco_to_cooccurrence_matrix_dict.keys():
@@ -50,7 +50,7 @@ class TestKronosPomegranate(TestCase):
         output_data_store = LocalFileSystem("analytics_platform/kronos/test/data/output-score-data")
         self.assertTrue(output_data_store is not None)
 
-        user_eco_kronos_dict = load_user_eco_to_kronos_model_dict(input_kronos_data_store=input_data_store)
+        user_eco_kronos_dict = load_user_eco_to_kronos_model_dict(input_kronos_data_store=input_data_store,additional_path="")
 
         self.assertTrue(user_eco_kronos_dict is not None)
 
@@ -58,17 +58,18 @@ class TestKronosPomegranate(TestCase):
                                                                           folderpath="data_kronos_dependency")
         self.assertTrue(eco_to_kronos_dependency_dict is not None)
 
-        user_request = [{"ecosystem": "pypi", "user_persona": "1", "package_list": [
+        user_request = [{"ecosystem": "pypi", "comp_package_count_threshold": 10,
+            "alt_package_count_threshold": 1,
+            "outlier_probability_threshold": 0.61,
+            "unknown_packages_ratio_threshold": 0.4, "package_list": [
             "p1",
             "p2",
             "p3",
-            "p4", "p6"
+            "np1"
         ]}]
 
         response = score_eco_user_package_dict(user_request, user_eco_kronos_dict=user_eco_kronos_dict,
-                                               eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict,
-                                               comp_package_count_threshold=10, alt_package_count_threshold=5,
-                                               outlier_threshold=0.61)
+                                               eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict)
         self.assertTrue(response is not None)
 
         output_data_store.write_json_file(filename="response.json", contents=response)

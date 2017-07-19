@@ -1,1 +1,53 @@
-[{"alternate_packages": {"p2": [{"similarity_score": 0.6666666666666666, "package_name": "p3"}, {"similarity_score": 0.6666666666666666, "package_name": "p1"}, {"similarity_score": 0.5, "package_name": "p6"}, {"similarity_score": 0.5, "package_name": "p4"}], "p3": [{"similarity_score": 1.0, "package_name": "p6"}, {"similarity_score": 0.6666666666666666, "package_name": "p2"}, {"similarity_score": 0.6666666666666666, "package_name": "p1"}, {"similarity_score": 0.5, "package_name": "p4"}], "p1": [{"similarity_score": 0.6666666666666666, "package_name": "p2"}, {"similarity_score": 0.6666666666666666, "package_name": "p3"}, {"similarity_score": 0.5, "package_name": "p6"}], "p6": [{"similarity_score": 1.0, "package_name": "p3"}, {"similarity_score": 0.5, "package_name": "p2"}, {"similarity_score": 0.5, "package_name": "p1"}, {"similarity_score": 0.5, "package_name": "p4"}], "p4": [{"similarity_score": 1.0, "package_name": "p5"}, {"similarity_score": 0.5, "package_name": "p2"}, {"similarity_score": 0.5, "package_name": "p3"}, {"similarity_score": 0.5, "package_name": "p6"}]}, "outlier_package_list": [{"outlier_prbability": 0.7499999999999999, "package_name": "p4"}, {"outlier_prbability": 0.7499999999999999, "package_name": "p6"}, {"outlier_prbability": 0.71875, "package_name": "p2"}, {"outlier_prbability": 0.65, "package_name": "p1"}, {"outlier_prbability": 0.65, "package_name": "p3"}], "companion_packages": [], "user_persona": "1", "ecosystem": "pypi"}]
+[
+  {
+    "missing_packages": [
+      "np1"
+    ],
+    "outlier_package_list": [
+      {
+        "outlier_prbability": 0.71875,
+        "package_name": "p2"
+      },
+      {
+        "outlier_prbability": 0.65,
+        "package_name": "p3"
+      },
+      {
+        "outlier_prbability": 0.65,
+        "package_name": "p1"
+      }
+    ],
+    "alternate_packages": {
+      "p2": [
+        {
+          "similarity_score": 0.6666666666666666,
+          "package_name": "p3"
+        }
+      ],
+      "p3": [
+        {
+          "similarity_score": 1,
+          "package_name": "p6"
+        }
+      ],
+      "p1": [
+        {
+          "similarity_score": 0.6666666666666666,
+          "package_name": "p2"
+        }
+      ]
+    },
+    "user_persona": "1",
+    "ecosystem": "pypi",
+    "companion_packages": [
+      {
+        "cooccurrence_probability": 0.4000000000000001,
+        "package_name": "p5"
+      },
+      {
+        "cooccurrence_probability": 0.2500000000000001,
+        "package_name": "p4"
+      }
+    ]
+  }
+]

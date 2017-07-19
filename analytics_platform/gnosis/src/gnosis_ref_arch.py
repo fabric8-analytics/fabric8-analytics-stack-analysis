@@ -7,7 +7,6 @@ from gnosis_constants import *
 from gnosis_util import *
 
 
-
 class GnosisReferenceArchitecture(AbstractGnosis):
     """
     GnosisReferenceArchitecture i.e. Reference Architecture Generator
@@ -22,8 +21,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         self._dictionary = dictionary
 
     @classmethod
-    def train(cls, data_store, min_support_count=FP_MIN_SUPPORT_COUNT,
-              min_intent_topic_count=FP_INTENT_TOPIC_COUNT_THRESHOLD):
+    def train(cls, data_store, additional_path="", min_support_count=FP_MIN_SUPPORT_COUNT,
+              min_intent_topic_count=FP_INTENT_TOPIC_COUNT_THRESHOLD, fp_num_partition=FP_NUM_PARTITION):
 
         """
         Generates the Gnosis Reference Architecture
@@ -34,16 +33,16 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         :return: the Gnosis Reference Architecture dictionary
         """
 
-
         gnosis_ptm_obj = GnosisPackageTopicModel.load(data_store=data_store,
-                                                      filename=GNOSIS_PTM_OUTPUT_PATH)
+                                                      filename=additional_path + GNOSIS_PTM_OUTPUT_PATH)
         eco_to_package_topic_dict = gnosis_ptm_obj.get_dictionary()
 
         eco_to_package_to_topic_dict = eco_to_package_topic_dict[GNOSIS_PTM_PACKAGE_TOPIC_MAP]
 
         fp_growth_model = cls._train_fp_growth_model(data_store=data_store,
                                                      eco_to_package_topic_dict=eco_to_package_to_topic_dict,
-                                                     min_support_count=min_support_count)
+                                                     min_support_count=min_support_count,
+                                                     additional_path=additional_path, fp_num_partition=fp_num_partition)
 
         gnosis_intent_to_component_class_dict = cls._generate_intent_component_class_dict_fp_growth(
             model=fp_growth_model, min_intent_topic_count=min_intent_topic_count)
@@ -166,9 +165,10 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         return gnosis_ra_obj
 
     @classmethod
-    def _train_fp_growth_model(cls, data_store, eco_to_package_topic_dict, min_support_count):
+    def _train_fp_growth_model(cls, data_store, eco_to_package_topic_dict, min_support_count, additional_path,
+                               fp_num_partition):
         sc = SparkContext()
-        manifest_file_list = data_store.list_files(prefix=MANIFEST_FILEPATH)
+        manifest_file_list = data_store.list_files(prefix=additional_path + MANIFEST_FILEPATH)
         list_of_topic_list = list()
         for manifest_file in manifest_file_list:
             eco_to_package_list_json_array = data_store.read_json_file(manifest_file)
@@ -176,7 +176,9 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                 ecosystem = eco_to_package_list_json.get(MANIFEST_ECOSYSTEM)
                 list_of_package_list = eco_to_package_list_json.get(MANIFEST_PACKAGE_LIST)
                 for package_list in list_of_package_list:
-                    topic_list = cls.get_topic_list_for_package_list(package_list, ecosystem, eco_to_package_topic_dict)
+                    package_list_lowercase = [x.lower() for x in package_list]
+                    topic_list = cls.get_topic_list_for_package_list(package_list_lowercase, ecosystem,
+                                                                     eco_to_package_topic_dict)
                     list_of_topic_list.append(topic_list)
         transactions = sc.parallelize(list_of_topic_list)
         transactions.cache()
@@ -184,7 +186,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         min_support = float(min_support_count / float(transactions.count()))
 
         model = FPGrowth.train(transactions, minSupport=min_support,
-                               numPartitions=FP_NUM_PARTITION)
+                               numPartitions=fp_num_partition)
 
         return model
 
@@ -195,6 +197,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         for fi in result:
             if len(fi.items) > min_intent_topic_count:
                 gnosis_intent_component_class_dict["".join(fi.items)] = fi.items
+
         return gnosis_intent_component_class_dict
 
     @classmethod
