@@ -17,6 +17,9 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 app = Flask(__name__)
 CORS(app)
 
+global user_eco_kronos_dict
+global eco_to_kronos_dependency_dict
+
 @app.route('/api/v1/schemas/kronos_load', methods=['POST'])
 def load_model():
     input_json = request.get_json()
@@ -25,10 +28,10 @@ def load_model():
     bucket_name = trunc_string_at(kronos_data_url, "/", 2, 3)
     additional_path = trunc_string_at(kronos_data_url, "/", 3, -1)
 
-    current_app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=bucket_name,
+    app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=bucket_name,
                                                                              additional_path=additional_path)
 
-    current_app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=bucket_name,
+    app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=bucket_name,
                                                                                       additional_path=additional_path)
 
     app.logger.info("Kronos model got loaded successfully!")
@@ -61,8 +64,8 @@ def predict_and_score():
     app.logger.info("Analyzing the given EPV")
 
     response = score_eco_user_package_dict(user_request=input_json,
-                                           user_eco_kronos_dict=current_app.user_eco_kronos_dict,
-                                           eco_to_kronos_dependency_dict=current_app.eco_to_kronos_dependency_dict)
+                                           user_eco_kronos_dict=app.user_eco_kronos_dict,
+                                           eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict)
 
     return flask.jsonify(response)
 
