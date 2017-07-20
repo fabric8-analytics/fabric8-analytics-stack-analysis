@@ -144,7 +144,7 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
                     'Args': ['spark-submit',
                              '--py-files',
                              '/home/hadoop/' + s3_key,
-                             '/home/hadoop/analytics_platform/kronos/src/offline_training.py',
+                             '/home/hadoop/analytics_platform/kronos/src/kronos_offline_training.py',
                              training_data_url,
                              fp_min_support_count,
                              fp_intent_topic_count_threshold,
