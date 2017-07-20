@@ -232,10 +232,11 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
             unknown_package_ratio_threshold = request_dict[KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_NAME]
 
         requested_package_list = request_dict[KRONOS_SCORE_PACKAGE_LIST]
+        package_list_lower_case = [x.lower() for x in requested_package_list]
         kronos = user_eco_kronos_dict[user_category][ecosystem]
         kronos_dependency = eco_to_kronos_dependency_dict[ecosystem]
         prediction_result_dict = score_kronos(kronos=kronos,
-                                              requested_package_list=requested_package_list,
+                                              requested_package_list=package_list_lower_case,
                                               kronos_dependency=kronos_dependency,
                                               comp_package_count_threshold=comp_package_count_threshold,
                                               alt_package_count_threshold=alt_package_count_threshold,
@@ -246,4 +247,3 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
 
         response_json_list.append(prediction_result_dict)
     return response_json_list
-
