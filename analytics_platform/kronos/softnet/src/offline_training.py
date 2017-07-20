@@ -1,9 +1,9 @@
-from analytics_platform.softnet.src.cooccurrence_matrix_generator import CooccurrenceMatrixGenerator
-from analytics_platform.softnet.src.kronos_dependency_generator import KronosDependencyGenerator
+from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator import CooccurrenceMatrixGenerator
+from analytics_platform.kronos.softnet.src.kronos_dependency_generator import KronosDependencyGenerator
 from util.data_store.s3_data_store import S3DataStore
-from analytics_platform.softnet.src import config
+from analytics_platform.kronos.src import config
 from util.data_store.local_filesystem import LocalFileSystem
-from analytics_platform.softnet.src.softnet_constants import *
+from analytics_platform.kronos.softnet.src.softnet_constants import *
 import sys
 import time
 

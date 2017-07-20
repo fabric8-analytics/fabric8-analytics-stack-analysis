@@ -1,15 +1,15 @@
 from pomegranate import *
 
-from analytics_platform.kronos.pgm.src.abstract_kronos import AbstractKronos
-from analytics_platform.kronos.pgm.src.kronos_constants import *
-from analytics_platform.kronos.pgm.src.kronos_util import *
+from analytics_platform.kronos.pgm.src.abstract_pgm import AbstractPGM
+from analytics_platform.kronos.pgm.src.pgm_constants import *
+from analytics_platform.kronos.pgm.src.pgm_util import *
 from util.data_store.local_filesystem import LocalFileSystem
 from util.data_store.s3_data_store import S3DataStore
 import pickle
 from joblib import Parallel, delayed
 
 
-class KronosPomegranate(AbstractKronos):
+class PGMPomegranate(AbstractPGM):
     """
     Kronos - The Knowledge Graph
     """
@@ -26,7 +26,7 @@ class KronosPomegranate(AbstractKronos):
         kronos_model = cls._train_kronos_for_ecosystem(kronos_dependency_dict=kronos_dependency_dict,
                                                        package_occurrence_df=package_occurrence_df)
 
-        return KronosPomegranate(kronos_model)
+        return PGMPomegranate(kronos_model)
 
     def save(self, data_store, filename):
         pgm_model = self.model
@@ -49,7 +49,7 @@ class KronosPomegranate(AbstractKronos):
             data_store.download_file(filename, local_filename)
             with open(local_filename, 'rb') as f:
                 pgm_model = BayesianNetwork.from_json(pickle.load(f))
-        return KronosPomegranate(pgm_model)
+        return PGMPomegranate(pgm_model)
 
     @classmethod
     def _train_kronos_for_ecosystem(cls, kronos_dependency_dict, package_occurrence_df):

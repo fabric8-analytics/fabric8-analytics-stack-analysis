@@ -1,9 +1,9 @@
 import sys
 import time
 
-from analytics_platform.gnosis.src import config
-from analytics_platform.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
-from analytics_platform.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
+from analytics_platform.kronos.src import config
+from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
+from analytics_platform.kronos.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
 from gnosis_constants import *
 from util.data_store.s3_data_store import S3DataStore
 

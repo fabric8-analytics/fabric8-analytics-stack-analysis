@@ -1,6 +1,6 @@
 from util.data_store.local_filesystem import LocalFileSystem
-from analytics_platform.softnet.src.softnet_util import *
-from analytics_platform.softnet.src.softnet_constants import *
+from analytics_platform.kronos.softnet.src.softnet_util import *
+from analytics_platform.kronos.softnet.src.softnet_constants import *
 
 
 class KronosDependencyGenerator(object):

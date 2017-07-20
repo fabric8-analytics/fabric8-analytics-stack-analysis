@@ -1,5 +1,5 @@
-from analytics_platform.gnosis.src.abstract_gnosis import AbstractGnosis
-from analytics_platform.gnosis.src.gnosis_constants import *
+from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
+from analytics_platform.kronos.gnosis.src.gnosis_constants import *
 
 
 class GnosisPackageTopicModel(AbstractGnosis):

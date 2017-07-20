@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
 
-class AbstractKronos(object):
+class AbstractPGM(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod

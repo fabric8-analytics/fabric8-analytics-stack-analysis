@@ -2,9 +2,9 @@ import sys
 import time
 
 from analytics_platform.kronos.src import config
-from analytics_platform.kronos.src.kronos_constants import *
-from analytics_platform.kronos.src.kronos_pomegranate import KronosPomegranate
-from analytics_platform.kronos.src.kronos_util import trunc_string_at
+from analytics_platform.kronos.pgm.src.pgm_constants import *
+from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
+from analytics_platform.kronos.pgm.src.pgm_util import trunc_string_at
 from util.data_store.s3_data_store import S3DataStore
 
 
@@ -74,8 +74,8 @@ def train_and_save_kronos_list(input_kronos_dependency_data_store, input_co_occu
         for ecosystem in eco_to_cooccurrence_matrix_dict.keys():
             kronos_dependency_dict = eco_to_kronos_dependency_dict[ecosystem]
             cooccurrence_matrix_df = eco_to_cooccurrence_matrix_dict[ecosystem]
-            kronos_model = KronosPomegranate.train(kronos_dependency_dict=kronos_dependency_dict,
-                                                   package_occurrence_df=cooccurrence_matrix_df)
+            kronos_model = PGMPomegranate.train(kronos_dependency_dict=kronos_dependency_dict,
+                                                package_occurrence_df=cooccurrence_matrix_df)
             filename = KRONOS_OUTPUT_FOLDER + "/" + str(user_category) + "/" + "kronos" + "_" + str(
                 ecosystem) + ".json"
             kronos_model.save(data_store=output_data_store, filename=additional_path + filename)

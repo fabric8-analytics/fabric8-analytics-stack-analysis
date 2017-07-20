@@ -1,4 +1,4 @@
-from analytics_platform.softnet.src.softnet_constants import *
+from analytics_platform.kronos.softnet.src.softnet_constants import *
 import pandas as pd
 import numpy as np
 

@@ -1,6 +1,6 @@
-from analytics_platform.kronos.pgm.src.kronos_constants import *
-from analytics_platform.kronos.pgm.src.kronos_pomegranate import KronosPomegranate
-from analytics_platform.kronos.pgm.src.kronos_util import *
+from analytics_platform.kronos.pgm.src.pgm_constants import *
+from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
+from analytics_platform.kronos.pgm.src.pgm_util import *
 
 from analytics_platform.kronos.src import config
 from util.data_store.s3_data_store import S3DataStore
@@ -19,8 +19,8 @@ def load_user_eco_to_kronos_model_dict(input_kronos_data_store, additional_path)
         ecosystem = kronos_model_filename.split("/")[-1].split(".")[0].split("_")[-1]
         if ecosystem not in ecosystem_list:
             ecosystem_list.append(ecosystem)
-        kronos_model = KronosPomegranate.load(data_store=input_kronos_data_store,
-                                              filename=kronos_model_filename)
+        kronos_model = PGMPomegranate.load(data_store=input_kronos_data_store,
+                                           filename=kronos_model_filename)
         temp_user_eco_to_kronos_model_dict[
             (user_category, ecosystem)] = kronos_model
 

@@ -1,4 +1,4 @@
-from analytics_platform.softnet.src.softnet_util import *
+from analytics_platform.kronos.softnet.src.softnet_util import *
 
 
 class CooccurrenceMatrixGenerator(object):
