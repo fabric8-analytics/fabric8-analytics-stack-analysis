@@ -1,7 +1,7 @@
 import logging
 
-from analytics_platform.gnosis.src import config
-from analytics_platform.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
+from analytics_platform.kronos.src import config
+from analytics_platform.kronos.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
 from util.data_store.local_filesystem import LocalFileSystem
 
 logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
@@ -15,10 +15,10 @@ from unittest import TestCase
 
 class TestGnosisReferenceArchitecture(TestCase):
     def test_train_and_save_gnosis_ref_arch_local(self):
-        input_data_store = LocalFileSystem("analytics_platform/gnosis/test/data/input-ra-data")
+        input_data_store = LocalFileSystem("analytics_platform/kronos/gnosis/test/data/input-ra-data")
         self.assertTrue(input_data_store is not None)
 
-        output_data_store = LocalFileSystem("analytics_platform/gnosis/test/data/output-ra-data")
+        output_data_store = LocalFileSystem("analytics_platform/kronos/gnosis/test/data/output-ra-data")
         self.assertTrue(output_data_store is not None)
 
         gnosis_ra_obj = GnosisReferenceArchitecture.train(data_store=input_data_store, min_support_count=40,

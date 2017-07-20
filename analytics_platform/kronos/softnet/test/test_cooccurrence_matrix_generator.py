@@ -2,9 +2,9 @@ import logging
 
 from pandas.util.testing import assert_frame_equal
 
-from analytics_platform.softnet.src import config
-from analytics_platform.softnet.src.cooccurrence_matrix_generator import CooccurrenceMatrixGenerator
-from analytics_platform.softnet.src.offline_training import load_eco_to_kronos_dependency_dict
+from analytics_platform.kronos.src import config
+from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator import CooccurrenceMatrixGenerator
+from analytics_platform.kronos.softnet.src.offline_training import load_eco_to_kronos_dependency_dict
 from util.data_store.local_filesystem import LocalFileSystem
 
 logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
@@ -15,10 +15,10 @@ from unittest import TestCase
 
 class TestCooccurrenceMatrixGenerator(TestCase):
     def test_generate_and_save_cooccurrence_matrices_local(self):
-        input_data_store = LocalFileSystem("analytics_platform/softnet/test/data/input-com-data")
+        input_data_store = LocalFileSystem("analytics_platform/kronos/softnet/test/data/input-com-data")
         self.assertTrue(input_data_store is not None)
 
-        output_data_store = LocalFileSystem("analytics_platform/softnet/test/data/output-com-data")
+        output_data_store = LocalFileSystem("analytics_platform/kronos/softnet/test/data/output-com-data")
         self.assertTrue(output_data_store is not None)
 
         eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(

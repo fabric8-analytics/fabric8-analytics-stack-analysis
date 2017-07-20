@@ -1,7 +1,7 @@
 import logging
 
-from analytics_platform.softnet.src import config
-from analytics_platform.softnet.src.kronos_dependency_generator import KronosDependencyGenerator
+from analytics_platform.kronos.src import config
+from analytics_platform.kronos.softnet.src.kronos_dependency_generator import KronosDependencyGenerator
 from util.data_store.local_filesystem import LocalFileSystem
 
 logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
@@ -12,10 +12,10 @@ from unittest import TestCase
 
 class TestKronosDependencyGenerator(TestCase):
     def test_generate_and_save_kronos_dependency_local(self):
-        input_data_store = LocalFileSystem("analytics_platform/softnet/test/data/input-kd-data")
+        input_data_store = LocalFileSystem("analytics_platform/kronos/softnet/test/data/input-kd-data")
         self.assertTrue(input_data_store is not None)
 
-        output_data_store = LocalFileSystem("analytics_platform/softnet/test/data/output-kd-data")
+        output_data_store = LocalFileSystem("analytics_platform/kronos/softnet/test/data/output-kd-data")
         self.assertTrue(output_data_store is not None)
 
         gnosis_ref_arch_json = input_data_store.read_json_file(filename="data_gnosis/gnosis_ref_arch.json")
