@@ -17,7 +17,8 @@ from analytics_platform.kronos.src import config
 COMPONENT_PREFIX = "kronos"
 
 
-def submit_job(input_bootstrap_file, input_src_code_file, training_data_url):
+def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_min_support_count,
+               fp_intent_topic_count_threshold, fp_num_partition):
     str_cur_time = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
 
     # S3 bucket/key, where the input spark job ( src code ) will be uploaded
@@ -144,7 +145,10 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url):
                              '--py-files',
                              '/home/hadoop/' + s3_key,
                              '/home/hadoop/analytics_platform/kronos/src/offline_training.py',
-                             training_data_url]
+                             training_data_url,
+                             fp_min_support_count,
+                             fp_intent_topic_count_threshold,
+                             fp_num_partition]
                 }
             }
         ],
