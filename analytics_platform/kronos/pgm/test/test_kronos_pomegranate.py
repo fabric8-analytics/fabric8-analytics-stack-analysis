@@ -4,7 +4,7 @@ from analytics_platform.kronos.src import config
 from analytics_platform.kronos.src.kronos_pomegranate import KronosPomegranate
 from analytics_platform.kronos.src.offline_training import load_eco_to_kronos_dependency_dict, \
     load_user_eco_to_co_occerrence_matrix_dict
-from analytics_platform.kronos.src.online_scoring import score_eco_user_package_dict, \
+from analytics_platform.kronos.src.kronos_online_scoring import score_eco_user_package_dict, \
     load_user_eco_to_kronos_model_dict, get_eco_to_kronos_dependency_dict
 from util.data_store.local_filesystem import LocalFileSystem
 
