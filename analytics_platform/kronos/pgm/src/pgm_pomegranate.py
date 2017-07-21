@@ -62,7 +62,7 @@ class PGMPomegranate(AbstractPGM):
         package_occurrence_matrix = generate_matrix_from_pandas_df(package_occurrence_df, kronos_node_list)
 
         pgm_model = BayesianNetwork.from_structure(package_occurrence_matrix, structure=kronos_dependency_list,
-                                               state_names=kronos_node_string_list)
+                                                   state_names=kronos_node_string_list)
         return pgm_model
 
     def score(self, evidence_dict_list):

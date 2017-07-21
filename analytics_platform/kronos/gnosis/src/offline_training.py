@@ -1,22 +1,12 @@
 import sys
 import time
 
-from analytics_platform.kronos.src import config
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
 from analytics_platform.kronos.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
+from analytics_platform.kronos.src import config
 from gnosis_constants import *
+from util.analytics_platform_util import trunc_string_at
 from util.data_store.s3_data_store import S3DataStore
-
-
-def trunc_string_at(s, d, n1, n2):
-    """Returns s truncated at the n'th occurrence of the delimiter, d"""
-    if n2 > 0:
-        result = d.join(s.split(d, n2)[n1:n2])
-    else:
-        result = d.join(s.split(d, n2)[n1:])
-        if not result.endswith("/"):
-            result += "/"
-    return result
 
 
 def train_and_save_gnosis_ref_arch(input_data_store, output_data_store, additional_path, fp_min_support_count,

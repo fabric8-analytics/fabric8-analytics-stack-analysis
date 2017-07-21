@@ -10,7 +10,7 @@ class KronosDependencyGenerator(object):
 
     def __init__(self, dictionary):
         """
-        Instantiate Soft Net: Component Class Topic Model
+        Instantiate Kronos Dependency Generator
         """
 
         self._dictionary = dictionary

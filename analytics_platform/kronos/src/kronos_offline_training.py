@@ -18,32 +18,26 @@ if __name__ == '__main__':
         fp_min_support_count = int(sys.argv[2])
         fp_intent_topic_count_threshold = int(sys.argv[3])
         fp_num_partition = int(sys.argv[4])
-        print("env")
+        # print("env")
 
-    print(training_data_url)
-    print(fp_min_support_count)
-    print(fp_intent_topic_count_threshold)
-    print(fp_num_partition)
+    print("S3 URL : ", training_data_url)
+    print()
 
     t0 = time.time()
+    print("Gnosis Training Started")
     generate_and_save_gnosis_package_topic_model_s3(training_data_url=training_data_url)
     train_and_save_gnosis_ref_arch_s3(training_data_url=training_data_url, fp_min_support_count=fp_min_support_count,
                                       fp_intent_topic_count_threshold=fp_intent_topic_count_threshold,
                                       fp_num_partition=fp_num_partition)
-    print(time.time() - t0)
-    t0 = time.time()
+    print("Gnosis Training Ended in ", time.time() - t0, " seconds")
 
-    print("kronos dependency generation started.")
+    t0 = time.time()
+    print("Softnet Training Started")
     generate_and_save_kronos_dependency_s3(training_data_url=training_data_url)
-    print("kronos dependency generation ended.")
-    print("cooccurrence matrix generation started.")
     generate_and_save_cooccurrence_matrices_s3(training_data_url=training_data_url)
-    print("cooccurrence matrix generation ended.")
-
-    print(time.time() - t0)
+    print("Softnet Training Ended in ", time.time() - t0, " seconds")
 
     t0 = time.time()
-
+    print("Kronos Training Started")
     train_and_save_kronos_list_s3(training_data_url=training_data_url)
-
-    print(time.time() - t0)
+    print("Kronos Training Ended in ", time.time() - t0, " seconds")

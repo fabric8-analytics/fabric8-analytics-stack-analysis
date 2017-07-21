@@ -4,7 +4,7 @@ import time
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.pgm.src.pgm_constants import *
 from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
-from analytics_platform.kronos.pgm.src.pgm_util import trunc_string_at
+from util.analytics_platform_util import trunc_string_at
 from util.data_store.s3_data_store import S3DataStore
 
 

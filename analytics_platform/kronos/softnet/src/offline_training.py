@@ -1,22 +1,12 @@
-from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator import CooccurrenceMatrixGenerator
-from analytics_platform.kronos.softnet.src.kronos_dependency_generator import KronosDependencyGenerator
-from util.data_store.s3_data_store import S3DataStore
-from analytics_platform.kronos.src import config
-from util.data_store.local_filesystem import LocalFileSystem
-from analytics_platform.kronos.softnet.src.softnet_constants import *
 import sys
 import time
 
-
-def trunc_string_at(s, d, n1, n2):
-    """Returns s truncated at the n'th occurrence of the delimiter, d"""
-    if n2 > 0:
-        result = d.join(s.split(d, n2)[n1:n2])
-    else:
-        result = d.join(s.split(d, n2)[n1:])
-        if not result.endswith("/"):
-            result += "/"
-    return result
+from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator import CooccurrenceMatrixGenerator
+from analytics_platform.kronos.softnet.src.kronos_dependency_generator import KronosDependencyGenerator
+from analytics_platform.kronos.softnet.src.softnet_constants import *
+from analytics_platform.kronos.src import config
+from util.data_store.s3_data_store import S3DataStore
+from util.analytics_platform_util import trunc_string_at
 
 
 def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, additional_path):
