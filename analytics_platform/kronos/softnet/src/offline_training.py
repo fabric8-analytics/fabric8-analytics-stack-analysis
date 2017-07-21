@@ -117,24 +117,3 @@ def generate_and_save_cooccurrence_matrices_s3(training_data_url):
                                             input_manifest_data_store=input_manifest_data_store,
                                             output_data_store=output_data_store, additional_path=additional_path)
 
-
-if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        training_data_url = "s3://dev-stack-analysis-data/python/github"
-        print("no env")
-    else:
-        training_data_url = sys.argv[1]
-        print("env")
-
-    print(training_data_url)
-
-    t0 = time.time()
-
-    print("kronos dependency generation started.")
-    generate_and_save_kronos_dependency_s3(training_data_url=training_data_url)
-    print("kronos dependency generation ended.")
-    print("cooccurrence matrix generation started.")
-    generate_and_save_cooccurrence_matrices_s3(training_data_url=training_data_url)
-    print("cooccurrence matrix generation ended.")
-
-    print(time.time() - t0)

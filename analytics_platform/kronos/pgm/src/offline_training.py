@@ -102,19 +102,3 @@ def train_and_save_kronos_list_s3(training_data_url):
                                input_co_occurrence_data_store=input_cooccurrence_matrix_data_store,
                                output_data_store=output_data_store, additional_path=additional_path)
 
-
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        training_data_url = "s3://perf-gsk-data/python/machine-learning"
-        print("no env")
-    else:
-        training_data_url = sys.argv[1]
-        print("env")
-
-    print(training_data_url)
-
-    t0 = time.time()
-
-    train_and_save_kronos_list_s3(training_data_url=training_data_url)
-
-    print(time.time() - t0)

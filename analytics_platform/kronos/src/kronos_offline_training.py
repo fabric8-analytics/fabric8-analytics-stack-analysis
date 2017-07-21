@@ -18,7 +18,7 @@ if __name__ == '__main__':
         fp_min_support_count = int(sys.argv[2])
         fp_intent_topic_count_threshold = int(sys.argv[3])
         fp_num_partition = int(sys.argv[4])
-        # print("env")
+        print("env")
 
     print("S3 URL : ", training_data_url)
     print()
