@@ -9,6 +9,7 @@ from analytics_platform.kronos.deployment.submit_training_job import submit_job
 from analytics_platform.kronos.gnosis.src.gnosis_constants import *
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
 from analytics_platform.kronos.src.kronos_online_scoring import *
+from util.analytics_platform_util import trunc_string_at
 
 if sys.version_info.major == 2:
     reload(sys)
