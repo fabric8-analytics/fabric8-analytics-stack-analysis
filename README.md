@@ -3,9 +3,9 @@
 ## List of models currently present in the analytcs platform
 
 
-* [Gnosis](/analytics_platform/gnosis)
-* [Kronos](/analytics_platform/kronos)
-* [Softnet](/analytics_platform/softnet)
+* [Gnosis](/analytics_platform/kronos/gnosis)
+* [Pgm](/analytics_platform/kronos/pgm)
+* [Softnet](/analytics_platform/kronos/softnet)
 
 ## Deploy to openshift cluster
 
