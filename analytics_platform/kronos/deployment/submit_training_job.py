@@ -80,10 +80,7 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
                                         "LC_ALL": "en_US.UTF-8",
                                         "LANG": "en_US.UTF-8",
                                         "AWS_S3_ACCESS_KEY_ID": config.AWS_S3_ACCESS_KEY_ID,
-                                        "AWS_S3_SECRET_ACCESS_KEY": config.AWS_S3_SECRET_ACCESS_KEY,
-                                        "AWS_GNOSIS_BUCKET": config.AWS_GNOSIS_BUCKET,
-                                        "AWS_SOFTNET_BUCKET": config.AWS_SOFTNET_BUCKET,
-                                        "AWS_KRONOS_BUCKET": config.AWS_KRONOS_BUCKET,
+                                        "AWS_S3_SECRET_ACCESS_KEY": config.AWS_S3_SECRET_ACCESS_KEY
                                     }
                                 }
                             ]

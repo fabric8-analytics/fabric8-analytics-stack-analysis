@@ -19,12 +19,6 @@ spec:
       - command:
         - /bin/entrypoint.sh
         env:
-        - name: AWS_KRONOS_BUCKET
-          value: tusharma-kronos-data
-        - name: AWS_GNOSIS_BUCKET
-          value: tusharma-gnosis-data
-        - name: AWS_SOFTNET_BUCKET
-          value: tusharma-softnet-data
         - name: DEPLOYMENT_PREFIX
           value: DEV
         - name: SERVICE_PORT
@@ -41,7 +35,7 @@ spec:
             secretKeyRef:
               key: AWS_S3_SECRET_ACCESS_KEY
               name: aws-stack-analysis
-        image: surajd/kronos:latest
+        image: tuhinsharma/kronos:latest
         ports:
         - containerPort: 6006
         imagePullPolicy: Always
