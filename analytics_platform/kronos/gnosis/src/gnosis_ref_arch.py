@@ -21,8 +21,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         self._dictionary = dictionary
 
     @classmethod
-    def train(cls, data_store, additional_path="", min_support_count=FP_MIN_SUPPORT_COUNT,
-              min_intent_topic_count=FP_INTENT_TOPIC_COUNT_THRESHOLD, fp_num_partition=FP_NUM_PARTITION):
+    def train(cls, data_store, additional_path="", min_support_count=None,
+              min_intent_topic_count=None, fp_num_partition=None):
 
         """
         Generates the Gnosis Reference Architecture

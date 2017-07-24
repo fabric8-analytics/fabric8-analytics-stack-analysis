@@ -207,31 +207,22 @@ def get_alternate_packages_for_packages(similar_package_dict, package_names, alt
 
 
 def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_kronos_dependency_dict):
-    comp_package_count_threshold = KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_VALUE
-    alt_package_count_threshold = KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_VALUE
-    outlier_probability_threshold = KRONOS_OUTLIER_PROBABILITY_THRESHOLD_VALUE
-    unknown_package_ratio_threshold = KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_VALUE
-
     request_json_list = list(user_request)
 
     response_json_list = list()
     for request_json in request_json_list:
-        request_dict = dict(request_json)
-        ecosystem = request_dict[KRONOS_SCORE_ECOSYSTEM]
-        if KRONOS_SCORE_USER_PERSONA in request_dict:
-            user_category = request_dict[KRONOS_SCORE_USER_PERSONA]
-        else:
-            user_category = "1"
-        if KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_NAME in request_dict:
-            comp_package_count_threshold = request_dict[KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_NAME]
-        if KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_NAME in request_dict:
-            alt_package_count_threshold = request_dict[KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_NAME]
-        if KRONOS_OUTLIER_PROBABILITY_THRESHOLD_NAME in request_dict:
-            outlier_probability_threshold = request_dict[KRONOS_OUTLIER_PROBABILITY_THRESHOLD_NAME]
-        if KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_NAME in request_dict:
-            unknown_package_ratio_threshold = request_dict[KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_NAME]
+        ecosystem = request_json.get(KRONOS_SCORE_ECOSYSTEM)
+        user_category = request_json.get(KRONOS_SCORE_USER_PERSONA, "1")
+        comp_package_count_threshold = request_json.get(KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_NAME,
+                                                        KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_VALUE)
+        alt_package_count_threshold = request_json.get(KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_NAME,
+                                                       KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_VALUE)
+        outlier_probability_threshold = request_json.get(KRONOS_OUTLIER_PROBABILITY_THRESHOLD_NAME,
+                                                         KRONOS_OUTLIER_PROBABILITY_THRESHOLD_VALUE)
+        unknown_package_ratio_threshold = request_json.get(KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_NAME,
+                                                           KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_VALUE)
 
-        requested_package_list = request_dict[KRONOS_SCORE_PACKAGE_LIST]
+        requested_package_list = request_json.get(KRONOS_SCORE_PACKAGE_LIST)
         package_list_lower_case = [x.lower() for x in requested_package_list]
         kronos = user_eco_kronos_dict[user_category][ecosystem]
         kronos_dependency = eco_to_kronos_dependency_dict[ecosystem]
