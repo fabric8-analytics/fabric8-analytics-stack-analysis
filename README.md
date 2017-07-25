@@ -18,7 +18,7 @@ oc new-project fabric8-analytics-stack-analysis
 - Build image and push to docker hub
 
 ```bash
-docker build -t docker.io/surajd/kronos:latest -f Dockerfile.kronos .
+docker build -t docker.io/surajd/kronos:latest .
 docker push docker.io/surajd/kronos:latest
 ```
 
