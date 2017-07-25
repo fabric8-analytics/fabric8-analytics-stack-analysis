@@ -10,9 +10,9 @@ node('docker') {
         checkout scm
         commitId = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
 
-        dir('openshift') {
-            stash name: 'template', includes: 'template.yaml'
-        }
+        //dir('openshift') {
+        //    stash name: 'template', includes: 'template.yaml'
+        //}
     }
 
     stage('Build') {
@@ -30,16 +30,16 @@ node('docker') {
     }
 }
 
-if (env.BRANCH_NAME == 'master') {
-    node('oc') {
-        stage('Deploy - dev') {
-            unstash 'template'
-            sh "oc --context=dev process -v IMAGE_TAG=${commitId} -f template.yaml | oc --context=dev apply -f -"
-        }
-
-        stage('Deploy - stage') {
-            unstash 'template'
-            sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -f template.yaml | oc --context=rh-idev apply -f -"
-        }
-    }
-}
+//if (env.BRANCH_NAME == 'master') {
+//    node('oc') {
+//        stage('Deploy - dev') {
+//            unstash 'template'
+//            sh "oc --context=dev process -v IMAGE_TAG=${commitId} -f template.yaml | oc --context=dev apply -f -"
+//        }
+//
+//        stage('Deploy - stage') {
+//            unstash 'template'
+//            sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -f template.yaml | oc --context=rh-idev apply -f -"
+//        }
+//    }
+//}
