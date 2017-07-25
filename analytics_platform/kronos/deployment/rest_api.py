@@ -2,12 +2,14 @@ import logging
 import sys
 
 import flask
-from flask import Flask, request, current_app
+from flask import Flask, request
 from flask_cors import CORS
 
 from analytics_platform.kronos.deployment.submit_training_job import submit_job
-from analytics_platform.kronos.src.online_scoring import *
-from analytics_platform.kronos.src.offline_training import load_eco_to_kronos_dependency_dict_s3
+from analytics_platform.kronos.gnosis.src.gnosis_constants import *
+from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
+from analytics_platform.kronos.src.kronos_online_scoring import *
+from util.analytics_platform_util import trunc_string_at
 
 if sys.version_info.major == 2:
     reload(sys)
@@ -17,6 +19,10 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 app = Flask(__name__)
 CORS(app)
 
+global user_eco_kronos_dict
+global eco_to_kronos_dependency_dict
+
+
 @app.route('/api/v1/schemas/kronos_load', methods=['POST'])
 def load_model():
     input_json = request.get_json()
@@ -25,11 +31,11 @@ def load_model():
     bucket_name = trunc_string_at(kronos_data_url, "/", 2, 3)
     additional_path = trunc_string_at(kronos_data_url, "/", 3, -1)
 
-    current_app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=bucket_name,
-                                                                             additional_path=additional_path)
+    app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=bucket_name,
+                                                                     additional_path=additional_path)
 
-    current_app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=bucket_name,
-                                                                                      additional_path=additional_path)
+    app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=bucket_name,
+                                                                              additional_path=additional_path)
 
     app.logger.info("Kronos model got loaded successfully!")
 
@@ -47,11 +53,20 @@ def heart_beat():
 @app.route('/api/v1/schemas/kronos_training', methods=['POST'])
 def train_and_save_kronos():
     app.logger.info("Submitting the training job")
+
     input_json = request.get_json()
     training_data_url = input_json.get("training_data_url")
+    fp_min_support_count = input_json.get(FP_MIN_SUPPORT_COUNT_NAME, FP_MIN_SUPPORT_COUNT_VALUE)
+    fp_intent_topic_count_threshold = input_json.get(FP_INTENT_TOPIC_COUNT_THRESHOLD_NAME,
+                                                     FP_INTENT_TOPIC_COUNT_THRESHOLD_VALUE)
+    fp_num_partition = input_json.get(FP_NUM_PARTITION_NAME, FP_NUM_PARTITION_VALUE)
 
     response = submit_job(input_bootstrap_file='/bootstrap_action.sh',
-                          input_src_code_file='/tmp/training.zip', training_data_url=training_data_url)
+                          input_src_code_file='/tmp/training.zip', training_data_url=training_data_url,
+                          fp_min_support_count=str(fp_min_support_count),
+                          fp_intent_topic_count_threshold=str(fp_intent_topic_count_threshold),
+                          fp_num_partition=str(fp_num_partition))
+
     return flask.jsonify(response)
 
 
@@ -61,8 +76,8 @@ def predict_and_score():
     app.logger.info("Analyzing the given EPV")
 
     response = score_eco_user_package_dict(user_request=input_json,
-                                           user_eco_kronos_dict=current_app.user_eco_kronos_dict,
-                                           eco_to_kronos_dependency_dict=current_app.eco_to_kronos_dependency_dict)
+                                           user_eco_kronos_dict=app.user_eco_kronos_dict,
+                                           eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict)
 
     return flask.jsonify(response)
 

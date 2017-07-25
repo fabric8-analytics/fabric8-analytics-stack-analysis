@@ -1,6 +1,0 @@
-{
-  "request_id": "some UUID",
-  "timestamp": "time ( UTC ) when user submitted request",
-  "intent_name": "intent",
-  "component_classes": ["", ""]
-}

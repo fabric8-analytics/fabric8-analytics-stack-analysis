@@ -1,5 +1,0 @@
-{
-  "request_id": "some UUID",
-  "timestamp": "time ( UTC ) when user submitted request",
-  "query": "brief description of intent"
-}
