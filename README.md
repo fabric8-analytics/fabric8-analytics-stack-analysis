@@ -15,21 +15,15 @@
 oc new-project fabric8-analytics-stack-analysis
 ```
 
-- Build image and push to docker hub
-
-```bash
-docker build -t docker.io/surajd/kronos:latest .
-docker push docker.io/surajd/kronos:latest
-```
-
-- Deploy secret
+- Deploy secrets and [config map](https://github.com/fabric8-analytics/fabric8-analytics-common/blob/master/openshift/generate-config.sh)
 
 ```bash
 oc apply -f secret.yaml
+oc apply -f config.yaml
 ```
 
 - Deploy app using `oc`
 
 ```bash
-oc apply -f kronos-os.yaml
+oc process -f openshift/template.yaml | oc apply -f -
 ```
