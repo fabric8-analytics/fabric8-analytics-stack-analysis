@@ -42,8 +42,6 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         gnosis_component_class_list = cls._generate_component_class_list_for_eco_package_topic_dict(
             eco_to_package_topic_dict=eco_to_package_to_topic_dict)
 
-        print len(gnosis_component_class_list)
-
         fp_growth_model = cls._train_fp_growth_model(data_store=data_store,
                                                      eco_to_package_topic_dict=eco_to_package_to_topic_dict,
                                                      min_support_count=min_support_count,
