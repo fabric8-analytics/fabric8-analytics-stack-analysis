@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: bayesian-kronos
+metadata:
+  name: bayesian-kronos
+  annotations:
+    description: bayesian-kronos
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      service: bayesian-kronos
+    name: bayesian-kronos
+  spec:
+    replicas: 1
+    selector:
+      service: bayesian-kronos
+    template:
+      metadata:
+        labels:
+          service: bayesian-kronos
+      spec:
+        containers:
+        - command:
+          - /bin/entrypoint.sh
+          env:
+          - name: DEPLOYMENT_PREFIX
+            valueFrom:
+              configMapKeyRef:
+                name: bayesian-config
+                key: deployment-prefix
+          - name: SERVICE_PORT
+            value: "6006"
+          - name: SERVICE_TIMEOUT
+            value: "900"
+          - name: AWS_S3_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                key: s3-access-key-id
+                name: aws
+          - name: AWS_S3_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                key: s3-secret-access-key
+                name: aws
+          name: bayesian-kronos
+          image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
+          ports:
+          - containerPort: 6006
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 6006
+            initialDelaySeconds: 15
+            periodSeconds: 60
+            timeoutSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 6006
+            initialDelaySeconds: 15
+            periodSeconds: 60
+            timeoutSeconds: 15
+          resources:
+            requests:
+              cpu: ${CPU_REQUEST}
+              memory: ${MEMORY_REQUEST}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      service: bayesian-kronos
+    name: bayesian-kronos
+  spec:
+    ports:
+    - port: 6006
+      targetPort: 0
+    selector:
+      service: bayesian-kronos
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: bayesian-kronos
+  spec:
+    port:
+      targetPort: 6006
+    to:
+      kind: Service
+      name: bayesian-kronos
+
+parameters:
+- description: CPU request
+  displayName: CPU request
+  required: true
+  name: CPU_REQUEST
+  value: "4"
+
+- description: Memory request
+  displayName: Memory request
+  required: true
+  name: MEMORY_REQUEST
+  value: "512Mi"
+
+- description: Docker registry where the image is
+  displayName: Docker registry
+  required: true
+  name: DOCKER_REGISTRY
+  value: "registry.devshift.net"
+
+- description: Docker image to use
+  displayName: Docker image
+  required: true
+  name: DOCKER_IMAGE
+  value: "bayesian/kronos"
+
+- description: Image tag
+  displayName: Image tag
+  required: true
+  name: IMAGE_TAG
+  value: "latest"
+
