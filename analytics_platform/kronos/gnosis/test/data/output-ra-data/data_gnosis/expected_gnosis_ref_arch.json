@@ -1,243 +1,268 @@
 {
   "edge_list": [
     {
-      "to": "c_test",
-      "from": "c_testc_testingc_unittestc_text"
+      "to": "c_pyhton3",
+      "from": "c_pyhton3:c_python2"
+    },
+    {
+      "to": "c_python2",
+      "from": "c_pyhton3:c_python2"
+    },
+    {
+      "to": "c_compatability",
+      "from": "c_compatability:c_pyhton3"
+    },
+    {
+      "to": "c_pyhton3",
+      "from": "c_compatability:c_pyhton3"
+    },
+    {
+      "to": "c_eggs",
+      "from": "c_eggs:c_testing"
     },
     {
       "to": "c_testing",
-      "from": "c_testc_testingc_unittestc_text"
+      "from": "c_eggs:c_testing"
     },
     {
       "to": "c_unittest",
-      "from": "c_testc_testingc_unittestc_text"
+      "from": "c_unittest:c_python"
+    },
+    {
+      "to": "c_python",
+      "from": "c_unittest:c_python"
+    },
+    {
+      "to": "c_client",
+      "from": "c_client:c_http"
+    },
+    {
+      "to": "c_http",
+      "from": "c_client:c_http"
+    },
+    {
+      "to": "c_testing",
+      "from": "c_testing:c_text"
     },
     {
       "to": "c_text",
-      "from": "c_testc_testingc_unittestc_text"
+      "from": "c_testing:c_text"
+    },
+    {
+      "to": "c_python2",
+      "from": "c_python2:c_utility"
+    },
+    {
+      "to": "c_utility",
+      "from": "c_python2:c_utility"
+    },
+    {
+      "to": "c_automatic",
+      "from": "c_automatic:c_unittest"
+    },
+    {
+      "to": "c_unittest",
+      "from": "c_automatic:c_unittest"
+    },
+    {
+      "to": "c_eggs",
+      "from": "c_eggs:c_collection"
     },
     {
       "to": "c_collection",
-      "from": "c_collectionc_testc_testingc_unittest"
-    },
-    {
-      "to": "c_test",
-      "from": "c_collectionc_testc_testingc_unittest"
-    },
-    {
-      "to": "c_testing",
-      "from": "c_collectionc_testc_testingc_unittest"
-    },
-    {
-      "to": "c_unittest",
-      "from": "c_collectionc_testc_testingc_unittest"
-    },
-    {
-      "to": "c_test",
-      "from": "c_testc_testingc_unittestc_library"
-    },
-    {
-      "to": "c_testing",
-      "from": "c_testc_testingc_unittestc_library"
-    },
-    {
-      "to": "c_unittest",
-      "from": "c_testc_testingc_unittestc_library"
-    },
-    {
-      "to": "c_library",
-      "from": "c_testc_testingc_unittestc_library"
-    },
-    {
-      "to": "c_compatability",
-      "from": "c_compatabilityc_pyhton3c_python2c_utility"
-    },
-    {
-      "to": "c_pyhton3",
-      "from": "c_compatabilityc_pyhton3c_python2c_utility"
-    },
-    {
-      "to": "c_python2",
-      "from": "c_compatabilityc_pyhton3c_python2c_utility"
+      "from": "c_eggs:c_collection"
     },
     {
       "to": "c_utility",
-      "from": "c_compatabilityc_pyhton3c_python2c_utility"
+      "from": "c_utility:c_wrapper"
     },
     {
-      "to": "c_testing",
-      "from": "c_testingc_unittestc_libraryc_text"
+      "to": "c_wrapper",
+      "from": "c_utility:c_wrapper"
     },
     {
-      "to": "c_unittest",
-      "from": "c_testingc_unittestc_libraryc_text"
+      "to": "c_automatic",
+      "from": "c_automatic:c_library"
     },
     {
       "to": "c_library",
-      "from": "c_testingc_unittestc_libraryc_text"
+      "from": "c_automatic:c_library"
+    },
+    {
+      "to": "c_html",
+      "from": "c_html:c_library"
+    },
+    {
+      "to": "c_library",
+      "from": "c_html:c_library"
+    },
+    {
+      "to": "c_wrapper",
+      "from": "c_wrapper:c_http"
+    },
+    {
+      "to": "c_http",
+      "from": "c_wrapper:c_http"
+    },
+    {
+      "to": "c_test",
+      "from": "c_test:c_text"
     },
     {
       "to": "c_text",
-      "from": "c_testingc_unittestc_libraryc_text"
+      "from": "c_test:c_text"
     },
     {
-      "to": "c_compatability",
-      "from": "c_compatabilityc_pyhton3c_python2c_wrapper"
+      "to": "c_api",
+      "from": "c_api:c_python"
     },
     {
-      "to": "c_pyhton3",
-      "from": "c_compatabilityc_pyhton3c_python2c_wrapper"
+      "to": "c_python",
+      "from": "c_api:c_python"
     },
     {
-      "to": "c_python2",
-      "from": "c_compatabilityc_pyhton3c_python2c_wrapper"
+      "to": "c_collection",
+      "from": "c_collection:c_test"
     },
     {
-      "to": "c_wrapper",
-      "from": "c_compatabilityc_pyhton3c_python2c_wrapper"
+      "to": "c_test",
+      "from": "c_collection:c_test"
     },
     {
-      "to": "c_pyhton3",
-      "from": "c_pyhton3c_python2c_utilityc_wrapper"
+      "to": "c_package",
+      "from": "c_package:c_tool"
     },
     {
-      "to": "c_python2",
-      "from": "c_pyhton3c_python2c_utilityc_wrapper"
+      "to": "c_tool",
+      "from": "c_package:c_tool"
     },
     {
-      "to": "c_utility",
-      "from": "c_pyhton3c_python2c_utilityc_wrapper"
+      "to": "c_client",
+      "from": "c_client:c_api"
     },
     {
-      "to": "c_wrapper",
-      "from": "c_pyhton3c_python2c_utilityc_wrapper"
+      "to": "c_api",
+      "from": "c_client:c_api"
     },
     {
-      "to": "c_compatability",
-      "from": "c_compatabilityc_pyhton3c_python2c_utilityc_wrapper"
+      "to": "c_visualization",
+      "from": "c_visualization:c_tool"
     },
     {
-      "to": "c_pyhton3",
-      "from": "c_compatabilityc_pyhton3c_python2c_utilityc_wrapper"
+      "to": "c_tool",
+      "from": "c_visualization:c_tool"
     },
     {
-      "to": "c_python2",
-      "from": "c_compatabilityc_pyhton3c_python2c_utilityc_wrapper"
+      "to": "c_unicode",
+      "from": "c_unicode:c_pickle"
     },
     {
-      "to": "c_utility",
-      "from": "c_compatabilityc_pyhton3c_python2c_utilityc_wrapper"
-    },
-    {
-      "to": "c_wrapper",
-      "from": "c_compatabilityc_pyhton3c_python2c_utilityc_wrapper"
-    },
-    {
-      "to": "c_compatability",
-      "from": "c_compatabilityc_pyhton3c_utilityc_wrapper"
-    },
-    {
-      "to": "c_pyhton3",
-      "from": "c_compatabilityc_pyhton3c_utilityc_wrapper"
-    },
-    {
-      "to": "c_utility",
-      "from": "c_compatabilityc_pyhton3c_utilityc_wrapper"
-    },
-    {
-      "to": "c_wrapper",
-      "from": "c_compatabilityc_pyhton3c_utilityc_wrapper"
-    },
-    {
-      "to": "c_compatability",
-      "from": "c_compatabilityc_python2c_utilityc_wrapper"
-    },
-    {
-      "to": "c_python2",
-      "from": "c_compatabilityc_python2c_utilityc_wrapper"
-    },
-    {
-      "to": "c_utility",
-      "from": "c_compatabilityc_python2c_utilityc_wrapper"
-    },
-    {
-      "to": "c_wrapper",
-      "from": "c_compatabilityc_python2c_utilityc_wrapper"
+      "to": "c_pickle",
+      "from": "c_unicode:c_pickle"
     }
   ],
   "intent_list": [
-    "c_testc_testingc_unittestc_text",
-    "c_collectionc_testc_testingc_unittest",
-    "c_testc_testingc_unittestc_library",
-    "c_compatabilityc_pyhton3c_python2c_utility",
-    "c_testingc_unittestc_libraryc_text",
-    "c_compatabilityc_pyhton3c_python2c_wrapper",
-    "c_pyhton3c_python2c_utilityc_wrapper",
-    "c_compatabilityc_pyhton3c_python2c_utilityc_wrapper",
-    "c_compatabilityc_pyhton3c_utilityc_wrapper",
-    "c_compatabilityc_python2c_utilityc_wrapper"
+    "c_unittest:c_python",
+    "c_client:c_http",
+    "c_html:c_library",
+    "c_wrapper:c_http",
+    "c_test:c_text",
+    "c_automatic:c_unittest",
+    "c_client:c_api",
+    "c_unicode:c_pickle",
+    "c_pyhton3:c_python2",
+    "c_eggs:c_testing",
+    "c_compatability:c_pyhton3",
+    "c_testing:c_text",
+    "c_python2:c_utility",
+    "c_eggs:c_collection",
+    "c_utility:c_wrapper",
+    "c_automatic:c_library",
+    "c_api:c_python",
+    "c_collection:c_test",
+    "c_package:c_tool",
+    "c_visualization:c_tool"
   ],
   "gnosis_dict": {
-    "c_compatabilityc_python2c_utilityc_wrapper": [
+    "c_unittest:c_python": [
+      "c_unittest",
+      "c_python"
+    ],
+    "c_compatability:c_pyhton3": [
       "c_compatability",
-      "c_python2",
-      "c_utility",
-      "c_wrapper"
+      "c_pyhton3"
     ],
-    "c_testc_testingc_unittestc_text": [
-      "c_test",
-      "c_testing",
-      "c_unittest",
-      "c_text"
-    ],
-    "c_testc_testingc_unittestc_library": [
-      "c_test",
-      "c_testing",
-      "c_unittest",
+    "c_html:c_library": [
+      "c_html",
       "c_library"
     ],
-    "c_compatabilityc_pyhton3c_python2c_utility": [
-      "c_compatability",
+    "c_wrapper:c_http": [
+      "c_wrapper",
+      "c_http"
+    ],
+    "c_test:c_text": [
+      "c_test",
+      "c_text"
+    ],
+    "c_automatic:c_unittest": [
+      "c_automatic",
+      "c_unittest"
+    ],
+    "c_client:c_api": [
+      "c_client",
+      "c_api"
+    ],
+    "c_collection:c_test": [
+      "c_collection",
+      "c_test"
+    ],
+    "c_unicode:c_pickle": [
+      "c_unicode",
+      "c_pickle"
+    ],
+    "c_pyhton3:c_python2": [
       "c_pyhton3",
+      "c_python2"
+    ],
+    "c_eggs:c_testing": [
+      "c_eggs",
+      "c_testing"
+    ],
+    "c_client:c_http": [
+      "c_client",
+      "c_http"
+    ],
+    "c_testing:c_text": [
+      "c_testing",
+      "c_text"
+    ],
+    "c_python2:c_utility": [
       "c_python2",
       "c_utility"
     ],
-    "c_testingc_unittestc_libraryc_text": [
-      "c_testing",
-      "c_unittest",
-      "c_library",
-      "c_text"
+    "c_eggs:c_collection": [
+      "c_eggs",
+      "c_collection"
     ],
-    "c_compatabilityc_pyhton3c_python2c_wrapper": [
-      "c_compatability",
-      "c_pyhton3",
-      "c_python2",
-      "c_wrapper"
-    ],
-    "c_pyhton3c_python2c_utilityc_wrapper": [
-      "c_pyhton3",
-      "c_python2",
+    "c_utility:c_wrapper": [
       "c_utility",
       "c_wrapper"
     ],
-    "c_compatabilityc_pyhton3c_python2c_utilityc_wrapper": [
-      "c_compatability",
-      "c_pyhton3",
-      "c_python2",
-      "c_utility",
-      "c_wrapper"
+    "c_automatic:c_library": [
+      "c_automatic",
+      "c_library"
     ],
-    "c_compatabilityc_pyhton3c_utilityc_wrapper": [
-      "c_compatability",
-      "c_pyhton3",
-      "c_utility",
-      "c_wrapper"
+    "c_api:c_python": [
+      "c_api",
+      "c_python"
     ],
-    "c_collectionc_testc_testingc_unittest": [
-      "c_collection",
-      "c_test",
-      "c_testing",
-      "c_unittest"
+    "c_package:c_tool": [
+      "c_package",
+      "c_tool"
+    ],
+    "c_visualization:c_tool": [
+      "c_visualization",
+      "c_tool"
     ]
   },
   "component_class_list": [
