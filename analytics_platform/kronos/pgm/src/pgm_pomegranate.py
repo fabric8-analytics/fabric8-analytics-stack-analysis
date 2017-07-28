@@ -77,4 +77,4 @@ class PGMPomegranate(AbstractPGM):
 
 
 def parallel_predict(X):
-    return map(pgm_model_kronos.predict_proba, X, [1] * len(X))
+    return map(pgm_model_kronos.predict_proba, X, [3] * len(X))
