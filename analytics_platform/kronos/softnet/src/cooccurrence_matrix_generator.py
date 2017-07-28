@@ -50,11 +50,12 @@ class CooccurrenceMatrixGenerator(object):
 
     @classmethod
     def get_intent_occurrence(cls, row_intent_component_dict):
-        intent_occurrence = 1
-        for value in row_intent_component_dict.values():
-            if value == 0:
-                intent_occurrence = 0
-                break
+        intent_occurrence = 0
+        den = len(row_intent_component_dict.values())
+        num = sum(row_intent_component_dict.values())
+        value = float(num) / float(den)
+        if value > 0.4:
+            intent_occurrence = 1
         return intent_occurrence
 
     @classmethod
