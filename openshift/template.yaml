@@ -67,6 +67,9 @@ objects:
             requests:
               cpu: ${CPU_REQUEST}
               memory: ${MEMORY_REQUEST}
+            limits:
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -79,28 +82,30 @@ objects:
       targetPort: 0
     selector:
       service: bayesian-kronos
-- apiVersion: v1
-  kind: Route
-  metadata:
-    name: bayesian-kronos
-  spec:
-    port:
-      targetPort: 6006
-    to:
-      kind: Service
-      name: bayesian-kronos
 
 parameters:
 - description: CPU request
   displayName: CPU request
   required: true
   name: CPU_REQUEST
-  value: "4"
+  value: "2"
+
+- description: CPU limit
+  displayName: CPU limit
+  required: true
+  name: CPU_LIMIT
+  value: "2"
 
 - description: Memory request
   displayName: Memory request
   required: true
   name: MEMORY_REQUEST
+  value: "512Mi"
+
+- description: Memory limit
+  displayName: Memory limit
+  required: true
+  name: MEMORY_LIMIT
   value: "512Mi"
 
 - description: Docker registry where the image is
