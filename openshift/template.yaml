@@ -82,16 +82,6 @@ objects:
       targetPort: 0
     selector:
       service: bayesian-kronos
-- apiVersion: v1
-  kind: Route
-  metadata:
-    name: bayesian-kronos
-  spec:
-    port:
-      targetPort: 6006
-    to:
-      kind: Service
-      name: bayesian-kronos
 
 parameters:
 - description: CPU request
