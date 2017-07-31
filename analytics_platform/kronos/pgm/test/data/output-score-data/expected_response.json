@@ -1,22 +1,6 @@
 [
   {
-    "missing_packages": [
-      "np1"
-    ],
-    "outlier_package_list": [
-      {
-        "outlier_prbability": 0.71875,
-        "package_name": "p2"
-      },
-      {
-        "outlier_prbability": 0.65,
-        "package_name": "p3"
-      },
-      {
-        "outlier_prbability": 0.65,
-        "package_name": "p1"
-      }
-    ],
+    "outlier_package_list": [],
     "alternate_packages": {
       "p2": [
         {
@@ -26,7 +10,7 @@
       ],
       "p3": [
         {
-          "similarity_score": 1,
+          "similarity_score": 1.0,
           "package_name": "p6"
         }
       ],
@@ -38,15 +22,18 @@
       ]
     },
     "user_persona": "1",
+    "missing_packages": [
+      "np1"
+    ],
     "ecosystem": "pypi",
     "companion_packages": [
       {
-        "cooccurrence_probability": 0.4000000000000001,
-        "package_name": "p5"
+        "cooccurrence_probability": 0.492081329733322,
+        "package_name": "p4"
       },
       {
-        "cooccurrence_probability": 0.2500000000000001,
-        "package_name": "p4"
+        "cooccurrence_probability": 0.4000000000000001,
+        "package_name": "p5"
       }
     ]
   }
