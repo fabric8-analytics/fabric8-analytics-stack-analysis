@@ -39,16 +39,17 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
         eco_to_package_to_topic_dict = eco_to_package_topic_dict[GNOSIS_PTM_PACKAGE_TOPIC_MAP]
 
+        gnosis_component_class_list = cls._generate_component_class_list_for_eco_package_topic_dict(
+            eco_to_package_topic_dict=eco_to_package_to_topic_dict)
+
         fp_growth_model = cls._train_fp_growth_model(data_store=data_store,
                                                      eco_to_package_topic_dict=eco_to_package_to_topic_dict,
                                                      min_support_count=min_support_count,
                                                      additional_path=additional_path, fp_num_partition=fp_num_partition)
 
         gnosis_intent_to_component_class_dict = cls._generate_intent_component_class_dict_fp_growth(
-            model=fp_growth_model, min_intent_topic_count=min_intent_topic_count)
-
-        gnosis_component_class_list = cls._generate_component_class_list_for_eco_package_topic_dict(
-            eco_to_package_topic_dict=eco_to_package_to_topic_dict)
+            model=fp_growth_model, min_intent_topic_count=min_intent_topic_count,
+            package_list=gnosis_component_class_list)
 
         # TODO: modify this while implementing multiple levels in the reference architecture
         gnosis_intent_to_intent_dict = {}
@@ -191,14 +192,48 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         return model
 
     @classmethod
-    def _generate_intent_component_class_dict_fp_growth(cls, model, min_intent_topic_count):
+    def _generate_intent_component_class_dict_fp_growth(cls, model, min_intent_topic_count, package_list):
         result = model.freqItemsets().collect()
-        gnosis_intent_component_class_dict = dict()
-        for fi in result:
-            if len(fi.items) > min_intent_topic_count:
-                gnosis_intent_component_class_dict["".join(fi.items)] = fi.items
 
-        return gnosis_intent_component_class_dict
+        itemset_freq_tuple_list = [(fi.items, fi.freq) for fi in result]
+
+        topic_num_to_itemset_dict = dict()
+        for itemset_freq_tuple in itemset_freq_tuple_list:
+            item_length = len(itemset_freq_tuple[0])
+            if item_length == min_intent_topic_count:
+                if item_length in topic_num_to_itemset_dict:
+                    l = topic_num_to_itemset_dict[item_length]
+                    l.append(itemset_freq_tuple)
+                    topic_num_to_itemset_dict[item_length] = l
+                else:
+                    topic_num_to_itemset_dict[item_length] = [itemset_freq_tuple]
+
+        for key in topic_num_to_itemset_dict:
+            item_list = topic_num_to_itemset_dict[key]
+            sorted_item_list = sorted(item_list, key=lambda x: x[1], reverse=False)
+            topic_num_to_itemset_dict[key] = sorted_item_list
+
+        item_dict = {z: 2 for z in package_list}
+        intent_dict = dict()
+        for key_value in topic_num_to_itemset_dict:
+            k_itemset_list = topic_num_to_itemset_dict[key_value]
+            index = 0
+            for items_support_tuple in k_itemset_list:
+                items = items_support_tuple[0]
+                parent = ":".join(items)
+                intent_dict[parent] = items
+                for item in items:
+                    if item in item_dict:
+                        item_dict[item] -= 1
+                keys_to_remove = list()
+                for key, value in item_dict.iteritems():
+                    if value == 0:
+                        k_itemset_list = modify_list(key, k_itemset_list, index)
+                        keys_to_remove.append(key)
+                for key in keys_to_remove:
+                    del item_dict[key]
+                index += 1
+        return intent_dict
 
     @classmethod
     def _generate_component_class_list_for_eco_package_topic_dict(cls, eco_to_package_topic_dict):
