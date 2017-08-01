@@ -9,7 +9,6 @@ AWS_S3_ACCESS_KEY_ID = os.environ.get("AWS_S3_ACCESS_KEY_ID", "")
 AWS_S3_SECRET_ACCESS_KEY = os.environ.get("AWS_S3_SECRET_ACCESS_KEY", "")
 SERVICE_TIMEOUT = os.environ.get("SERVICE_TIMEOUT", "")
 AWS_BUCKET_NAME = os.environ.get("AWS_BUCKET_NAME","dev-stack-analysis-clean-data")
-KRONOS_MODEL_PATH = os.environ.get("KRONOS_MODEL_PATH","python/github/")
-
-
+KRONOS_SCORING_REGION = os.environ.get("KRONOS_SCORING_REGION", "")
+KRONOS_MODEL_PATH = os.environ.get("KRONOS_MODEL_PATH", KRONOS_SCORING_REGION + "/github/")
 DEPLOYMENT_PREFIX = os.environ.get("DEPLOYMENT_PREFIX", "")
