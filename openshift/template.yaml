@@ -90,13 +90,13 @@ parameters:
   displayName: CPU request
   required: true
   name: CPU_REQUEST
-  value: "4"
+  value: "3.5"
 
 - description: CPU limit
   displayName: CPU limit
   required: true
   name: CPU_LIMIT
-  value: "4"
+  value: "3.5"
 
 - description: Memory request
   displayName: Memory request
