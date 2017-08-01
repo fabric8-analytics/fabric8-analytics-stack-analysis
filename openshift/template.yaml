@@ -76,14 +76,14 @@ objects:
   kind: Service
   metadata:
     labels:
-      service: bayesian-kronos
-    name: bayesian-kronos
+      service: bayesian-kronos-${KRONOS_SCORING_REGION}
+    name: bayesian-kronos-${KRONOS_SCORING_REGION}
   spec:
     ports:
     - port: 6006
       targetPort: 0
     selector:
-      service: bayesian-kronos
+      service: bayesian-kronos-${KRONOS_SCORING_REGION}
 
 parameters:
 - description: CPU request
