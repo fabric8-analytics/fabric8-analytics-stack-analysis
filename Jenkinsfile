@@ -33,12 +33,13 @@ node('docker') {
 if (env.BRANCH_NAME == 'master') {
     node('oc') {
 
-        def dc = 'bayesian-kronos'
+        def dcs = ['bayesian-kronos-maven', 'bayesian-kronos-pypi']
         lock('f8a_staging') {
 
             stage('Deploy - stage') {
                 unstash 'template'
-                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -f template.yaml | oc --context=rh-idev apply -f -"
+                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -v KRONOS_SCORING_REGION=pypi -v CPU_REQUEST=2 -f template.yaml | oc --context=rh-idev apply -f -"
+                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -v KRONOS_SCORING_REGION=maven -v CPU_REQUEST=2 -v MEMORY_REQUEST=1024Mi -v MEMORY_LIMIT=1024Mi -f template.yaml | oc --context=rh-idev apply -f -"
             }
 
             stage('End-to-End Tests') {
@@ -46,7 +47,7 @@ if (env.BRANCH_NAME == 'master') {
                 try {
                     timeout(10) {
                         sleep 5
-                        sh "oc logs -f dc/${dc}"
+                        sh "oc logs -f dc/${dcs[0]}"
                         def e2e = build job: 'fabric8-analytics-common-master', wait: true, propagate: false, parameters: [booleanParam(name: 'runOnOpenShift', value: true)]
                         result = e2e.result
                     }
@@ -54,7 +55,9 @@ if (env.BRANCH_NAME == 'master') {
                     error "Error: ${err}"
                 } finally {
                     if (!result?.equals('SUCCESS')) {
-                        sh "oc rollback ${dc}"
+                        dcs.each {
+                            sh "oc rollback ${it}"
+                        }
                         error 'End-to-End tests failed.'
                     } else {
                         echo 'End-to-End tests passed.'
