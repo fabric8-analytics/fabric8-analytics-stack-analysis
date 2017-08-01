@@ -10,6 +10,7 @@ from analytics_platform.kronos.gnosis.src.gnosis_constants import *
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
 from analytics_platform.kronos.src.kronos_online_scoring import *
 from util.analytics_platform_util import trunc_string_at
+from analytics_platform.kronos.src.config import AWS_BUCKET_NAME, KRONOS_MODEL_PATH
 
 if sys.version_info.major == 2:
     reload(sys)
@@ -22,27 +23,14 @@ CORS(app)
 global user_eco_kronos_dict
 global eco_to_kronos_dependency_dict
 
+app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=AWS_BUCKET_NAME,
+                                                                 additional_path=KRONOS_MODEL_PATH)
 
-@app.route('/api/v1/schemas/kronos_load', methods=['POST'])
-def load_model():
-    input_json = request.get_json()
-    kronos_data_url = input_json.get("kronos_data_url")
-
-    bucket_name = trunc_string_at(kronos_data_url, "/", 2, 3)
-    additional_path = trunc_string_at(kronos_data_url, "/", 3, -1)
-
-    app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=bucket_name,
-                                                                     additional_path=additional_path)
-
-    app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=bucket_name,
-                                                                              additional_path=additional_path)
-
-    app.logger.info("Kronos model got loaded successfully!")
-
-    response = dict()
-    response["message"] = "Kronos is loaded successfully"
-
-    return flask.jsonify(response)
+app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=AWS_BUCKET_NAME,
+                                                                          additional_path=KRONOS_MODEL_PATH)
+print "###################"
+print AWS_BUCKET_NAME, KRONOS_MODEL_PATH
+print "####################"
 
 
 @app.route('/')
