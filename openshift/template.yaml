@@ -11,16 +11,16 @@ objects:
   kind: DeploymentConfig
   metadata:
     labels:
-      service: bayesian-kronos
-    name: bayesian-kronos
+      service: bayesian-kronos-${KRONOS_SCORING_REGION}
+    name: bayesian-kronos-${KRONOS_SCORING_REGION}
   spec:
     replicas: 1
     selector:
-      service: bayesian-kronos
+      service: bayesian-kronos-${KRONOS_SCORING_REGION}
     template:
       metadata:
         labels:
-          service: bayesian-kronos
+          service: bayesian-kronos-${KRONOS_SCORING_REGION}
       spec:
         containers:
         - command:
@@ -35,6 +35,8 @@ objects:
             value: "6006"
           - name: SERVICE_TIMEOUT
             value: "900"
+          - name: KRONOS_SCORING_REGION
+            value: "${KRONOS_SCORING_REGION}"
           - name: AWS_S3_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
@@ -125,4 +127,10 @@ parameters:
   required: true
   name: IMAGE_TAG
   value: "latest"
+
+- description: Kronos Scoring Region - pypi or maven
+  displayName: Kronos Scoring Region
+  required: true
+  name: KRONOS_SCORING_REGION
+  value: "pypi"
 

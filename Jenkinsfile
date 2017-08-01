@@ -38,7 +38,8 @@ if (env.BRANCH_NAME == 'master') {
 
             stage('Deploy - stage') {
                 unstash 'template'
-                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -f template.yaml | oc --context=rh-idev apply -f -"
+                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -v KRONOS_SCORING_REGION=pypi-f template.yaml | oc --context=rh-idev apply -f -"
+                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -v KRONOS_SCORING_REGION=maven -f template.yaml | oc --context=rh-idev apply -f -"
             }
 
             stage('End-to-End Tests') {
