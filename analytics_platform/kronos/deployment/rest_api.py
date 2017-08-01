@@ -8,7 +8,7 @@ from flask_cors import CORS
 from analytics_platform.kronos.deployment.submit_training_job import submit_job
 from analytics_platform.kronos.gnosis.src.gnosis_constants import *
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
-from analytics_platform.kronos.src.config import AWS_BUCKET_NAME, KRONOS_MODEL_PATH
+from analytics_platform.kronos.src.config import AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION
 from analytics_platform.kronos.src.kronos_online_scoring import *
 
 if sys.version_info.major == 2:
@@ -21,12 +21,17 @@ CORS(app)
 
 global user_eco_kronos_dict
 global eco_to_kronos_dependency_dict
+global scoring_status
 
-app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=AWS_BUCKET_NAME,
+if KRONOS_SCORING_REGION !="":
+  app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=AWS_BUCKET_NAME,
                                                                  additional_path=KRONOS_MODEL_PATH)
 
-app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=AWS_BUCKET_NAME,
+  app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=AWS_BUCKET_NAME,
                                                                           additional_path=KRONOS_MODEL_PATH)
+  app.scoring_status = True
+else:
+  app.scoring_status = False
 
 @app.route('/')
 def heart_beat():
@@ -57,8 +62,10 @@ def train_and_save_kronos():
 def predict_and_score():
     input_json = request.get_json()
     app.logger.info("Analyzing the given EPV")
-
-    response = score_eco_user_package_dict(user_request=input_json,
+    response = {"message": "Failed to load model, Kronos Region not available"}
+    
+    if app.scoring_status:
+      response = score_eco_user_package_dict(user_request=input_json,
                                            user_eco_kronos_dict=app.user_eco_kronos_dict,
                                            eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict)
 
