@@ -61,7 +61,8 @@ def train_and_save_kronos():
 @app.route('/api/v1/schemas/kronos_scoring', methods=['POST'])
 def predict_and_score():
     input_json = request.get_json()
-    app.logger.info("Analyzing the given EPV")
+    app.logger.error("Analyzing the given EPV")
+    app.logger.error(input_json)
     response = {"message": "Failed to load model, Kronos Region not available"}
     
     if app.scoring_status:
