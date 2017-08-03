@@ -57,14 +57,14 @@ objects:
               port: 6006
             initialDelaySeconds: 15
             periodSeconds: 60
-            timeoutSeconds: 15
+            timeoutSeconds: 30
           readinessProbe:
             httpGet:
               path: /
               port: 6006
             initialDelaySeconds: 15
             periodSeconds: 60
-            timeoutSeconds: 15
+            timeoutSeconds: 30
           resources:
             requests:
               cpu: ${CPU_REQUEST}
