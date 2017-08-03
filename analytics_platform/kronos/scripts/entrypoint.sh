@@ -6,7 +6,7 @@
 
 zip -r /tmp/training.zip /analytics_platform /util
 
-gunicorn --pythonpath / -b 0.0.0.0:$SERVICE_PORT --workers=2 -t $SERVICE_TIMEOUT rest_api:app
+gunicorn --pythonpath / -b 0.0.0.0:$SERVICE_PORT --workers=2 -k gevent -t $SERVICE_TIMEOUT rest_api:app
 
 # --------------------------------------------------------------------------------------------------
 # to make the container alive for indefinite time
