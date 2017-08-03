@@ -46,6 +46,8 @@ KD_EDGE_LIST = "kronos_edge_list"
 KD_SIMILAR_PACKAGE_MAP = "similar_package_dict"
 KD_PACKAGE_NAME = "package_name"
 KD_SIMILARITY_SCORE = "similarity_score"
+KD_PACKAGE_TO_TOPIC_MAP = "package_to_topic_dict"
+KD_TOPIC_LIST = "topic_list"
 
 """
 Constatns for Edge Dict

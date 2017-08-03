@@ -1,6 +1,7 @@
-from analytics_platform.kronos.softnet.src.softnet_constants import *
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+from analytics_platform.kronos.softnet.src.softnet_constants import *
 
 
 def generate_parent_tuple_list(node_list, edge_dict_list):
@@ -28,16 +29,19 @@ def get_similar_package_dict_list(package, package_list, package_to_topic_dict):
     package_score_dict_list = list()
     for package_2 in package_list:
         topic_list_2 = package_to_topic_dict[package_2]
+        actual_topic_list = [x[len(GNOSIS_PTM_TOPIC_PREFIX):] for x in topic_list_2]
         similarity_score = calculate_similarity_score(topic_list_1, topic_list_2)
-        package_score_dict_list.append({KD_PACKAGE_NAME: package_2, KD_SIMILARITY_SCORE: similarity_score})
+        package_score_dict_list.append(
+            {KD_PACKAGE_NAME: package_2, KD_SIMILARITY_SCORE: similarity_score, KD_TOPIC_LIST: actual_topic_list})
     sorted_package_score_dict_list = sorted(package_score_dict_list, key=lambda x: x[KD_SIMILARITY_SCORE], reverse=True)
     return sorted_package_score_dict_list
 
 
 def calculate_similarity_score(topic_list_1, topic_list_2):
-    average_length = (len(topic_list_1) + len(topic_list_2)) / 2
-    intersection = [x for x in topic_list_1 if x in topic_list_2]
-    return float(len(intersection)) / average_length
+    average_length = float(len(topic_list_1) + len(topic_list_2)) / 2
+    intersection_set = set.intersection(set(topic_list_1), set(topic_list_2))
+    similarity_score = float(len(intersection_set)) / average_length
+    return similarity_score
 
 
 def create_empty_pandas_df(rowsize, columns_list):

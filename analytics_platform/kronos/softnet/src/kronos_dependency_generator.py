@@ -1,6 +1,5 @@
-from util.data_store.local_filesystem import LocalFileSystem
 from analytics_platform.kronos.softnet.src.softnet_util import *
-from analytics_platform.kronos.softnet.src.softnet_constants import *
+from util.data_store.local_filesystem import LocalFileSystem
 
 
 class KronosDependencyGenerator(object):
@@ -52,6 +51,7 @@ class KronosDependencyGenerator(object):
         kronos_dependency_dict[KD_PARENT_TUPLE_LIST] = parent_tuple_list_string
         kronos_dependency_dict[KD_EDGE_LIST] = kronos_dependency_edge_list
         kronos_dependency_dict[KD_SIMILAR_PACKAGE_MAP] = similar_package_dict
+        kronos_dependency_dict[KD_PACKAGE_TO_TOPIC_MAP] = package_to_topic_dict
 
         return KronosDependencyGenerator(kronos_dependency_dict)
 
