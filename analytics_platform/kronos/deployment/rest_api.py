@@ -61,14 +61,25 @@ def train_and_save_kronos():
 @app.route('/api/v1/schemas/kronos_scoring', methods=['POST'])
 def predict_and_score():
     input_json = request.get_json()
+    app.logger.error("\n\n\n**********************************************************************")
+    app.logger.error("#######################################################")
     app.logger.error("Analyzing the given EPV")
     app.logger.error(input_json)
+    app.logger.error("#######################################################")
     response = {"message": "Failed to load model, Kronos Region not available"}
     
     if app.scoring_status:
       response = score_eco_user_package_dict(user_request=input_json,
                                            user_eco_kronos_dict=app.user_eco_kronos_dict,
                                            eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict)
+
+    app.logger.error("Sending back Kronos Response")
+    app.logger.error(response)
+    app.logger.error("#######################################################")
+    app.logger.error("**********************************************************************")
+
+
+
 
     return flask.jsonify(response)
 
