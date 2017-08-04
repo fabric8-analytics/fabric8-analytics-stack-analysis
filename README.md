@@ -27,3 +27,17 @@ oc apply -f config.yaml
 ```bash
 oc process -f openshift/template.yaml | oc apply -f -
 ```
+ 
+## Sample request
+```
+[
+        {
+            "ecosystem": "maven",
+            "package_list": [
+            	"org.mongodb:mongodb-driver-async",
+                "io.vertx:vertx-core",
+                "io.vertx:vertx-web"
+          ]
+        }
+    ]
+```
