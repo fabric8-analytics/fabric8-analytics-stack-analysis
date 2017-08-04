@@ -111,7 +111,14 @@ def generated_evidence_dict_list_and_potential_outlier_index_list(observed_packa
     return evidence_dict_list, potential_outlier_index_list
 
 
-def get_kronos_recommendation(kronos, observed_package_list, node_list, outlier_threshold):
+def get_clean_topics_for_package(package_to_topic_dict, package):
+    topic_list = package_to_topic_dict[package]
+    clean_topic_list = [x[len(GNOSIS_PTM_TOPIC_PREFIX):] for x in topic_list]
+    return clean_topic_list
+
+
+def get_kronos_recommendation(kronos, observed_package_list, node_list, outlier_threshold, package_to_topic_dict,
+                              outlier_package_count_threshold):
     evidence_dict_list, potential_outlier_index_list = generated_evidence_dict_list_and_potential_outlier_index_list(
         observed_package_list, node_list)
 
@@ -126,9 +133,15 @@ def get_kronos_recommendation(kronos, observed_package_list, node_list, outlier_
             outlier_dict = dict()
             outlier_dict[KRONOS_OUTLIER_PACKAGE_NAME] = observed_package_list[i]
             outlier_dict[KRONOS_OUTLIER_PROBABILITY] = outlier_score
+            outlier_dict[KD_TOPIC_LIST] = get_clean_topics_for_package(package_to_topic_dict, observed_package_list[i])
             outlier_dict_list.append(outlier_dict)
     sorted_outlier_dict_list = sorted(outlier_dict_list, key=lambda x: x[KRONOS_OUTLIER_PROBABILITY], reverse=True)
-    return companion_recommendation_dict, sorted_outlier_dict_list
+    num_outlier_packages = len(sorted_outlier_dict_list)
+    if num_outlier_packages > outlier_package_count_threshold:
+        num_outlier_packages = outlier_package_count_threshold
+    sorted_outlier_dict_list_pruned = sorted_outlier_dict_list[:num_outlier_packages]
+
+    return companion_recommendation_dict, sorted_outlier_dict_list_pruned
 
 
 def get_non_companion_packages(alternate_package_dict, observed_package_list):
@@ -153,7 +166,8 @@ def get_observed_and_missing_package_list(requested_package_list, unknown_packag
 
 
 def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package_count_threshold,
-                 alt_package_count_threshold, outlier_probability_threshold, unknown_package_ratio_threshold):
+                 alt_package_count_threshold, outlier_probability_threshold, unknown_package_ratio_threshold,
+                 outlier_package_count_threshold):
     package_list = kronos_dependency.get(KD_PACKAGE_LIST)
     intent_list = kronos_dependency.get(KD_INTENT_LIST)
     node_list = package_list + intent_list
@@ -165,10 +179,13 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
     alternate_package_dict = {}
     companion_package_dict_list_pruned = list()
     outlier_package_dict_list = list()
+    observed_package_to_topic_dict = {}
 
     if observed_package_list is not None:
         similar_package_json = kronos_dependency.get(KD_SIMILAR_PACKAGE_MAP)
         similar_package_dict = dict(similar_package_json)
+        package_to_topic_json = kronos_dependency.get(KD_PACKAGE_TO_TOPIC_MAP)
+        package_to_topic_dict = dict(package_to_topic_json)
         alternate_package_dict = get_alternate_packages_for_packages(similar_package_dict=similar_package_dict,
                                                                      package_names=observed_package_list,
                                                                      alt_package_count_threshold=alt_package_count_threshold)
@@ -178,18 +195,31 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
         companion_recommendation_dict, outlier_package_dict_list = get_kronos_recommendation(kronos,
                                                                                              observed_package_list,
                                                                                              node_list,
-                                                                                             outlier_probability_threshold)
+                                                                                             outlier_probability_threshold,
+                                                                                             package_to_topic_dict,
+                                                                                             outlier_package_count_threshold)
 
         companion_package_dict_list = get_companion_package_dict(result=companion_recommendation_dict,
                                                                  package_list=package_list,
                                                                  non_companion_packages=non_companion_packages)
         companion_package_dict_list_pruned = companion_package_dict_list[0:comp_package_count_threshold]
 
+        for companion_package in companion_package_dict_list_pruned:
+            topic_list = get_clean_topics_for_package(package_to_topic_dict=package_to_topic_dict,
+                                                      package=companion_package[KRONOS_COMPANION_PACKAGE_NAME])
+            companion_package[KD_TOPIC_LIST] = topic_list
+
+        for observed_package in observed_package_list:
+            observed_package_to_topic_dict[observed_package] = get_clean_topics_for_package(
+                package_to_topic_dict=package_to_topic_dict,
+                package=observed_package)
+
     result = dict()
     result[KRONOS_ALTERNATE_PACKAGES] = alternate_package_dict
     result[KRONOS_COMPANION_PACKAGES] = companion_package_dict_list_pruned
     result[KRONOS_OUTLIER_PACKAGES] = outlier_package_dict_list
     result[KRONOS_MISSING_PACKAGES] = missing_package_list
+    result[KRONOS_PACKAGE_TO_TOPIC_DICT] = observed_package_to_topic_dict
     return result
 
 
@@ -200,8 +230,7 @@ def get_alternate_packages_for_packages(similar_package_dict, package_names, alt
         num_alternate_packages = len(alternate_package_dict_list_of_package)
         if num_alternate_packages > alt_package_count_threshold:
             num_alternate_packages = alt_package_count_threshold
-        alternate_package_dict_list_of_package_pruned = [alternate_package_dict_list_of_package[i] for i in
-                                                         range(num_alternate_packages)]
+        alternate_package_dict_list_of_package_pruned = alternate_package_dict_list_of_package[:num_alternate_packages]
         alternate_package_dict[package_name] = alternate_package_dict_list_of_package_pruned
     return alternate_package_dict
 
@@ -221,6 +250,8 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
                                                          KRONOS_OUTLIER_PROBABILITY_THRESHOLD_VALUE)
         unknown_package_ratio_threshold = request_json.get(KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_NAME,
                                                            KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_VALUE)
+        outlier_package_count_threshold = request_json.get(KRONOS_OUTLIER_COUNT_THRESHOLD_NAME,
+                                                           KRONOS_OUTLIER_COUNT_THRESHOLD_VALUE)
 
         requested_package_list = request_json.get(KRONOS_SCORE_PACKAGE_LIST)
         package_list_lower_case = [x.lower() for x in requested_package_list]
@@ -232,7 +263,8 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
                                               comp_package_count_threshold=comp_package_count_threshold,
                                               alt_package_count_threshold=alt_package_count_threshold,
                                               outlier_probability_threshold=outlier_probability_threshold,
-                                              unknown_package_ratio_threshold=unknown_package_ratio_threshold)
+                                              unknown_package_ratio_threshold=unknown_package_ratio_threshold,
+                                              outlier_package_count_threshold=outlier_package_count_threshold)
         prediction_result_dict[KRONOS_SCORE_USER_PERSONA] = user_category
         prediction_result_dict[KRONOS_SCORE_ECOSYSTEM] = ecosystem
 
