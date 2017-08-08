@@ -1,0 +1,6 @@
+*.pyc
+config.py
+docker-compose*
+.env
+configmap.yaml
+secrets.yaml

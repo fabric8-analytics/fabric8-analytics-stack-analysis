@@ -1,0 +1,43 @@
+{
+  "jti": "516a620e-a25d-4521-9688-c22d321395d7",
+  "exp": 1498651128,
+  "nbf": 0,
+  "iat": 1496059128,
+  "iss": "https://sso.openshift.io/auth/realms/fabric8",
+  "aud": "fabric8-online-platform",
+  "sub": "cbeb141c-2dec-4852-ae29-c6c9b3e230c1",
+  "typ": "Bearer",
+  "azp": "fabric8-online-platform",
+  "auth_time": 1496059127,
+  "session_state": "ff44d8c5-7fb3-4a18-bfe3-e565de5ad168",
+  "acr": "1",
+  "client_session": "ee40cf10-ae69-46c5-bf79-cbb6b4ded300",
+  "allowed-origins": [
+    "*"
+  ],
+  "realm_access": {
+    "roles": [
+      "uma_authorization"
+    ]
+  },
+  "resource_access": {
+    "broker": {
+      "roles": [
+        "read-token"
+      ]
+    },
+    "account": {
+      "roles": [
+        "manage-account",
+        "manage-account-links",
+        "view-profile"
+      ]
+    }
+  },
+  "name": "Arunkumar S",
+  "company": "RedHat",
+  "preferred_username": "sailarunkumar",
+  "given_name": "Arunkumar",
+  "family_name": "S",
+  "email": "sail.arunkumar@gmail.com"
+}

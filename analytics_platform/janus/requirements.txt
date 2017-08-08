@@ -1,0 +1,6 @@
+flask
+flask-cors==3.0.2
+boto3
+boto
+numpy
+requests

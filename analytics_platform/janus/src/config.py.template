@@ -1,0 +1,20 @@
+import os
+
+TESTING = False
+DEBUG = False
+LOGFILE_PATH = os.environ.get("LOGFILE_PATH", "/tmp/error.log")
+PURPOSE_OF_LIFE = os.environ.get("PURPOSE_OF_LIFE", "eat junk food :)")
+SERVICE_PORT = os.environ.get("SERVICE_PORT", "")
+
+AWS_S3_ACCESS_KEY_ID = os.environ.get("AWS_S3_ACCESS_KEY_ID", "")
+AWS_S3_SECRET_ACCESS_KEY = os.environ.get("AWS_S3_SECRET_ACCESS_KEY", "")
+AWS_BUCKET = os.environ.get("AWS_BUCKET", "")
+AWS_TARGET_BUCKET = os.environ.get("AWS_TARGET_BUCKET", "")
+AWS_BATCH_BUCKET = os.environ.get("AWS_BATCH_BUCKET", "")
+
+DEPLOYMENT_PREFIX = os.environ.get("DEPLOYMENT_PREFIX", "DEV")
+
+MIN_K = os.environ.get("MIN_K", "")
+MAX_K = os.environ.get("MAX_K", "")
+NUM_FILES = os.environ.get("NUM_FILES", "")
+METHOD = os.environ.get("METHOD", "KMEANS")

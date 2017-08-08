@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: janus
+  name: janus
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: janus:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    sourceSecret: 
+      name: sshsecret
+    git:
+      ref: janus-model
+      uri: git@github.com:sara-02/fabric8-analytics-stack-analysis.git
+    type: Git
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Dockerfile.janus
+    type: Docker
+  triggers:
+  - type: ConfigChange
+  - type: ImageChange
+status:
+  lastVersion: 0
