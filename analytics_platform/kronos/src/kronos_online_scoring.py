@@ -202,9 +202,12 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
         companion_package_dict_list = get_companion_package_dict(result=companion_recommendation_dict,
                                                                  package_list=package_list,
                                                                  non_companion_packages=non_companion_packages)
-        companion_package_dict_list_pruned = companion_package_dict_list[0:comp_package_count_threshold]
+        companion_package_dict_list_pruned = companion_package_dict_list[
+            0:comp_package_count_threshold]
 
-        for companion_package in companion_package_dict_list_pruned:
+        companion_package_dict_same_name_pruned = [companion_package for companion_package in companion_package_dict_list_pruned if not companion_package[
+            'package_name'].endswith(('zip', 'docs', 'sources'))]
+        for companion_package in companion_package_dict_same_name_pruned:
             topic_list = get_clean_topics_for_package(package_to_topic_dict=package_to_topic_dict,
                                                       package=companion_package[KRONOS_COMPANION_PACKAGE_NAME])
             companion_package[KD_TOPIC_LIST] = topic_list
@@ -216,7 +219,7 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
 
     result = dict()
     result[KRONOS_ALTERNATE_PACKAGES] = alternate_package_dict
-    result[KRONOS_COMPANION_PACKAGES] = companion_package_dict_list_pruned
+    result[KRONOS_COMPANION_PACKAGES] = companion_package_dict_same_name_pruned
     result[KRONOS_OUTLIER_PACKAGES] = outlier_package_dict_list
     result[KRONOS_MISSING_PACKAGES] = missing_package_list
     result[KRONOS_PACKAGE_TO_TOPIC_DICT] = observed_package_to_topic_dict
@@ -226,12 +229,19 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
 def get_alternate_packages_for_packages(similar_package_dict, package_names, alt_package_count_threshold):
     alternate_package_dict = dict()
     for package_name in package_names:
-        alternate_package_dict_list_of_package = similar_package_dict[package_name]
+        alternate_package_dict_list_of_package = similar_package_dict[
+            package_name]
         num_alternate_packages = len(alternate_package_dict_list_of_package)
         if num_alternate_packages > alt_package_count_threshold:
             num_alternate_packages = alt_package_count_threshold
-        alternate_package_dict_list_of_package_pruned = alternate_package_dict_list_of_package[:num_alternate_packages]
-        alternate_package_dict[package_name] = alternate_package_dict_list_of_package_pruned
+        alternate_package_dict_list_of_package_pruned = alternate_package_dict_list_of_package[
+            :num_alternate_packages]
+        alternate_package_dict_same_name_pruned = [
+            alternate_package for alternate_package in
+            alternate_package_dict_list_of_package_pruned if not
+            alternate_package['package_name'].endswith(('docs', 'zip', 'sources'))]
+        alternate_package_dict[
+            package_name] = alternate_package_dict_same_name_pruned
     return alternate_package_dict
 
 
