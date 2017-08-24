@@ -47,4 +47,4 @@ oc process -f openshift/template.yaml | oc apply -f -
 ## Latest Depolyment
 
 * Maven
-	* Redployed on: 2017-08-07 14:08 (UTC+5:30)
+	* Redployed on: Aug 24, 2017 1:17:57 PM (GMT + 05:30)
