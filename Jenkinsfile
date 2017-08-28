@@ -38,8 +38,8 @@ if (env.BRANCH_NAME == 'master') {
 
             stage('Deploy - stage') {
                 unstash 'template'
-                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -v KRONOS_SCORING_REGION=pypi -v CPU_REQUEST=2 -v CPU_LIMIT=2 -f template.yaml | oc --context=rh-idev apply -f -"
-                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -v KRONOS_SCORING_REGION=maven -v CPU_REQUEST=2 -v CPU_LIMIT=2 -v MEMORY_REQUEST=1024Mi -v MEMORY_LIMIT=1024Mi -f template.yaml | oc --context=rh-idev apply -f -"
+                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -v KRONOS_SCORING_REGION=pypi -v CPU_REQUEST=1 -v CPU_LIMIT=1 -f template.yaml | oc --context=rh-idev apply -f -"
+                sh "oc --context=rh-idev process -v IMAGE_TAG=${commitId} -v KRONOS_SCORING_REGION=maven -v CPU_REQUEST=1 -v CPU_LIMIT=1 -v MEMORY_REQUEST=1024Mi -v MEMORY_LIMIT=1024Mi -f template.yaml | oc --context=rh-idev apply -f -"
             }
 
             stage('End-to-End Tests') {
