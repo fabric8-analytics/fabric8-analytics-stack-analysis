@@ -8,8 +8,8 @@ from pyspark.mllib.fpm import FPGrowth
 
 from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
-from gnosis_constants import *
-import util.gnosis_util as utils
+from analytics_platform.kronos.gnosis.src.gnosis_constants import *
+from analytics_platform.kronos.gnosis.src.gnosis_util import *
 
 
 class GnosisReferenceArchitecture(AbstractGnosis):
@@ -112,7 +112,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
         :return: the list of component classes."""
 
-        component_class_list = utils.generate_value_list_from_dict(
+        component_class_list = generate_value_list_from_dict(
             dictionary=gnosis_intent_component_class_dict)
         return component_class_list
 
@@ -129,9 +129,9 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
         :return: list of edges where edges are represented as tuples."""
 
-        intent_to_component_class_edge_list = utils.generate_key_to_value_edges(
+        intent_to_component_class_edge_list = generate_key_to_value_edges(
             dictionary=gnosis_intent_to_component_class_dict)
-        intent_to_intent_edge_list = utils.generate_key_to_value_edges(
+        intent_to_intent_edge_list = generate_key_to_value_edges(
             dictionary=gnosis_intent_to_intent_dict)
         edge_list = intent_to_component_class_edge_list + intent_to_intent_edge_list
         return edge_list
@@ -147,7 +147,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         :return: list of intents."""
 
         super_intent_list = gnosis_intent_to_intent_dict.keys()
-        sub_intent_list = utils.generate_value_list_from_dict(
+        sub_intent_list = generate_value_list_from_dict(
             gnosis_intent_to_intent_dict)
         intent_list = gnosis_intent_to_component_class_dict.keys()
         node_set = set.union(set(super_intent_list), set(
@@ -249,10 +249,9 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                     if item in item_dict:
                         item_dict[item] -= 1
                 keys_to_remove = list()
-                for key, value in item_dict.iteritems():
+                for key, value in item_dict.items():
                     if value == 0:
-                        k_itemset_list = utils.modify_list(
-                            key, k_itemset_list, index)
+                        k_itemset_list = modify_list(key, k_itemset_list, index)
                         keys_to_remove.append(key)
                 for key in keys_to_remove:
                     del item_dict[key]

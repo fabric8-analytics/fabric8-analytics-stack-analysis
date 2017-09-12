@@ -36,17 +36,17 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
                                                str_cur_time)
     s3_log_uri = 's3://{bucket}/{key}'.format(bucket=s3_log_bucket, key=s3_log_key)
 
-    print "Uploading the bootstrap action to AWS S3 URI " + s3_bootstrap_uri + " ..."
+    print("Uploading the bootstrap action to AWS S3 URI {} ...".format(s3_bootstrap_uri))
     # Note: This overwrites if file already exists
     s3_client = boto3.client('s3',
                              aws_access_key_id=config.AWS_S3_ACCESS_KEY_ID,
                              aws_secret_access_key=config.AWS_S3_SECRET_ACCESS_KEY)
     s3_client.upload_file(input_bootstrap_file, s3_bucket, s3_bootstrap_key)
 
-    print "Uploading the src code to AWS S3 URI " + s3_uri + " ..."
+    print("Uploading the src code to AWS S3 URI {} ...".format(s3_uri))
     s3_client.upload_file(input_src_code_file, s3_bucket, s3_key)
 
-    print "Starting spark emr cluster and submitting the jobs ..."
+    print("Starting spark emr cluster and submitting the jobs ...")
     emr_client = boto3.client('emr',
                               aws_access_key_id=config.AWS_S3_ACCESS_KEY_ID,
                               aws_secret_access_key=config.AWS_S3_SECRET_ACCESS_KEY,
@@ -168,6 +168,6 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
         output['training_job_id'] = "Error"
         output['status'] = 'Error'
         output['status_description'] = "Error! The job/cluster could not be created!"
-        print response
+        print(response)
 
     return output
