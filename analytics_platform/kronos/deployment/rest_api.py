@@ -10,6 +10,7 @@ from analytics_platform.kronos.gnosis.src.gnosis_constants import *
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
 from analytics_platform.kronos.src.config import AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION
 from analytics_platform.kronos.src.kronos_online_scoring import *
+from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
 
 if sys.version_info.major == 2:
     reload(sys)
@@ -22,16 +23,26 @@ CORS(app)
 global user_eco_kronos_dict
 global eco_to_kronos_dependency_dict
 global scoring_status
+global all_package_list_obj
 
-if KRONOS_SCORING_REGION !="":
-  app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=AWS_BUCKET_NAME,
-                                                                 additional_path=KRONOS_MODEL_PATH)
+if KRONOS_SCORING_REGION != "":
+    app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(bucket_name=AWS_BUCKET_NAME,
+                                                                     additional_path=KRONOS_MODEL_PATH)
 
-  app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=AWS_BUCKET_NAME,
-                                                                          additional_path=KRONOS_MODEL_PATH)
-  app.scoring_status = True
+    app.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(bucket_name=AWS_BUCKET_NAME,
+                                                                              additional_path=KRONOS_MODEL_PATH)
+    app.all_package_list_obj = RecommendationValidator.load_package_list_s3(
+        AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION)
+
+    app.scoring_status = True
+
+    app.logger.error("----------------------------------")
+    app.logger.error("The total manifest file for this ecosystem are: %d" %
+                     app.all_package_list_obj.get_all_list_package_length())
+    app.logger.error("----------------------------------")
 else:
-  app.scoring_status = False
+    app.scoring_status = False
+
 
 @app.route('/')
 def heart_beat():
@@ -61,25 +72,25 @@ def train_and_save_kronos():
 @app.route('/api/v1/schemas/kronos_scoring', methods=['POST'])
 def predict_and_score():
     input_json = request.get_json()
-    app.logger.error("\n\n\n**********************************************************************")
+    app.logger.error(
+        "\n\n\n**********************************************************************")
     app.logger.error("#######################################################")
     app.logger.error("Analyzing the given EPV")
     app.logger.error(input_json)
     app.logger.error("#######################################################")
     response = {"message": "Failed to load model, Kronos Region not available"}
-    
+
     if app.scoring_status:
-      response = score_eco_user_package_dict(user_request=input_json,
-                                           user_eco_kronos_dict=app.user_eco_kronos_dict,
-                                           eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict)
+        response = score_eco_user_package_dict(user_request=input_json,
+                                               user_eco_kronos_dict=app.user_eco_kronos_dict,
+                                               eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict,
+                                               all_package_list_obj=app.all_package_list_obj)
 
     app.logger.error("Sending back Kronos Response")
     app.logger.error(response)
     app.logger.error("#######################################################")
-    app.logger.error("**********************************************************************")
-
-
-
+    app.logger.error(
+        "**********************************************************************")
 
     return flask.jsonify(response)
 
