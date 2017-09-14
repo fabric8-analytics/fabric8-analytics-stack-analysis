@@ -188,9 +188,6 @@ class RecommendationValidator(object):
         :return: The list of valid companion package recommendations.
         """
 
-        # TODO: Handle the possibility of a package present in Counter list but not
-        # in PGM companion package list
-
         final_companion_recommendations = []
         count = Counter()
         for each_recommendation in companion_packages:
@@ -203,10 +200,12 @@ class RecommendationValidator(object):
             # a valid subset.
             for package in difference_list:
                 count[package] += 1
+        # Pick only top three companion components
+        top_three_comp_name = [comp[0] for comp in count.most_common(3)]
         for each_recommendation in companion_packages:
-            # TODO: Enable this for zero level filtering
-            comp_count = count[each_recommendation.get('package_name')]
-            if comp_count:
+            companion_package_name = each_recommendation.get('package_name')
+            comp_count = count[companion_package_name]
+            if companion_package_name in top_three_comp_name and comp_count:
                 # change the value of cooccurrence_probability to reflect the actual manifest
                 # usage count.
                 each_recommendation["cooccurrence_probability"] = comp_count
