@@ -33,7 +33,6 @@ class RecommendationValidator(object):
         all_list_of_package_list = []
         manifest_filenames = input_manifest_data_store.list_files(
             additional_path + MANIFEST_FILEPATH)
-
         for manifest_filename in manifest_filenames:
             user_category = manifest_filename.split("/")[-2]
             manifest_content_json_list = input_manifest_data_store.read_json_file(
@@ -77,6 +76,7 @@ class RecommendationValidator(object):
         """
 
         if not None == input_list and not None == companion_package:
+            input_list = input_list[:]
             input_list.append(companion_package)
             recommended_dependency_set = set(input_list)
             return recommended_dependency_set
@@ -94,6 +94,7 @@ class RecommendationValidator(object):
         """
 
         if not None == input_list and not None == alternate_package and not None == alternate_to:
+            input_list = input_list[:]
             if alternate_to in input_list:
                 recommended_dependency_set = set(input_list)
                 recommended_dependency_set.remove(alternate_to)
@@ -127,17 +128,20 @@ class RecommendationValidator(object):
 
         :return: The list of companion packages observed among the known dependency set.
         """
-
+        input_list = input_list[:]
         input_set = set(input_list)
         difference_list = []
         for dependency_list in self.all_list_of_package_list:
+            diff = []
             manifest_dependency_set = set(dependency_list)
-            if manifest_dependency_set >= recommended_dependency_set:
+            if manifest_dependency_set > recommended_dependency_set:
                 # diff gives us list of packges present in the known stack vs
                 # the input stack, leaving only the companion packages
                 diff = list(manifest_dependency_set -
-                            input_set)
-                difference_list.extend(diff)
+                            recommended_dependency_set)
+            elif manifest_dependency_set == recommended_dependency_set:
+                diff = list(recommended_dependency_set - input_set)
+            difference_list.extend(diff)
         return difference_list
 
     def check_alternate_recommendation(self, input_list, alternate_packages):
@@ -165,12 +169,11 @@ class RecommendationValidator(object):
                     input_list, alternate_package_name, alternate_to)
                 count_value = self.check_alternate_recommendation_validity(
                     recommended_dependency_set)
-                # TODO: Enable this for zero level filtering
-                # if count_value:
-                # change the value of similarity_score to reflect the actual manifest
-                # usage count.
-                alternate_package["similarity_score"] = count_value
-                temp_each_recommendation.append(alternate_package)
+                if count_value:
+                    # change the value of similarity_score to reflect the actual manifest
+                    # usage count.
+                    alternate_package["similarity_score"] = count_value
+                    temp_each_recommendation.append(alternate_package)
             final_alternate_recommendations[
                 each_recommendation] = temp_each_recommendation
         return final_alternate_recommendations
@@ -202,13 +205,12 @@ class RecommendationValidator(object):
                 count[package] += 1
         for each_recommendation in companion_packages:
             # TODO: Enable this for zero level filtering
-            # comp_count = count[each_recommendation.get('package_name')]
-            # if comp_count:
-            # change the value of cooccurrence_probability to reflect the actual manifest
-            # usage count.
-            each_recommendation["cooccurrence_probability"] = count[
-                each_recommendation.get('package_name')]
-            final_companion_recommendations.append(each_recommendation)
+            comp_count = count[each_recommendation.get('package_name')]
+            if comp_count:
+                # change the value of cooccurrence_probability to reflect the actual manifest
+                # usage count.
+                each_recommendation["cooccurrence_probability"] = comp_count
+                final_companion_recommendations.append(each_recommendation)
         return final_companion_recommendations
 
     def get_filtered_alternate_list(self, alternate_package, outlier_packages):

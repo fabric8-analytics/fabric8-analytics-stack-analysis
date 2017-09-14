@@ -1,0 +1,42 @@
+[
+    {
+        "ecosystem": "maven",
+        "package_list": [
+            [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+            ],
+            [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F"
+            ]
+        ]
+    },
+    {
+        "ecosystem": "pypi",
+        "package_list": [
+            [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+            ],
+            [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F"
+            ]
+        ]
+    }
+]
