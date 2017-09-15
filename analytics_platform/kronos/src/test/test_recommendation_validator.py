@@ -2,10 +2,6 @@ from analytics_platform.kronos.src import config
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
 from util.data_store.local_filesystem import LocalFileSystem
 import unittest
-# import logging
-
-# logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
-# logger = logging.getLogger(__name__)
 
 
 class TestRecommendationValidator(unittest.TestCase):
@@ -87,7 +83,7 @@ class TestRecommendationValidator(unittest.TestCase):
             alternate_packages, outlier_packages)
         self.assertTrue(len(filtered_alternate_list) == len(outlier_packages))
         self.assertTrue(outlier_packages[0][
-                        'package_name'] == filtered_alternate_list.keys()[0])
+                        'package_name'] == list(filtered_alternate_list.keys())[0])
 
     def test_generate_companion_set(self):
         input_manifest_data_store = LocalFileSystem(
