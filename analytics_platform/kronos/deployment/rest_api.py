@@ -36,10 +36,8 @@ if KRONOS_SCORING_REGION != "":
 
     app.scoring_status = True
 
-    app.logger.error("----------------------------------")
-    app.logger.error("The total manifest file for this ecosystem are: %d" %
-                     app.all_package_list_obj.get_all_list_package_length())
-    app.logger.error("----------------------------------")
+    app.logger.info("The total manifest file for this ecosystem are: %d" %
+                    app.all_package_list_obj.get_all_list_package_length())
 else:
     app.scoring_status = False
 
@@ -72,12 +70,10 @@ def train_and_save_kronos():
 @app.route('/api/v1/schemas/kronos_scoring', methods=['POST'])
 def predict_and_score():
     input_json = request.get_json()
-    app.logger.error(
-        "\n\n\n**********************************************************************")
-    app.logger.error("#######################################################")
-    app.logger.error("Analyzing the given EPV")
-    app.logger.error(input_json)
-    app.logger.error("#######################################################")
+
+    app.logger.info("Analyzing the given EPV")
+    app.logger.info(input_json)
+
     response = {"message": "Failed to load model, Kronos Region not available"}
 
     if app.scoring_status:
@@ -86,11 +82,8 @@ def predict_and_score():
                                                eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict,
                                                all_package_list_obj=app.all_package_list_obj)
 
-    app.logger.error("Sending back Kronos Response")
-    app.logger.error(response)
-    app.logger.error("#######################################################")
-    app.logger.error(
-        "**********************************************************************")
+    app.logger.info("Sending back Kronos Response")
+    app.logger.info(response)
 
     return flask.jsonify(response)
 
