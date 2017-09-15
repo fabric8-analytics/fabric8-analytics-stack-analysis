@@ -32,7 +32,7 @@ class RecommendationValidator(object):
                 filename=manifest_filename)
             for manifest_content_json in manifest_content_json_list:
                 manifest_content_dict = dict(manifest_content_json)
-                ecosystem = manifest_content_dict[MANIFEST_ECOSYSTEM]
+                ecosystem = manifest_content_dict.get(MANIFEST_ECOSYSTEM)
                 if ecosystem != input_ecosystem:
                     continue
                 list_of_package_list = manifest_content_dict.get(
@@ -67,8 +67,7 @@ class RecommendationValidator(object):
         if input_list is not None and companion_package is not None:
             input_list = input_list[:]
             input_list.append(companion_package)
-            recommended_dependency_set = set(input_list)
-            return recommended_dependency_set
+            return set(input_list)
         return set()
 
     def generate_alternate_dependency_set(self, input_list, alternate_package, alternate_to):
@@ -83,10 +82,8 @@ class RecommendationValidator(object):
         if input_list is not None and alternate_package is not None and alternate_to is not None:
             input_list = input_list[:]
             if alternate_to in input_list:
-                recommended_dependency_set = set(input_list)
-                recommended_dependency_set.remove(alternate_to)
-                recommended_dependency_set.add(alternate_package)
-                return recommended_dependency_set
+                return set(
+                    [alternate_package if package == alternate_to else package for package in input_list])
         return set()
 
     def check_alternate_recommendation_validity(self, recommended_dependency_set):
