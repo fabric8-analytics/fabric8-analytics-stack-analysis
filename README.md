@@ -29,22 +29,100 @@ oc process -f openshift/template.yaml | oc apply -f -
 ```
 
 
-## Sample Request
+## Sample Request Input
 
 ```
+Request Type: POST 
+URL: http://0.0.0.0:6006/api/v1/schemas/kronos_scoring
+BODY: JSON data
 [
         {
             "ecosystem": "maven",
-            "package_list": [
-            	"org.mongodb:mongodb-driver-async",
-                "io.vertx:vertx-core",
-                "io.vertx:vertx-web"
-				]
-        }
+            "comp_package_count_threshold": 5,
+            "alt_package_count_threshold": 2,
+            "outlier_probability_threshold": 0.88,
+            "unknown_packages_ratio_threshold": 0.3,
+            "package_list": [         
+            "io.vertx:vertx-core",
+            "io.vertx:vertx-web"
     ]
+        }
+]
 ```
+
+## Sample Request Output
+```
+[
+    {
+        "alternate_packages": {
+            "io.vertx:vertx-health-check": [],
+            "io.vertx:vertx-web": [
+                {
+                    "package_name": "io.vertx:vertx-web-templ-handlebars",
+                    "similarity_score": 1,
+                    "topic_list": [
+                        "restful",
+                        "web",
+                        "mircoservices",
+                        "real-time"
+                    ]
+                }
+            ]
+        },
+        "companion_packages": [],
+        "ecosystem": "maven",
+        "missing_packages": [
+            "io.vertx:test-random-package"
+        ],
+        "outlier_package_list": [
+            {
+                "outlier_prbability": 0.96774613950860655,
+                "package_name": "io.vertx:vertx-health-check",
+                "topic_list": [
+                    "microservice",
+                    "web-handler",
+                    "metrics",
+                    "health-check"
+                ]
+            },
+            {
+                "outlier_prbability": 0.9151901277396074,
+                "package_name": "io.vertx:vertx-web",
+                "topic_list": [
+                    "http",
+                    "restful",
+                    "mircoservices",
+                    "web"
+                ]
+            }
+        ],
+        "package_to_topic_dict": {
+            "io.vertx:vertx-core": [
+                "reactive",
+                "concurrency",
+                "non-blocking",
+                "event-loop"
+            ],
+            "io.vertx:vertx-health-check": [
+                "microservice",
+                "web-handler",
+                "metrics",
+                "health-check"
+            ],
+            "io.vertx:vertx-web": [
+                "http",
+                "restful",
+                "mircoservices",
+                "web"
+            ]
+        },
+        "user_persona": "1"
+    }
+]
+```
+
 
 ## Latest Depolyment
 
 * Maven
-	* Retrained on: 2017-09-07 15:55 (UTC+5:30)
+	* Retrained on: 2017-09-15 17:05 (UTC+5:30)
