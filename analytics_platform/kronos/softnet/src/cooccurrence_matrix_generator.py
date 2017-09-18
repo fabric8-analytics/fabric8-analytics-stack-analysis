@@ -2,14 +2,10 @@ from analytics_platform.kronos.softnet.src.softnet_util import *
 
 
 class CooccurrenceMatrixGenerator(object):
-    """
-    Cooccurrence Matrix Generator: Responsible for generating cooccurence matrix required for Kronos Training
-    """
+    """Cooccurrence Matrix Generator: Responsible for generating cooccurence matrix required for Kronos Training."""
 
     def __init__(self, matrix_dict):
-        """
-        Instantiate Cooccurrence Matrix Generator
-        """
+        """Instantiate Cooccurrence Matrix Generator."""
         # TODO matrix_df
 
         self._matrix_dict = matrix_dict

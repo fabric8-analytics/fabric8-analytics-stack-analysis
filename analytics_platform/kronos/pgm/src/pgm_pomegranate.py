@@ -10,9 +10,7 @@ from joblib import Parallel, delayed
 
 
 class PGMPomegranate(AbstractPGM):
-    """
-    Kronos - The Knowledge Graph
-    """
+    """Kronos - The Knowledge Graph."""
 
     def __init__(self, model):
         self._model = model

@@ -3,26 +3,21 @@ from util.data_store.local_filesystem import LocalFileSystem
 
 
 class KronosDependencyGenerator(object):
-    """
-    Kronos Dependency Generator: Responsible for generating the unweighted Kronos Dependency Graph
-    """
+    """Kronos Dependency Generator: Responsible for generating the unweighted Kronos Dependency Graph."""
 
     def __init__(self, dictionary):
-        """
-        Instantiate Kronos Dependency Generator
-        """
+        """Instantiate Kronos Dependency Generator."""
 
         self._dictionary = dictionary
 
     @classmethod
     def generate_kronos_dependency(cls, gnosis_ref_arch_dict, package_to_topic_dict, topic_to_package_dict):
-        """
-        Generate a soft net: component class topic model from the data available in the given data stores.
+        """Generate a soft net: component class topic model from the data available in the given data stores.
 
-        :param data_store: Gnosis graph store
-        :param pkg_topic_store: Package Topic graph store
-        :return: None
-        """
+        :param data_store: Gnosis graph store.
+        :param pkg_topic_store: Package Topic graph store.
+
+        :return: Object of class KronosDependencyGenerator."""
 
         package_list = package_to_topic_dict.keys()
         component_class_list = gnosis_ref_arch_dict.get(GNOSIS_RA_COMPONENT_CLASS_LIST)
@@ -56,23 +51,21 @@ class KronosDependencyGenerator(object):
         return KronosDependencyGenerator(kronos_dependency_dict)
 
     def save(self, data_store, filename):
-        """
-        Save the Soft Net: Component Class Topic Model.
+        """Save the Soft Net: Component Class Topic Model.
 
         :param data_store: Data store to keep the model.
-        :param file_name: Name of the file that will contain model.
-        """
+        :param file_name: Name of the file that will contain model."""
+
         kronos_dependency_dict = self._dictionary
         data_store.write_json_file(filename=filename, contents=kronos_dependency_dict)
 
     @classmethod
     def load(cls, data_store, filename):
-        """
-        Load the Soft Net: Component Class Topic Model.
+        """Load the Soft Net: Component Class Topic Model.
 
         :param data_store: Data store to keep the model.
-        :param file_name: Name of the file that contains model.
-        """
+        :param file_name: Name of the file that contains model."""
+
         kronos_dependency_dict = data_store.read_json_file(filename)
         return KronosDependencyGenerator(kronos_dependency_dict)
 
