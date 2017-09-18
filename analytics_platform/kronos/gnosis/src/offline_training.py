@@ -48,13 +48,11 @@ def train_and_save_gnosis_ref_arch_s3(training_data_url, fp_min_support_count,
 
 
 def generate_and_save_gnosis_package_topic_model(input_data_store, output_data_store, additional_path):
-    """
-    Trains the package to topic map as well as topic to package map.
-    :param input_data_store: source data store
-    :param output_data_store: destination data store
-    :param type: "curate" or "train"
-    :return: None
-    """
+    """Trains the package to topic map as well as topic to package map.
+
+    :param input_data_store: source data store.
+    :param output_data_store: destination data store.
+    :param type: "curate" or "train". """
 
     gnosis_package_topic_model_obj = GnosisPackageTopicModel.curate(data_store=input_data_store,
                                                                     filename=additional_path + GNOSIS_PTM_INPUT_PATH)
@@ -77,4 +75,3 @@ def generate_and_save_gnosis_package_topic_model_s3(training_data_url):
     generate_and_save_gnosis_package_topic_model(input_data_store=input_data_store, output_data_store=output_data_store,
                                                  additional_path=additional_path
                                                  )
-

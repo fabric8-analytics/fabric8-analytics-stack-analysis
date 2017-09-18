@@ -1,6 +1,5 @@
-"""
-Constants for Kronos Dependency i.e. KD
-"""
+"""Constants for Kronos Dependency i.e. KD."""
+
 KD_PACKAGE_LIST = "package_list"
 KD_INTENT_LIST = "intent_list"
 KD_INTENT_DEPENDENCY_MAP = "intent_dependency_map"
@@ -16,9 +15,8 @@ KD_TOPIC_LIST = "topic_list"
 KD_OUTPUT_FOLDER = "data_kronos_dependency"
 COM_OUTPUT_FOLDER = "data_co_occurrence_matrix"
 
-"""
-Constants for Kronos Model
-"""
+"""Constants for Kronos Model."""
+
 COMPONENT_RESULT_DICT = "package_result_dict"
 INTENT_RESULT_DICT = "intent_result_dict"
 KRONOS_OUTLIER_PROBABILITY_THRESHOLD_VALUE = 0.9
@@ -38,9 +36,8 @@ KRONOS_OUTLIER_PACKAGES = "outlier_package_list"
 KRONOS_MISSING_PACKAGES = "missing_packages"
 KRONOS_PACKAGE_TO_TOPIC_DICT = "package_to_topic_dict"
 
-"""
-Constants for Input Request for scoring
-"""
+"""Constants for Input Request for scoring."""
+
 KRONOS_SCORE_ECOSYSTEM = "ecosystem"
 KRONOS_SCORE_USER_PERSONA = "user_persona"
 KRONOS_SCORE_PACKAGE_LIST = "package_list"
@@ -50,7 +47,6 @@ KRONOS_OUTLIER_PROBABILITY_THRESHOLD_NAME = "outlier_probability_threshold"
 KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_NAME = "unknown_packages_ratio_threshold"
 KRONOS_OUTLIER_COUNT_THRESHOLD_NAME = "outlier_package_count_threshold"
 
-"""
-Constants for Gnosis PTM
-"""
+"""Constants for Gnosis PTM."""
+
 GNOSIS_PTM_TOPIC_PREFIX = "c_"
