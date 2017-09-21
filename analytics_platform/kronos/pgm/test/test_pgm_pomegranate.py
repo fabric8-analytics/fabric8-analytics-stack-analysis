@@ -15,15 +15,12 @@ from unittest import TestCase
 
 
 class TestKronosPomegranate(TestCase):
-
     def test_train_and_save_kronos_list_local(self):
 
-        input_data_store = LocalFileSystem(
-            "tests/data/data_pgm/input-train-data")
+        input_data_store = LocalFileSystem("analytics_platform/kronos/pgm/test/data/input-train-data")
         self.assertTrue(input_data_store is not None)
 
-        output_data_store = LocalFileSystem(
-            "tests/data/data_pgm/output-train-data")
+        output_data_store = LocalFileSystem("analytics_platform/kronos/pgm/test/data/output-train-data")
         self.assertTrue(output_data_store is not None)
 
         eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
@@ -47,12 +44,10 @@ class TestKronosPomegranate(TestCase):
                 kronos_model.save(data_store=output_data_store, filename=filename)
 
     def test_score_eco_user_package_dict(self):
-        input_data_store = LocalFileSystem(
-            "tests/data/data_pgm/input-score-data")
+        input_data_store = LocalFileSystem("analytics_platform/kronos/pgm/test/data/input-score-data")
         self.assertTrue(input_data_store is not None)
 
-        output_data_store = LocalFileSystem(
-            "tests/data/data_pgm/output-score-data")
+        output_data_store = LocalFileSystem("analytics_platform/kronos/pgm/test/data/output-score-data")
         self.assertTrue(output_data_store is not None)
 
         user_eco_kronos_dict = load_user_eco_to_kronos_model_dict(input_kronos_data_store=input_data_store,
@@ -78,7 +73,7 @@ class TestKronosPomegranate(TestCase):
                          ]}]
 
         response = score_eco_user_package_dict(user_request, user_eco_kronos_dict=user_eco_kronos_dict,
-                                               eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict, all_package_list_obj=None)
+                                               eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict)
         self.assertTrue(response is not None)
 
         output_data_store.write_json_file(filename="response.json", contents=response)

@@ -14,14 +14,11 @@ from unittest import TestCase
 
 
 class TestCooccurrenceMatrixGenerator(TestCase):
-
     def test_generate_and_save_cooccurrence_matrices_local(self):
-        input_data_store = LocalFileSystem(
-            "tests/data/data_softnet/input-com-data")
+        input_data_store = LocalFileSystem("analytics_platform/kronos/softnet/test/data/input-com-data")
         self.assertTrue(input_data_store is not None)
 
-        output_data_store = LocalFileSystem(
-            "tests/data/data_softnet/output-com-data")
+        output_data_store = LocalFileSystem("analytics_platform/kronos/softnet/test/data/output-com-data")
         self.assertTrue(output_data_store is not None)
 
         eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
