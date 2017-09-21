@@ -1,3 +1,7 @@
+import sys
+sys.path.insert(1, '/usr/local/spark/python')
+sys.path.insert(2, '/usr/local/spark/python/lib/py4j-0.10.4-src.zip')
+
 from pyspark import SparkContext
 from pyspark.mllib.fpm import FPGrowth
 
