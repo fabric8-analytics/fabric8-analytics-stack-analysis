@@ -1,0 +1,38 @@
+[{
+    "ecosystem": "ecosystem_name",
+    "package_list": [{
+            "repo_name": "R1",
+            "github_stats": {
+                "stars": "count value",
+                "watches": "count value",
+                "forks": "count value"
+            },
+            "all_poms_found": [{
+                    "path_to_pom": "path to 1st pom found in the repo",
+                    "dependency_list": ["list of depenencies found in the path_to_pom pom.xml"]
+                },
+                {
+                    "path_to_pom": "path to the 2nd pom found in the repo",
+                    "dependency_list": ["list of depenencies found in the path_to_pom pom.xml"]
+                }
+            ]
+        },
+        {
+            "repo_name": "R2",
+            "github_stats": {
+                "stars": "count value",
+                "watches": "count value",
+                "forks": "count value"
+            },
+            "all_poms_found": [{
+                    "path_to_pom": "path to 1st pom found in the repo",
+                    "dependency_list": ["list of depenencies found in the path_to_pom pom.xml"]
+                },
+                {
+                    "path_to_pom": "path to 1st pom found in the repo",
+                    "dependency_list": ["list of depenencies found in the path_to_pom pom.xml"]
+                }
+            ]
+        }
+    ]
+}]
