@@ -15,7 +15,6 @@ RUN yum install -y epel-release && \
 # --------------------------------------------------------------------------------------------------
 COPY ./analytics_platform/kronos/requirements.txt /
 RUN pip install -r /requirements.txt && rm /requirements.txt
-RUN pip install pomegranate==0.7.3
 
 
 
