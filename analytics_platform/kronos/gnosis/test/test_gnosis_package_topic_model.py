@@ -11,14 +11,11 @@ from unittest import TestCase
 
 
 class TestGnosisPackageTopicModel(TestCase):
-
     def test_generate_and_save_package_topic_model_local(self):
-        input_data_store = LocalFileSystem(
-            "tests/data/data_gnosis/input-ptm-data")
+        input_data_store = LocalFileSystem("analytics_platform/kronos/gnosis/test/data/input-ptm-data")
         self.assertTrue(input_data_store is not None)
 
-        output_data_store = LocalFileSystem(
-            "tests/data/data_gnosis/output-ptm-data")
+        output_data_store = LocalFileSystem("analytics_platform/kronos/gnosis/test/data/output-ptm-data")
         self.assertTrue(output_data_store is not None)
 
         package_topic_model = GnosisPackageTopicModel.curate(data_store=input_data_store,

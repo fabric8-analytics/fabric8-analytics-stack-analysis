@@ -278,15 +278,14 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
         prediction_result_dict[KRONOS_SCORE_USER_PERSONA] = user_category
         prediction_result_dict[KRONOS_SCORE_ECOSYSTEM] = ecosystem
 
-        if all_package_list_obj is not None:
-            input_list = all_package_list_obj.get_filtered_input_list(
-                package_list_lower_case, prediction_result_dict["missing_packages"])
-            filtered_alternate_packages = all_package_list_obj.get_filtered_alternate_list(prediction_result_dict.get('alternate_packages'),
-                                                                                           prediction_result_dict["outlier_package_list"])
-            prediction_result_dict["alternate_packages"] = all_package_list_obj.check_alternate_recommendation(
-                input_list, filtered_alternate_packages)
-            prediction_result_dict["companion_packages"] = all_package_list_obj.check_companion_recommendation(
-                input_list, prediction_result_dict.get('companion_packages'))
+        input_list = all_package_list_obj.get_filtered_input_list(
+            package_list_lower_case, prediction_result_dict["missing_packages"])
+        filtered_alternate_packages = all_package_list_obj.get_filtered_alternate_list(prediction_result_dict.get('alternate_packages'),
+                                                                                       prediction_result_dict["outlier_package_list"])
+        prediction_result_dict["alternate_packages"] = all_package_list_obj.check_alternate_recommendation(
+            input_list, filtered_alternate_packages)
+        prediction_result_dict["companion_packages"] = all_package_list_obj.check_companion_recommendation(
+            input_list, prediction_result_dict.get('companion_packages'))
 
         response_json_list.append(prediction_result_dict)
     return response_json_list
