@@ -21,7 +21,7 @@
             "repo_name": "R2",
             "github_stats": {
                 "stars": "count value",
-                "watching": "count value",
+                "watches": "count value",
                 "forks": "count value"
             },
             "all_poms_found": [{
