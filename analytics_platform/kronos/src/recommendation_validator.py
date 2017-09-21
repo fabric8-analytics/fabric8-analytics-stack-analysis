@@ -3,6 +3,7 @@ import json
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.softnet.src.softnet_constants import MANIFEST_FILEPATH, MANIFEST_ECOSYSTEM, MANIFEST_PACKAGE_LIST
 from util.data_store.s3_data_store import S3DataStore
+from util.data_store.local_filesystem import LocalFileSystem
 
 
 class RecommendationValidator(object):
@@ -54,6 +55,20 @@ class RecommendationValidator(object):
         input_manifest_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                                 access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                 secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
+        return cls.load_package_list(input_manifest_data_store, additional_path, input_ecosystem)
+
+    @classmethod
+    def load_package_list_local(cls, input_folder_name, additional_path, input_ecosystem):
+        """Generate the aggregated manifest list for a given ecosystem from LocalFileSystem datasource.
+
+        :param input_folder: The main directory where the manifest files are stored.
+        :param additional_path: The directory to pick the manifest files from.
+        :param input_ecosystem: The ecosystem for which the aggregated manifest list will be saved.
+
+        :return: RecommendationValidator object."""
+
+        # Create a LocalFile object
+        input_manifest_data_store = LocalFileSystem(src_dir=input_folder_name)
         return cls.load_package_list(input_manifest_data_store, additional_path, input_ecosystem)
 
     def generate_companion_dependency_set(self, input_list, companion_package):
