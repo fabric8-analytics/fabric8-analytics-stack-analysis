@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from analytics_platform.kronos.gnosis.src.gnosis_constants import *
+
 def generate_value_list_from_dict(dictionary):
     """Creates a list of all the values of a dict after de-dup.
 
@@ -47,3 +50,17 @@ def modify_list(key, k_itemset_list, index):
     # print items_to_remove
     # print k_itemset_list
     return k_itemset_list
+
+def create_tags_for_package(package_name):
+    """Create tags for a package based on its name"""
+    tags = []
+    name_parts = package_name.split(":")[:2]
+    for name_part in name_parts:
+        # Exclude common parts of the package name that are not useful as tags
+        tags += [
+            GNOSIS_PTM_TOPIC_PREFIX + tag.lower()
+            for tag in name_part.split('.') if tag and tag != 'com' and tag != 'org' and tag != 'io'
+        ]
+    # Make sure there are no duplicates
+    return list(set(tags[:4]))
+

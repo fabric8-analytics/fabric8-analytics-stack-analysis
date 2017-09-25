@@ -1,5 +1,6 @@
 from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
 from analytics_platform.kronos.gnosis.src.gnosis_constants import *
+from analytics_platform.kronos.gnosis.src.gnosis_util import create_tags_for_package
 
 
 class GnosisPackageTopicModel(AbstractGnosis):
@@ -23,12 +24,13 @@ class GnosisPackageTopicModel(AbstractGnosis):
         return None
 
     @classmethod
-    def curate(cls, data_store, filename):
+    def curate(cls, data_store, filename, additional_path=""):
         """Reads curated package topic dict from the given store and makes every element
         to lower case, regenerates the package topic map and generated the topic to package map.
 
         :param data_store: Data store to read curated package to topic data from
         :param filename: name of the file containing curated data
+        :param additional_path: Path on s3 where the manifest file folder is located
 
         :return: Object of class GnosisPackageTopicModel."""
 
@@ -44,12 +46,16 @@ class GnosisPackageTopicModel(AbstractGnosis):
             package_to_topic_dict = dict()
             topic_to_package_dict = dict()
 
+            # Not returning tagged packages as there may be untagged packages inside
+            # the eco_to_package_topic_json as well.
+            package_topic_dict.update(cls.get_unknown_packages_from_manifests(data_store, additional_path,
+                                                                              package_topic_dict))
             for package in package_topic_dict.keys():
                 topic_list = package_topic_dict[package]
                 formatted_package = package.lower()
                 formatted_topic_list = [
                     GNOSIS_PTM_TOPIC_PREFIX + x.lower() for x in topic_list]
-                distinct_formatted_topic_list = list(set(formatted_topic_list))
+                distinct_formatted_topic_list = list(set(formatted_topic_list)) or create_tags_for_package(package)
                 package_to_topic_dict[
                     formatted_package] = distinct_formatted_topic_list
 
@@ -84,7 +90,7 @@ class GnosisPackageTopicModel(AbstractGnosis):
 
     @classmethod
     def load(cls, data_store, filename):
-        """Load the Packag Topic Model.
+        """Load the Package Topic Model.
 
         :param data_store: Data store to keep the model.
         :param file_name: Name of the file that contains model."""
@@ -97,3 +103,17 @@ class GnosisPackageTopicModel(AbstractGnosis):
         :return: a dict object"""
 
         return self._dictionary
+
+    @classmethod
+    def get_unknown_packages_from_manifests(cls, data_store, additional_path, package_topic_dict):
+        manifest_file_list = data_store.list_files(prefix=additional_path + MANIFEST_FILEPATH)
+        unknown_packages = {}
+        for manifest_file in manifest_file_list:
+            eco_to_package_list_json_array = data_store.read_json_file(manifest_file)
+            for eco_to_package_list_json in eco_to_package_list_json_array:
+                ecosystem = eco_to_package_list_json.get(MANIFEST_ECOSYSTEM)
+                list_of_package_list = eco_to_package_list_json.get(MANIFEST_PACKAGE_LIST)
+                for package_list in list_of_package_list:
+                    unknown_packages.update({x.lower(): [] for x in package_list if x not in package_topic_dict})
+        print(unknown_packages)
+        return unknown_packages
