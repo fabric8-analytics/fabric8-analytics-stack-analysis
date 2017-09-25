@@ -1,13 +1,14 @@
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
-import unittest
+
+from unittest import TestCase
 
 
-class TestRecommendationValidator(unittest.TestCase):
+class TestRecommendationValidator(TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestRecommendationValidator, self).__init__(*args, **kwargs)
-        self.input_folder_name = "analytics_platform/kronos/src/test/data"
+        self.input_folder_name = "tests/data/data_recom_valid"
         self.input_ecosystem = "maven"
         self.additional_path = ""
 
@@ -182,7 +183,3 @@ class TestRecommendationValidator(unittest.TestCase):
         self.assertTrue(len(result_companion_list) == 2)
         comp_name = [c.get('package_name') for c in result_companion_list]
         self.assertTrue(set(comp_name) == set(['E', 'F']))
-
-
-if __name__ == "__main__":
-    unittest.main()

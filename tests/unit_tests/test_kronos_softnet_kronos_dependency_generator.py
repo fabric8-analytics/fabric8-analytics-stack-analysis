@@ -11,11 +11,14 @@ from unittest import TestCase
 
 
 class TestKronosDependencyGenerator(TestCase):
+
     def test_generate_and_save_kronos_dependency_local(self):
-        input_data_store = LocalFileSystem("analytics_platform/kronos/softnet/test/data/input-kd-data")
+        input_data_store = LocalFileSystem(
+            "tests/data/data_softnet/input-kd-data")
         self.assertTrue(input_data_store is not None)
 
-        output_data_store = LocalFileSystem("analytics_platform/kronos/softnet/test/data/output-kd-data")
+        output_data_store = LocalFileSystem(
+            "tests/data/data_softnet/output-kd-data")
         self.assertTrue(output_data_store is not None)
 
         gnosis_ref_arch_json = input_data_store.read_json_file(filename="data_gnosis/gnosis_ref_arch.json")
