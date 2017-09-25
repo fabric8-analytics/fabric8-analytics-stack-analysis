@@ -1,6 +1,6 @@
 ERR_INPUT_INVALID = {
     "name": "ERR_INPUT_INVALID ",
-    "msg": "Input is invalid"
+    "msg": "Input is invalid."
 }
 
 ERR_MODEL_NOT_AVAILABLE = {
