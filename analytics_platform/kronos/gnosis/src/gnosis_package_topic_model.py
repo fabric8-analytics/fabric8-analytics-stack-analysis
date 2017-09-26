@@ -1,6 +1,5 @@
 from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
 from analytics_platform.kronos.gnosis.src.gnosis_constants import *
-from analytics_platform.kronos.gnosis.src.gnosis_util import create_tags_for_package
 
 
 class GnosisPackageTopicModel(AbstractGnosis):
@@ -25,8 +24,9 @@ class GnosisPackageTopicModel(AbstractGnosis):
 
     @classmethod
     def curate(cls, data_store, filename, additional_path=""):
-        """Reads curated package topic dict from the given store and makes every element
-        to lower case, regenerates the package topic map and generated the topic to package map.
+        """Reads curated package topic dict from the given store and makes every
+         element to lower case, regenerates the package topic map and generated
+         the topic to package map.
 
         :param data_store: Data store to read curated package to topic data from
         :param filename: name of the file containing curated data
@@ -46,16 +46,20 @@ class GnosisPackageTopicModel(AbstractGnosis):
             package_to_topic_dict = dict()
             topic_to_package_dict = dict()
 
-            # Not returning tagged packages as there may be untagged packages inside
-            # the eco_to_package_topic_json as well.
-            package_topic_dict.update(cls.get_unknown_packages_from_manifests(data_store, additional_path,
-                                                                              package_topic_dict))
+            # Not returning tagged packages as there may be untagged packages
+            # inside the eco_to_package_topic_json as well.
+            package_topic_dict.update(cls._get_unknown_packages_from_manifests(
+                data_store,
+                additional_path,
+                package_topic_dict))
             for package in package_topic_dict.keys():
                 topic_list = package_topic_dict[package]
                 formatted_package = package.lower()
                 formatted_topic_list = [
                     GNOSIS_PTM_TOPIC_PREFIX + x.lower() for x in topic_list]
-                distinct_formatted_topic_list = list(set(formatted_topic_list)) or create_tags_for_package(package)
+                distinct_formatted_topic_list = list(
+                    set(formatted_topic_list)) \
+                    or cls._create_tags_for_package(package)
                 package_to_topic_dict[
                     formatted_package] = distinct_formatted_topic_list
 
@@ -67,7 +71,8 @@ class GnosisPackageTopicModel(AbstractGnosis):
                         temp_package_list = topic_to_package_dict[
                             formatted_topic]
                         topic_to_package_dict[
-                            formatted_topic] = temp_package_list + [formatted_package]
+                            formatted_topic] = temp_package_list + \
+                                               [formatted_package]
 
             eco_to_package_to_topic_dict[ecosystem] = package_to_topic_dict
             eco_to_topic_to_package_dict[ecosystem] = topic_to_package_dict
@@ -105,15 +110,37 @@ class GnosisPackageTopicModel(AbstractGnosis):
         return self._dictionary
 
     @classmethod
-    def get_unknown_packages_from_manifests(cls, data_store, additional_path, package_topic_dict):
-        manifest_file_list = data_store.list_files(prefix=additional_path + MANIFEST_FILEPATH)
+    def _get_unknown_packages_from_manifests(cls, data_store, additional_path,
+                                             package_topic_dict):
+        manifest_file_list = data_store.list_files(prefix=additional_path +
+                                                   MANIFEST_FILEPATH)
         unknown_packages = {}
         for manifest_file in manifest_file_list:
-            eco_to_package_list_json_array = data_store.read_json_file(manifest_file)
+            eco_to_package_list_json_array = data_store.read_json_file(
+                manifest_file)
             for eco_to_package_list_json in eco_to_package_list_json_array:
-                ecosystem = eco_to_package_list_json.get(MANIFEST_ECOSYSTEM)
-                list_of_package_list = eco_to_package_list_json.get(MANIFEST_PACKAGE_LIST)
+                list_of_package_list = eco_to_package_list_json.get(
+                    MANIFEST_PACKAGE_LIST)
                 for package_list in list_of_package_list:
-                    unknown_packages.update({x.lower(): [] for x in package_list if x not in package_topic_dict})
-        print(unknown_packages)
+                    unknown_packages.update({x.lower(): []
+                                             for x in package_list
+                                             if x not in package_topic_dict})
         return unknown_packages
+
+    @classmethod
+    def _create_tags_for_package(cls, package_name):
+        """Create tags for a package based on its name"""
+        tags = []
+        name_parts = package_name.split(":")[:2]
+        for name_part in name_parts:
+            # Exclude common parts of the package name that are not
+            # useful as tags
+            tags += [
+                GNOSIS_PTM_TOPIC_PREFIX + tag.lower()
+                for tag in name_part.split('.') if
+                tag and tag != 'com' and tag != 'org' and tag != 'io'
+            ]
+        # Make sure there are no duplicates
+        return list(set(tags[:4]))
+
+

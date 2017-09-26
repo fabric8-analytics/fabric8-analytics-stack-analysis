@@ -278,6 +278,5 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         # eco_to_package_topic_dict
         topic_set = set()
         for package in package_list:
-            topic_set |= (set(eco_to_package_topic_dict[ecosystem].setdefault(package,
-                                                                              create_tags_for_package(package))))
+            topic_set |= (set(eco_to_package_topic_dict[ecosystem][package]))
         return list(topic_set)
