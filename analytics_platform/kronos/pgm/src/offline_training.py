@@ -45,7 +45,8 @@ def load_user_eco_to_co_occerrence_matrix_dict(input_co_occurrence_data_store, a
         ecosystem = com_filename.split("/")[-1].split(".")[0].split("_")[-1]
         if ecosystem not in ecosystem_list:
             ecosystem_list.append(ecosystem)
-        co_occurrence_matrix = input_co_occurrence_data_store.read_json_file_into_pandas_df(com_filename)
+        co_occurrence_matrix = input_co_occurrence_data_store.read_json_file_into_pandas_df(
+            com_filename)
         temp_user_eco_to_co_occurrence_matrix_dict[
             (user_category, ecosystem)] = co_occurrence_matrix
 
@@ -54,8 +55,8 @@ def load_user_eco_to_co_occerrence_matrix_dict(input_co_occurrence_data_store, a
     for user_category in user_category_list:
         eco_to_co_occurrence_matrix_dict = dict()
         for ecosystem in ecosystem_list:
-            eco_to_co_occurrence_matrix_dict[ecosystem] = temp_user_eco_to_co_occurrence_matrix_dict[
-                (user_category, ecosystem)]
+            eco_to_co_occurrence_matrix_dict[ecosystem] = \
+                temp_user_eco_to_co_occurrence_matrix_dict[(user_category, ecosystem)]
         user_eco_to_co_occurrence_matrix_dict[user_category] = eco_to_co_occurrence_matrix_dict
 
     return user_eco_to_co_occurrence_matrix_dict
@@ -64,10 +65,12 @@ def load_user_eco_to_co_occerrence_matrix_dict(input_co_occurrence_data_store, a
 def train_and_save_kronos_list(input_kronos_dependency_data_store, input_co_occurrence_data_store,
                                output_data_store, additional_path):
     eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
-        input_kronos_dependency_data_store=input_kronos_dependency_data_store, additional_path=additional_path)
+        input_kronos_dependency_data_store=input_kronos_dependency_data_store,
+        additional_path=additional_path)
 
     user_eco_to_cooccurrence_matrix_dict = load_user_eco_to_co_occerrence_matrix_dict(
-        input_co_occurrence_data_store=input_co_occurrence_data_store, additional_path=additional_path)
+        input_co_occurrence_data_store=input_co_occurrence_data_store,
+        additional_path=additional_path)
 
     for user_category in user_eco_to_cooccurrence_matrix_dict.keys():
         eco_to_cooccurrence_matrix_dict = user_eco_to_cooccurrence_matrix_dict[user_category]
@@ -98,7 +101,7 @@ def train_and_save_kronos_list_s3(training_data_url):
                                     access_key=config.AWS_S3_ACCESS_KEY_ID,
                                     secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
-    train_and_save_kronos_list(input_kronos_dependency_data_store=input_kronos_dependency_data_store,
-                               input_co_occurrence_data_store=input_cooccurrence_matrix_data_store,
-                               output_data_store=output_data_store, additional_path=additional_path)
-
+    train_and_save_kronos_list(
+        input_kronos_dependency_data_store=input_kronos_dependency_data_store,
+        input_co_occurrence_data_store=input_cooccurrence_matrix_data_store,
+        output_data_store=output_data_store, additional_path=additional_path)

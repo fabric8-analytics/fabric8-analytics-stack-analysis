@@ -9,14 +9,16 @@ from util.analytics_platform_util import trunc_string_at
 from util.data_store.s3_data_store import S3DataStore
 
 
-def train_and_save_gnosis_ref_arch(input_data_store, output_data_store, additional_path, fp_min_support_count,
+def train_and_save_gnosis_ref_arch(input_data_store, output_data_store, additional_path,
+                                   fp_min_support_count,
                                    fp_intent_topic_count_threshold,
                                    fp_num_partition):
-    gnosis_ref_arch_obj = GnosisReferenceArchitecture.train(data_store=input_data_store,
-                                                            additional_path=additional_path,
-                                                            min_support_count=fp_min_support_count,
-                                                            min_intent_topic_count=fp_intent_topic_count_threshold,
-                                                            fp_num_partition=fp_num_partition)
+    gnosis_ref_arch_obj = GnosisReferenceArchitecture.train(
+        data_store=input_data_store,
+        additional_path=additional_path,
+        min_support_count=fp_min_support_count,
+        min_intent_topic_count=fp_intent_topic_count_threshold,
+        fp_num_partition=fp_num_partition)
     gnosis_ref_arch_obj.save(output_data_store, additional_path + GNOSIS_RA_OUTPUT_PATH)
     return None
 
@@ -39,24 +41,31 @@ def train_and_save_gnosis_ref_arch_s3(training_data_url, fp_min_support_count,
                                     access_key=config.AWS_S3_ACCESS_KEY_ID,
                                     secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
-    train_and_save_gnosis_ref_arch(input_data_store=input_data_store, output_data_store=output_data_store,
-                                   additional_path=additional_path, fp_min_support_count=fp_min_support_count,
+    train_and_save_gnosis_ref_arch(input_data_store=input_data_store,
+                                   output_data_store=output_data_store,
+                                   additional_path=additional_path,
+                                   fp_min_support_count=fp_min_support_count,
                                    fp_intent_topic_count_threshold=fp_intent_topic_count_threshold,
                                    fp_num_partition=fp_num_partition)
     return None
 
 
-def generate_and_save_gnosis_package_topic_model(input_data_store, output_data_store, additional_path):
+def generate_and_save_gnosis_package_topic_model(input_data_store, output_data_store,
+                                                 additional_path):
     """Trains the package to topic map as well as topic to package map.
 
     :param input_data_store: source data store.
     :param output_data_store: destination data store.
     :param type: "curate" or "train". """
 
-    gnosis_package_topic_model_obj = GnosisPackageTopicModel.curate(data_store=input_data_store,
-                                                                    filename=additional_path + GNOSIS_PTM_INPUT_PATH,
-                                                                    additional_path=additional_path)
-    gnosis_package_topic_model_obj.save(data_store=output_data_store, filename=additional_path + GNOSIS_PTM_OUTPUT_PATH)
+    gnosis_package_topic_model_obj = GnosisPackageTopicModel.curate(
+        data_store=input_data_store,
+        filename=additional_path + GNOSIS_PTM_INPUT_PATH,
+        additional_path=additional_path)
+    gnosis_package_topic_model_obj.save(
+        data_store=output_data_store,
+        filename=additional_path + GNOSIS_PTM_OUTPUT_PATH)
+
     return None
 
 
@@ -71,5 +80,7 @@ def generate_and_save_gnosis_package_topic_model_s3(training_data_url):
     output_data_store = S3DataStore(src_bucket_name=output_bucket_name,
                                     access_key=config.AWS_S3_ACCESS_KEY_ID,
                                     secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
-    generate_and_save_gnosis_package_topic_model(input_data_store=input_data_store, output_data_store=output_data_store,
+
+    generate_and_save_gnosis_package_topic_model(input_data_store=input_data_store,
+                                                 output_data_store=output_data_store,
                                                  additional_path=additional_path)

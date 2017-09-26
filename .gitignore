@@ -1,5 +1,6 @@
 *.pyc
 env/
+venv/
 cache/
 config.py
 docker-compose*

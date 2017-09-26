@@ -7,7 +7,7 @@ def post(url, json_data):
 
     # TODO: check for error and raise exception
     if response.status_code != 200:
-        print ("ERROR %d: %s") % (response.status_code, response.reason)
+        print("ERROR {s}: {r}".format(s=response.status_code, r=response.reason))
 
     json_response = response.json()
     # print json.dumps(json_response, indent=4)

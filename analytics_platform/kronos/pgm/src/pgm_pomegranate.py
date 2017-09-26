@@ -21,8 +21,9 @@ class PGMPomegranate(AbstractPGM):
 
     @classmethod
     def train(cls, kronos_dependency_dict, package_occurrence_df):
-        kronos_model = cls._train_kronos_for_ecosystem(kronos_dependency_dict=kronos_dependency_dict,
-                                                       package_occurrence_df=package_occurrence_df)
+        kronos_model = cls._train_kronos_for_ecosystem(
+            kronos_dependency_dict=kronos_dependency_dict,
+            package_occurrence_df=package_occurrence_df)
 
         return PGMPomegranate(kronos_model)
 
@@ -53,13 +54,17 @@ class PGMPomegranate(AbstractPGM):
     def _train_kronos_for_ecosystem(cls, kronos_dependency_dict, package_occurrence_df):
 
         kronos_dependency_list_string = kronos_dependency_dict[KD_PARENT_TUPLE_LIST]
-        kronos_node_list = kronos_dependency_dict[KD_PACKAGE_LIST] + kronos_dependency_dict[KD_INTENT_LIST]
+        kronos_node_list = kronos_dependency_dict[KD_PACKAGE_LIST] + \
+            kronos_dependency_dict[KD_INTENT_LIST]
         kronos_node_string_list = [node_name.encode('utf-8') for node_name in kronos_node_list]
-        kronos_dependency_list = generate_kronos_dependency_list_for_pomegranate(kronos_dependency_list_string)
+        kronos_dependency_list = generate_kronos_dependency_list_for_pomegranate(
+            kronos_dependency_list_string)
 
-        package_occurrence_matrix = generate_matrix_from_pandas_df(package_occurrence_df, kronos_node_list)
+        package_occurrence_matrix = generate_matrix_from_pandas_df(package_occurrence_df,
+                                                                   kronos_node_list)
 
-        pgm_model = BayesianNetwork.from_structure(package_occurrence_matrix, structure=kronos_dependency_list,
+        pgm_model = BayesianNetwork.from_structure(package_occurrence_matrix,
+                                                   structure=kronos_dependency_list,
                                                    state_names=kronos_node_string_list)
         return pgm_model
 
@@ -69,7 +74,8 @@ class PGMPomegranate(AbstractPGM):
         n = len(evidence_dict_list)
         n_jobs = n
         result_array = reduce(list.__add__, Parallel(n_jobs=n_jobs)(
-            delayed(parallel_predict)(evidence_dict_list[int(n / n_jobs * i):int(n / n_jobs * (i + 1))]) for i in
+            delayed(parallel_predict)(evidence_dict_list[
+                int(n / n_jobs * i):int(n / n_jobs * (i + 1))]) for i in
             range(n_jobs)))
         return result_array
 

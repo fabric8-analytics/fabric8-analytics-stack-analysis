@@ -16,7 +16,8 @@ def generate_value_list_from_dict(dictionary):
 
 
 def generate_key_to_value_edges(dictionary):
-    """Represents every (key,[value1,value2,....]) pair of the dict as a list of edges [{"from":key,"to":value1},{"from":key,"to":value2},.....].
+    """Represents every (key,[value1,value2,....]) pair of the dict as a list of edges
+    [{"from":key,"to":value1},{"from":key,"to":value2},.....].
 
     :param dictionary: dict object
 
