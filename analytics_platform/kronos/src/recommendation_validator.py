@@ -1,7 +1,8 @@
 from collections import Counter
 import json
 from analytics_platform.kronos.src import config
-from analytics_platform.kronos.softnet.src.softnet_constants import MANIFEST_FILEPATH, MANIFEST_ECOSYSTEM, MANIFEST_PACKAGE_LIST
+from analytics_platform.kronos.softnet.src.softnet_constants import (
+    MANIFEST_FILEPATH, MANIFEST_ECOSYSTEM, MANIFEST_PACKAGE_LIST)
 from util.data_store.s3_data_store import S3DataStore
 from util.data_store.local_filesystem import LocalFileSystem
 
@@ -59,7 +60,8 @@ class RecommendationValidator(object):
 
     @classmethod
     def load_package_list_local(cls, input_folder_name, additional_path, input_ecosystem):
-        """Generate the aggregated manifest list for a given ecosystem from LocalFileSystem datasource.
+        """Generate the aggregated manifest list for a given ecosystem from
+        LocalFileSystem datasource.
 
         :param input_folder: The main directory where the manifest files are stored.
         :param additional_path: The directory to pick the manifest files from.
@@ -98,14 +100,17 @@ class RecommendationValidator(object):
             input_list = input_list[:]
             if alternate_to in input_list:
                 return set(
-                    [alternate_package if package == alternate_to else package for package in input_list])
+                    [alternate_package if package == alternate_to else package
+                        for package in input_list])
         return set()
 
     def check_alternate_recommendation_validity(self, recommended_dependency_set):
         """Check if the given test stack has a valid alternate recommendation.
-        An alternate recommendation is valid if the test stack is subset of any dependency set in the aggregated manifest list.
+        An alternate recommendation is valid if the test stack is subset of any
+        dependency set in the aggregated manifest list.
 
-        :param recommended_dependency_set: The test stack obtained from fnc. generate_alternate_dependency_set().
+        :param recommended_dependency_set: The test stack obtained from fnc.
+        generate_alternate_dependency_set().
 
         :return: Frequency of subset where test stack is a part of any known dependency list."""
 
@@ -118,9 +123,11 @@ class RecommendationValidator(object):
 
     def check_companion_recommendation_validity(self, recommended_dependency_set, input_list):
         """Check if the given test stack has a valid companion recommendation.
-        A companion recommendation is valid if the test stack is subset of any dependency set in the aggregated manifest list.
+        A companion recommendation is valid if the test stack is subset of any
+        dependency set in the aggregated manifest list.
 
-        :param recommended_dependency_set: The test stack obtained from fnc. generate_companion_dependency_set()
+        :param recommended_dependency_set: The test stack obtained from fnc.
+        generate_companion_dependency_set()
 
         :return: The list of companion packages observed among the known dependency set."""
 
@@ -205,7 +212,8 @@ class RecommendationValidator(object):
         return final_companion_recommendations
 
     def get_filtered_alternate_list(self, alternate_package, outlier_packages):
-        """Prune the PGM recommended alternate package list to include only the outlier packages for testing recommendation validation.
+        """Prune the PGM recommended alternate package list to include only the
+        outlier packages for testing recommendation validation.
 
         :param alternate_package: The alternate package list recommended by PGM.
         :param outlier_packages: The list outliers in user stack recognised by PGM.
@@ -221,7 +229,8 @@ class RecommendationValidator(object):
         return only_outlier_alternate
 
     def get_filtered_input_list(self, input_list, missing_packages):
-        """Prune the original package list to exclude the missing packages for testing recommendation validation.
+        """Prune the original package list to exclude the missing packages for
+        testing recommendation validation.
 
         :param input_list: The original package list of the user stack.
         :param missing_packages: The list of Packages unknown to PGM.

@@ -9,8 +9,10 @@ import numpy as np
 
 class S3DataStore(AbstractDataStore):
     def __init__(self, src_bucket_name, access_key, secret_key):
-        self.session = boto3.session.Session(aws_access_key_id=access_key, aws_secret_access_key=secret_key)
-        self.s3_resource = self.session.resource('s3', config=botocore.client.Config(signature_version='s3v4'))
+        self.session = boto3.session.Session(aws_access_key_id=access_key,
+                                             aws_secret_access_key=secret_key)
+        self.s3_resource = self.session.resource('s3', config=botocore.client.Config(
+            signature_version='s3v4'))
         self.bucket = self.s3_resource.Bucket(src_bucket_name)
         self.bucket_name = src_bucket_name
 

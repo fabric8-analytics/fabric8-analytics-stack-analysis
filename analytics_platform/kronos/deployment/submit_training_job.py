@@ -32,7 +32,8 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
     # Note: these logs are AWS logs that tell us about application-id of YARN application
     #       we need to log into EMR cluster nodes and use application-id to view YARN logs
     s3_log_bucket = config.DEPLOYMENT_PREFIX + '-automated-analytics-spark-jobs'
-    s3_log_key = '{}_{}_spark_emr_log_'.format(config.DEPLOYMENT_PREFIX, COMPONENT_PREFIX, str_cur_time)
+    s3_log_key = '{}_{}_spark_emr_log_'.format(config.DEPLOYMENT_PREFIX, COMPONENT_PREFIX,
+                                               str_cur_time)
     s3_log_uri = 's3://{bucket}/{key}'.format(bucket=s3_log_bucket, key=s3_log_key)
 
     print "Uploading the bootstrap action to AWS S3 URI " + s3_bootstrap_uri + " ..."
@@ -141,7 +142,8 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
                     'Args': ['spark-submit',
                              '--py-files',
                              '/home/hadoop/' + s3_key,
-                             '/home/hadoop/analytics_platform/kronos/src/kronos_offline_training.py',
+                             '/home/hadoop/analytics_platform/kronos/src/' \
+                             'kronos_offline_training.py',
                              training_data_url,
                              fp_min_support_count,
                              fp_intent_topic_count_threshold,
@@ -160,7 +162,8 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
         output['training_job_id'] = response.get('JobFlowId')
         output['status'] = 'work_in_progress'
         output[
-            'status_description'] = "The training is in progress. Please check the given training job after some time."
+            'status_description'] = "The training is in progress. Please check the given " \
+                                    "training job after some time."
     else:
         output['training_job_id'] = "Error"
         output['status'] = 'Error'

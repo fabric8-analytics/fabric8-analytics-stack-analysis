@@ -27,14 +27,17 @@ class GnosisReferenceArchitecture(AbstractGnosis):
               min_intent_topic_count=None, fp_num_partition=None):
         """Generates the Gnosis Reference Architecture.
 
-        :param data_store: input data store containing the processed package topic map and list of manifest files.
+        :param data_store: input data store containing the processed package
+        topic map and list of manifest files.
         :param min_support_count: minimum support count to be used by FP Growth Algo.
         :param min_intent_topic_count: minimum number of allowed topics per intent.
 
         :return: the Gnosis Reference Architecture dictionary."""
 
-        gnosis_ptm_obj = GnosisPackageTopicModel.load(data_store=data_store,
-                                                      filename=additional_path + GNOSIS_PTM_OUTPUT_PATH)
+        gnosis_ptm_obj = GnosisPackageTopicModel.load(
+            data_store=data_store,
+            filename=additional_path + GNOSIS_PTM_OUTPUT_PATH)
+
         eco_to_package_topic_dict = gnosis_ptm_obj.get_dictionary()
 
         eco_to_package_to_topic_dict = eco_to_package_topic_dict[
@@ -43,10 +46,11 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         gnosis_component_class_list = cls._generate_component_class_list_for_eco_package_topic_dict(
             eco_to_package_topic_dict=eco_to_package_to_topic_dict)
 
-        fp_growth_model = cls._train_fp_growth_model(data_store=data_store,
-                                                     eco_to_package_topic_dict=eco_to_package_to_topic_dict,
-                                                     min_support_count=min_support_count,
-                                                     additional_path=additional_path, fp_num_partition=fp_num_partition)
+        fp_growth_model = cls._train_fp_growth_model(
+            data_store=data_store,
+            eco_to_package_topic_dict=eco_to_package_to_topic_dict,
+            min_support_count=min_support_count,
+            additional_path=additional_path, fp_num_partition=fp_num_partition)
 
         gnosis_intent_to_component_class_dict = cls._generate_intent_component_class_dict_fp_growth(
             model=fp_growth_model, min_intent_topic_count=min_intent_topic_count,
@@ -113,11 +117,15 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         return component_class_list
 
     @classmethod
-    def _generate_edge_list(cls, gnosis_intent_to_component_class_dict, gnosis_intent_to_intent_dict):
-        """Generates the list of edges as the list of tuples  [(source,destination),(source,destination),...].
+    def _generate_edge_list(cls, gnosis_intent_to_component_class_dict,
+                            gnosis_intent_to_intent_dict):
+        """Generates the list of edges as the list of tuples
+        [(source,destination),(source,destination),...].
 
-        :param gnosis_intent_to_component_class_dict: lowest level of Gnosis hierarchy in dict format.
-        :param gnosis_intent_to_intent_dict: all the levels except the lowest level of Gnosis hierarchy in dict format.
+        :param gnosis_intent_to_component_class_dict: lowest level of Gnosis
+        hierarchy in dict format.
+        :param gnosis_intent_to_intent_dict: all the levels except the lowest
+        level of Gnosis hierarchy in dict format.
 
         :return: list of edges where edges are represented as tuples."""
 
@@ -129,10 +137,12 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         return edge_list
 
     @classmethod
-    def _generate_intent_list(cls, gnosis_intent_to_intent_dict, gnosis_intent_to_component_class_dict):
+    def _generate_intent_list(cls, gnosis_intent_to_intent_dict,
+                              gnosis_intent_to_component_class_dict):
         """Generates the list of intents.
 
-        :param gnosis_intent_to_intent_dict: all the levels except the lowest level of Gnosis hierarchy in dict format.
+        :param gnosis_intent_to_intent_dict: all the levels except the lowest
+        level of Gnosis hierarchy in dict format.
 
         :return: list of intents."""
 
@@ -147,11 +157,12 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
     @classmethod
     def _generate_gnosis_model(cls, gnosis_intent_to_intent_dict,
-                               gnosis_intent_to_component_class_dict, gnosis_component_class_list, gnosis_intent_list,
-                               gnosis_edge_list):
+                               gnosis_intent_to_component_class_dict, gnosis_component_class_list,
+                               gnosis_intent_list, gnosis_edge_list):
         """Generates the Gnosis model.
 
-        :param gnosis_edge_list_string: list of edges in the string format '[(source,destination),(source,destination),...]'.
+        :param gnosis_edge_list_string: list of edges in the string format
+        '[(source,destination),(source,destination),...]'.
         :param gnosis_intent_to_intent_dict: Intent to Intent map.
         :param gnosis_intent_component_class_dict: Intent to component class map.
         :param gnosis_component_class_list: Component class list.
@@ -160,8 +171,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         :return: Gnosis model."""
 
         gnosis_ra_dict = dict()
-        gnosis_ra_dict[GNOSIS_RA_DICT] = dict(
-            gnosis_intent_to_intent_dict, **gnosis_intent_to_component_class_dict)
+        gnosis_ra_dict[GNOSIS_RA_DICT] = dict(gnosis_intent_to_intent_dict,
+                                              **gnosis_intent_to_component_class_dict)
         gnosis_ra_dict[
             GNOSIS_RA_COMPONENT_CLASS_LIST] = gnosis_component_class_list
         gnosis_ra_dict[GNOSIS_RA_INTENT_LIST] = gnosis_intent_list
@@ -171,8 +182,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         return gnosis_ra_obj
 
     @classmethod
-    def _train_fp_growth_model(cls, data_store, eco_to_package_topic_dict, min_support_count, additional_path,
-                               fp_num_partition):
+    def _train_fp_growth_model(cls, data_store, eco_to_package_topic_dict, min_support_count,
+                               additional_path, fp_num_partition):
         sc = SparkContext()
         manifest_file_list = data_store.list_files(
             prefix=additional_path + MANIFEST_FILEPATH)
@@ -186,7 +197,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                     MANIFEST_PACKAGE_LIST)
                 for package_list in list_of_package_list:
                     package_list_lowercase = [x.lower() for x in package_list]
-                    topic_list = cls.get_topic_list_for_package_list(package_list_lowercase, ecosystem,
+                    topic_list = cls.get_topic_list_for_package_list(package_list_lowercase,
+                                                                     ecosystem,
                                                                      eco_to_package_topic_dict)
                     list_of_topic_list.append(topic_list)
         transactions = sc.parallelize(list_of_topic_list)
@@ -200,7 +212,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         return model
 
     @classmethod
-    def _generate_intent_component_class_dict_fp_growth(cls, model, min_intent_topic_count, package_list):
+    def _generate_intent_component_class_dict_fp_growth(cls, model, min_intent_topic_count,
+                                                        package_list):
         result = model.freqItemsets().collect()
 
         itemset_freq_tuple_list = [(fi.items, fi.freq) for fi in result]
@@ -210,9 +223,9 @@ class GnosisReferenceArchitecture(AbstractGnosis):
             item_length = len(itemset_freq_tuple[0])
             if item_length == min_intent_topic_count:
                 if item_length in topic_num_to_itemset_dict:
-                    l = topic_num_to_itemset_dict[item_length]
-                    l.append(itemset_freq_tuple)
-                    topic_num_to_itemset_dict[item_length] = l
+                    lst = topic_num_to_itemset_dict[item_length]
+                    lst.append(itemset_freq_tuple)
+                    topic_num_to_itemset_dict[item_length] = lst
                 else:
                     topic_num_to_itemset_dict[
                         item_length] = [itemset_freq_tuple]

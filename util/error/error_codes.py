@@ -5,5 +5,6 @@ ERR_INPUT_INVALID = {
 
 ERR_MODEL_NOT_AVAILABLE = {
     "name": "ERR_MODEL_NOT_AVAILABLE",
-    "msg": "Model does not seem to be available! It should be either trained or loaded before scoring."
+    "msg": "Model does not seem to be available! It should be either trained or loaded "
+           "before scoring."
 }
