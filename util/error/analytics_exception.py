@@ -7,4 +7,3 @@ class AnalyticsException(Exception):
 
     def __str__(self):
         return "{}: {}".format(self.code.get("name"), self.code.get("msg"))
-
