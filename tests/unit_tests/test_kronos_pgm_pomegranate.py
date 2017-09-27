@@ -62,7 +62,6 @@ class TestKronosPomegranate(TestCase):
 
         eco_to_kronos_dependency_dict = get_eco_to_kronos_dependency_dict(data_store=input_data_store,
                                                                           folderpath="data_kronos_dependency")
-        print eco_to_kronos_dependency_dict
         self.assertTrue(eco_to_kronos_dependency_dict is not None)
 
         user_request = [{"ecosystem": "pypi", "comp_package_count_threshold": 10,
