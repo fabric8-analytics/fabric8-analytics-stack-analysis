@@ -40,3 +40,20 @@ class TestGnosisPackageTopicModel(TestCase):
         self.assertDictEqual(output_result, expected_output_result)
 
         package_topic_model.save(data_store=output_data_store, filename="data_package_topic/package_topic.json")
+
+    def test_manifest_missing_packages(self):
+        pass
+
+    def test_package_tag_creation(self):
+        input_data_store = LocalFileSystem(
+            "tests/data/data_gnosis/input-ptm-data")
+        self.assertTrue(input_data_store is not None)
+
+        ptm_json = input_data_store.read_json_file(
+            filename='data_input_curated_package_topic/package_topic.json')
+        self.assertTrue(ptm_json)
+        package_names = ptm_json['package_topic_map']
+        for package_name in package_names:
+            tag_list = GnosisPackageTopicModel._create_tags_for_package(
+                package_name)
+            self.assertTrue(tag_list)
