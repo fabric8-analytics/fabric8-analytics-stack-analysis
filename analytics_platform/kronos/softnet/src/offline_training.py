@@ -6,6 +6,8 @@ from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator import 
 from analytics_platform.kronos.softnet.src.kronos_dependency_generator import \
     KronosDependencyGenerator
 from analytics_platform.kronos.softnet.src.softnet_constants import *
+from analytics_platform.kronos.apollo.src.apollo_constants import (
+    APOLLO_EXTENDED_COUNT, APOLLO_WEIGHT_LIST)
 from analytics_platform.kronos.src import config
 from util.data_store.s3_data_store import S3DataStore
 from util.analytics_platform_util import trunc_string_at
@@ -96,10 +98,17 @@ def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store,
             manifest_content_dict = dict(manifest_content_json)
             ecosystem = manifest_content_dict[MANIFEST_ECOSYSTEM]
             kronos_dependency_dict = eco_to_kronos_dependency_dict[ecosystem]
-            list_of_package_list = manifest_content_dict.get(MANIFEST_PACKAGE_LIST)
+            list_of_package_list = manifest_content_dict.get(
+                MANIFEST_PACKAGE_LIST)
+            list_of_package_weight = manifest_content_dict.get(
+                APOLLO_EXTENDED_COUNT)
+
+            weight_count = manifest_content_dict.get(APOLLO_EXTENDED_COUNT)
             cooccurrence_matrix_obj = CooccurrenceMatrixGenerator.generate_cooccurrence_matrix(
                 kronos_dependency_dict=kronos_dependency_dict,
-                list_of_package_list=list_of_package_list)
+                list_of_package_list=list_of_package_list,
+                list_of_package_weight=list_of_package_weight,
+                weight_count=weight_count)
             output_filename = COM_OUTPUT_FOLDER + "/" + str(
                 user_category) + "/" + "cooccurrence_matrix" + "_" + str(
                 ecosystem) + ".json"
