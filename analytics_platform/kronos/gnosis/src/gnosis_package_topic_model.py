@@ -112,6 +112,8 @@ class GnosisPackageTopicModel(AbstractGnosis):
     @classmethod
     def _get_unknown_packages_from_manifests(cls, data_store, additional_path,
                                              package_topic_dict):
+        """Checks the manifest files for packages that are missing in
+        the package topic map and collects them."""
         manifest_file_list = data_store.list_files(prefix=additional_path +
                                                    MANIFEST_FILEPATH)
         unknown_packages = {}
