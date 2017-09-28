@@ -190,7 +190,7 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
         requested_package_list, unknown_package_ratio_threshold, package_list)
 
     alternate_package_dict = {}
-    companion_package_dict_list_pruned = list()
+    companion_package_dict_same_name_pruned = list()
     outlier_package_dict_list = list()
     observed_package_to_topic_dict = {}
 
