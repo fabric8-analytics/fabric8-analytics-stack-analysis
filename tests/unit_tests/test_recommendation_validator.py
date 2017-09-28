@@ -123,8 +123,8 @@ class TestRecommendationValidator(TestCase):
         recommended_dependency_set = set(['A', 'B', 'C', 'D', 'E'])
         diff_list = obj.check_companion_recommendation_validity(
             recommended_dependency_set, input_list)
-        self.assertTrue(len(diff_list) == 2)
-        self.assertTrue(diff_list == ['E', 'F'])
+        self.assertTrue(len(diff_list) == 3)
+        self.assertTrue(diff_list == ['E', 'E', 'F'])
         recommended_dependency_set = set(['A', 'B', 'C', 'D', 'Q'])
         diff_list = obj.check_companion_recommendation_validity(
             recommended_dependency_set, input_list)
