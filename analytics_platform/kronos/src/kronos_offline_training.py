@@ -3,6 +3,7 @@ from analytics_platform.kronos.gnosis.src.offline_training import (
 from analytics_platform.kronos.softnet.src.offline_training import (
     generate_and_save_kronos_dependency_s3, generate_and_save_cooccurrence_matrices_s3)
 from analytics_platform.kronos.pgm.src.offline_training import train_and_save_kronos_list_s3
+from analytics_platform.kronos.apollo.src.apollo_manifest_format import ManifestFormatter
 import sys
 import time
 
@@ -22,6 +23,11 @@ if __name__ == '__main__':
 
     print("S3 URL : ", training_data_url)
     print()
+
+    t0 = time.time()
+    print("Manifest Preprocessing started")
+    ManifestFormatter.get_data_s3_store(training_data_url=training_data_url)
+    print("Manifest Preprocessing Ended in ", time.time() - t0, " seconds")
 
     t0 = time.time()
     print("Gnosis Training Started")

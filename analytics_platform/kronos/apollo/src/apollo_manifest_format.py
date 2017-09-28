@@ -2,6 +2,7 @@ from analytics_platform.kronos.src import config
 from analytics_platform.kronos.apollo.src.apollo_constants import *
 from util.data_store.s3_data_store import S3DataStore
 from util.data_store.local_filesystem import LocalFileSystem
+from util.analytics_platform_util import trunc_string_at
 
 
 class ManifestFormatter(object):
@@ -189,11 +190,14 @@ class ManifestFormatter(object):
         ManifestFormatter.generate_save_obj(
             result_manifest_json, manifest_filename, output_manifest_data_store, additional_path)
 
+    @classmethod
+    def get_data_s3_store(cls, training_data_url):
+        """Return the clean manifest present in the given s3 training URL.
 
-if __name__ == '__main__':
-    ManifestFormatter.load_manifest_local(input_folder_name="tests/data/data_apollo/input_raw_manifest",
-                                          output_folder_name="tests/data/data_apollo/output_clean_manifest",
-                                          additional_path="")
-    # ManifestFormatter.load_manifest_s3(input_bucket_name=config.AWS_BUCKET_NAME,
-    #                                    output_bucket_name=config.AWS_BUCKET_NAME,
-    #                                    additional_path=config.KRONOS_MODEL_PATH)
+           :param training_data_url: The Location where data is read from and written to."""
+
+        input_data_name = trunc_string_at(training_data_url, "/", 2, 3)
+        output_data_name = trunc_string_at(training_data_url, "/", 2, 3)
+        additional_path = trunc_string_at(training_data_url, "/", 3, -1)
+        cls.load_manifest_s3(input_data_name,
+                             output_data_name, additional_path)
