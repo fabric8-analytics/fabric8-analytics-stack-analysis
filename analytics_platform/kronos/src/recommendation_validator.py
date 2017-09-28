@@ -137,13 +137,8 @@ class RecommendationValidator(object):
         for dependency_list in self.all_list_of_package_list:
             diff = []
             manifest_dependency_set = set(dependency_list)
-            if manifest_dependency_set > recommended_dependency_set:
-                # diff gives us list of packges present in the known stack vs
-                # the input stack, leaving only the companion packages
-                diff = list(manifest_dependency_set -
-                            recommended_dependency_set)
-            elif manifest_dependency_set == recommended_dependency_set:
-                diff = list(recommended_dependency_set - input_set)
+            if manifest_dependency_set >= recommended_dependency_set:
+                diff = list(manifest_dependency_set - input_set)
             difference_list.extend(diff)
         return difference_list
 
@@ -179,7 +174,7 @@ class RecommendationValidator(object):
                 each_recommendation] = temp_each_recommendation
         return final_alternate_recommendations
 
-    def check_companion_recommendation(self, input_list, companion_packages):
+    def check_companion_recommendation(self, input_list, companion_packages, top_count=3):
         """Return the filtered companion recommendations after validation.
 
         :param input_list: The original package list of the user stack.
@@ -200,11 +195,11 @@ class RecommendationValidator(object):
             for package in difference_list:
                 count[package] += 1
         # Pick only top three companion components
-        top_three_comp_name = [comp[0] for comp in count.most_common(3)]
+        top_comp_name = [comp[0] for comp in count.most_common(top_count)]
         for each_recommendation in companion_packages:
             companion_package_name = each_recommendation.get('package_name')
             comp_count = count[companion_package_name]
-            if companion_package_name in top_three_comp_name and comp_count:
+            if companion_package_name in top_comp_name and comp_count:
                 # change the value of cooccurrence_probability to reflect the actual manifest
                 # usage count.
                 each_recommendation["cooccurrence_probability"] = comp_count
