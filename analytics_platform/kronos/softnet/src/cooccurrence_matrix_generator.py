@@ -12,7 +12,10 @@ class CooccurrenceMatrixGenerator(object):
         self._matrix_dict = matrix_dict
 
     @classmethod
-    def generate_cooccurrence_matrix(cls, kronos_dependency_dict, list_of_package_list, list_of_package_weight, weight_count):
+    def generate_cooccurrence_matrix(cls, kronos_dependency_dict,
+                                     list_of_package_list,
+                                     list_of_package_weight,
+                                     weight_count):
         kronos_intent_dependency_dict = kronos_dependency_dict.get(
             KD_INTENT_DEPENDENCY_MAP)
         kronos_component_dependency_dict = kronos_dependency_dict.get(
@@ -30,7 +33,8 @@ class CooccurrenceMatrixGenerator(object):
         return CooccurrenceMatrixGenerator(cooccurrence_matrix)
 
     def save(self, data_store, filename):
-        data_store.write_pandas_df_into_json_file(data=self._matrix_dict, filename=filename)
+        data_store.write_pandas_df_into_json_file(
+            data=self._matrix_dict, filename=filename)
 
     @classmethod
     def load(cls, data_store, filename):
@@ -60,7 +64,8 @@ class CooccurrenceMatrixGenerator(object):
         return intent_occurrence
 
     @classmethod
-    def _generate_cooccurrence_matrix_for_ecosystem(cls, list_of_package_list, node_list,
+    def _generate_cooccurrence_matrix_for_ecosystem(cls, list_of_package_list,
+                                                    node_list,
                                                     kronos_component_dependency_dict,
                                                     kronos_intent_dependency_dict,
                                                     list_of_package_weight,
@@ -107,8 +112,8 @@ class CooccurrenceMatrixGenerator(object):
                 for intent in intent_list:
                     children_intent_list = kronos_intent_dependency_dict[intent]
                     if set(children_intent_list) < set(temp_node_list):
-                        row_intent_component_df = cooccurrence_matrix.loc[[row_id],
-                                                                          children_intent_list]
+                        row_intent_component_df = cooccurrence_matrix.\
+                            loc[[row_id], children_intent_list]
                         row_intent_component_dict = row_intent_component_df.to_dict(
                             orient="index")[row_id]
                         intent_occurrence = cls.get_intent_occurrence(

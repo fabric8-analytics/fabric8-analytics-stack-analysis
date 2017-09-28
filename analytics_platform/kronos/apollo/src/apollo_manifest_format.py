@@ -14,7 +14,9 @@ class ManifestFormatter(object):
         self.manifest_json = clean_manifest_json
 
     @staticmethod
-    def get_clean_manifest(input_manifest_data_store, output_manifest_data_store, additional_path):
+    def get_clean_manifest(input_manifest_data_store,
+                           output_manifest_data_store,
+                           additional_path):
         """Generate the clean aggregated manifest list as required by Gnosis.
 
         :param input_manifest_data_store: The Data store to pick the manifest files from.
@@ -51,10 +53,14 @@ class ManifestFormatter(object):
         output_manifest_data_store = S3DataStore(src_bucket_name=output_bucket_name,
                                                  access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                  secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
-        return cls.get_clean_manifest(input_manifest_data_store, output_manifest_data_store, additional_path)
+        return cls.get_clean_manifest(input_manifest_data_store,
+                                      output_manifest_data_store,
+                                      additional_path)
 
     @classmethod
-    def load_manifest_local(cls, input_folder_name, output_folder_name, additional_path):
+    def load_manifest_local(cls, input_folder_name,
+                            output_folder_name,
+                            additional_path):
         """Generate the aggregated manifest list for a given ecosystem from
         LocalFileSystem datasource.
 
@@ -67,7 +73,9 @@ class ManifestFormatter(object):
         # Create a LocalFile object
         input_manifest_data_store = LocalFileSystem(src_dir=input_folder_name)
         output_manifest_data_store = LocalFileSystem(src_dir=output_folder_name)
-        return cls.get_clean_manifest(input_manifest_data_store, output_manifest_data_store, additional_path)
+        return cls.get_clean_manifest(input_manifest_data_store,
+                                      output_manifest_data_store,
+                                      additional_path)
 
     def save(self, data_store, filename):
         """Saves the Manifest object in json format.
@@ -84,7 +92,8 @@ class ManifestFormatter(object):
 
         return self.manifest_json
 
-    def get_output_filename(self, manifest_filename, additional_path):
+    def get_output_filename(self, manifest_filename,
+                            additional_path):
         """Generate output filename from given input filename.
 
            :param manifest_filename: The input file name.
@@ -109,11 +118,16 @@ class ManifestFormatter(object):
         stars = int(github_stats.get(GH_STAR, 0))
         watchers = int(github_stats.get(GH_WATCH, 0))
         popularity_count = int(
-            round(WT_STARS * stars + WT_FORKS * forks + WT_WATCHERS * watchers))
+            round(WT_STARS * stars +
+                  WT_FORKS * forks +
+                  WT_WATCHERS * watchers))
         return popularity_count
 
     @classmethod
-    def generate_save_obj(cls, result_manifest_json, manifest_filename, output_manifest_data_store, additional_path):
+    def generate_save_obj(cls, result_manifest_json,
+                          manifest_filename,
+                          output_manifest_data_store,
+                          additional_path):
         """Create and save the object of ManifestFormatter class.
 
            :param result_manifest_json: The clean manifets json to be saved.
@@ -158,15 +172,16 @@ class ManifestFormatter(object):
     def get_aggregate_each_manifest_json(cls, manifest_content_json):
         """Create a dict of clean values per manifest_json.
 
-           :param manifest_content_json: The raw manifest content to be cleaned. 
+           :param manifest_content_json: The raw manifest content to be cleaned.
 
            :return: Clean dict of values."""
 
         temp_eco_values = {}
         ecosystem = manifest_content_json.get(APOLLO_ECOSYSTEM)
         package_list = manifest_content_json.get(APOLLO_PACKAGE_LIST)
-        aggregated_package_list, aggregated_package_weight, aggregated_count = ManifestFormatter.aggregate_each_pom(
-            package_list)
+        aggregated_package_list, aggregated_package_weight, aggregated_count = ManifestFormatter\
+            .aggregate_each_pom(
+                package_list)
         temp_eco_values[APOLLO_ECOSYSTEM] = ecosystem
         temp_eco_values[APOLLO_PACKAGE_LIST] = aggregated_package_list
         temp_eco_values[APOLLO_WEIGHT_LIST] = aggregated_package_weight
@@ -174,7 +189,10 @@ class ManifestFormatter(object):
         return temp_eco_values
 
     @classmethod
-    def clean_each_file(cls, manifest_filename, manifest_content_json_list, output_manifest_data_store, additional_path):
+    def clean_each_file(cls, manifest_filename,
+                        manifest_content_json_list,
+                        output_manifest_data_store,
+                        additional_path):
         """Prepare the clean manifest data and save it.
 
            :param manifest_filename: The raw manifest file name.

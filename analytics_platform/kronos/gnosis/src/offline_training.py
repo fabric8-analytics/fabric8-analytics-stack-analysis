@@ -19,7 +19,8 @@ def train_and_save_gnosis_ref_arch(input_data_store, output_data_store, addition
         min_support_count=fp_min_support_count,
         min_intent_topic_count=fp_intent_topic_count_threshold,
         fp_num_partition=fp_num_partition)
-    gnosis_ref_arch_obj.save(output_data_store, additional_path + GNOSIS_RA_OUTPUT_PATH)
+    gnosis_ref_arch_obj.save(
+        output_data_store, additional_path + GNOSIS_RA_OUTPUT_PATH)
     return None
 
 
