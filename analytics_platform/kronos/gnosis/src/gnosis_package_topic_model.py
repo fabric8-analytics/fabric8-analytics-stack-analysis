@@ -24,9 +24,11 @@ class GnosisPackageTopicModel(AbstractGnosis):
 
     @classmethod
     def curate(cls, data_store, filename, additional_path=""):
-        """Reads curated package topic dict from the given store and makes every
-         element to lower case, regenerates the package topic map and generated
-         the topic to package map.
+        """Generate an instance of this class, contains the package topic map and topic package map
+
+        Reads curated package topic dict from the given store and makes every
+        element to lower case, regenerates the package topic map and generated
+        the topic to package map.
 
         :param data_store: Data store to read curated package to topic data from
         :param filename: name of the file containing curated data
@@ -72,7 +74,7 @@ class GnosisPackageTopicModel(AbstractGnosis):
                             formatted_topic]
                         topic_to_package_dict[
                             formatted_topic] = temp_package_list + \
-                                               [formatted_package]
+                            [formatted_package]
 
             eco_to_package_to_topic_dict[ecosystem] = package_to_topic_dict
             eco_to_topic_to_package_dict[ecosystem] = topic_to_package_dict
@@ -144,5 +146,3 @@ class GnosisPackageTopicModel(AbstractGnosis):
             ]
         # Make sure there are no duplicates
         return list(set(tags[:4]))
-
-
