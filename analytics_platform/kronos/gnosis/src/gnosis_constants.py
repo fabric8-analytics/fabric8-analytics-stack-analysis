@@ -15,6 +15,8 @@ GNOSIS_PTM_PACKAGE_TOPIC_MAP = "package_topic_map"
 GNOSIS_PTM_TOPIC_PACKAGE_MAP = "topic_package_map"
 GNOSIS_PTM_TOPIC_PREFIX = "c_"
 GNOSIS_PTM_INPUT_PATH = "data_input_curated_package_topic/package_topic.json"
+# Get rid of this limit and set it to -1 once we do ovecome this limitation
+GNOSIS_PTM_TAG_LIMIT = 4
 
 
 """General Constants for Gnosis."""

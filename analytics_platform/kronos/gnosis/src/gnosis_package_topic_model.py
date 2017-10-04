@@ -59,11 +59,9 @@ class GnosisPackageTopicModel(AbstractGnosis):
                 formatted_package = package.lower()
                 formatted_topic_list = [
                     GNOSIS_PTM_TOPIC_PREFIX + x.lower() for x in topic_list]
-                distinct_formatted_topic_list = list(
-                    set(formatted_topic_list)) \
-                    or cls._create_tags_for_package(package)
-                package_to_topic_dict[
-                    formatted_package] = distinct_formatted_topic_list
+                distinct_formatted_topic_list = \
+                    set(formatted_topic_list) or cls._create_tags_for_package(package)
+                package_to_topic_dict[formatted_package] = list(distinct_formatted_topic_list)
 
                 for formatted_topic in distinct_formatted_topic_list:
                     if formatted_topic not in topic_to_package_dict:
@@ -124,7 +122,7 @@ class GnosisPackageTopicModel(AbstractGnosis):
                 manifest_file)
             for eco_to_package_list_json in eco_to_package_list_json_array:
                 list_of_package_list = eco_to_package_list_json.get(
-                    MANIFEST_PACKAGE_LIST)
+                    MANIFEST_PACKAGE_LIST) or []
                 for package_list in list_of_package_list:
                     unknown_packages.update({x.lower(): []
                                              for x in package_list
@@ -145,4 +143,4 @@ class GnosisPackageTopicModel(AbstractGnosis):
                 tag and tag != 'com' and tag != 'org' and tag != 'io'
             ]
         # Make sure there are no duplicates
-        return list(set(tags[:4]))
+        return set(tags[:GNOSIS_PTM_TAG_LIMIT])
