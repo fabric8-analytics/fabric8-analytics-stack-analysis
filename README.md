@@ -1,6 +1,6 @@
 # Stack Analysis
 
-## List of models currently present in the analytcs platform
+## List of models currently present in the analytics platform
 
 
 * [Gnosis](/analytics_platform/kronos/gnosis)
