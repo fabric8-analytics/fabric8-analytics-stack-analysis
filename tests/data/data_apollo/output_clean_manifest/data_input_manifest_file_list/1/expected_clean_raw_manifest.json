@@ -1,0 +1,24 @@
+[
+    {
+        "ecosystem": "ecosystem_name",
+        "github_weights": [3300, 3300, 2, 2],
+        "github_repeat_count": 6604,
+        "package_list": [
+            ["1", "2", "3"],
+            ["4", "5"],
+            ["6", "7", "8", "9"],
+            ["10", "11"]
+            ]
+    }, 
+    {
+        "ecosystem": "ecosystem_name",
+        "github_weights": [3300, 3300, 2, 2],
+        "github_repeat_count": 6604,
+        "package_list": [
+            ["1", "2", "3"],
+            ["4", "5"],
+            ["6", "7", "8", "9"],
+            ["10", "11"]
+        ]
+    }
+]

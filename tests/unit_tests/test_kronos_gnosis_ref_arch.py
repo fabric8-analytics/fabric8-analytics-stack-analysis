@@ -25,7 +25,7 @@ class TestGnosisReferenceArchitecture(TestCase):
         self.assertTrue(output_data_store is not None)
 
         gnosis_ra_obj = GnosisReferenceArchitecture.train(data_store=input_data_store, min_support_count=40,
-                                                          min_intent_topic_count=2,fp_num_partition=12)
+                                                          min_intent_topic_count=2, fp_num_partition=12)
 
         self.assertTrue(gnosis_ra_obj is not None)
         output_result = gnosis_ra_obj.get_dictionary()
