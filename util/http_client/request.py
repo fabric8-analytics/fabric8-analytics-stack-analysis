@@ -1,5 +1,5 @@
 import requests
-import json
+from util.logging.project_logger import _logger
 
 
 def post(url, json_data):
@@ -7,7 +7,7 @@ def post(url, json_data):
 
     # TODO: check for error and raise exception
     if response.status_code != 200:
-        print("ERROR {s}: {r}".format(s=response.status_code, r=response.reason))
+        _logger.debug("ERROR {s}: {r}".format(s=response.status_code, r=response.reason))
 
     json_response = response.json()
     return json_response
