@@ -16,7 +16,7 @@ _logger = daiquiri.getLogger(__name__)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        training_data_url = "s3://dev-stack-analysis-clean-data/python/github/"
+        training_data_url = "s3://dev-stack-analysis-clean-data/pypi/github/"
         fp_min_support_count = 45
         fp_intent_topic_count_threshold = 3
         fp_num_partition = 12
