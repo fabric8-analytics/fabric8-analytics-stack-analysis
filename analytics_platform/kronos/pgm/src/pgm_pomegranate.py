@@ -9,6 +9,7 @@ import pickle
 from joblib import Parallel, delayed
 import functools
 
+
 class PGMPomegranate(AbstractPGM):
     """Kronos - The Knowledge Graph."""
 
