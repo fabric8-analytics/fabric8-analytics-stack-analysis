@@ -42,7 +42,7 @@ class TestGnosisPackageTopicModel(TestCase):
 
     def test_manifest_missing_packages(self):
         input_data_store = LocalFileSystem(
-            "tests/data/data_gnosis/input-ptm-manifest-data")
+            "tests/data/data_gnosis")
         self.assertTrue(input_data_store is not None)
         manifest_json = input_data_store.read_json_file(
             filename='data_input_manifest_file_list/manifest_unknown_packages.json'
