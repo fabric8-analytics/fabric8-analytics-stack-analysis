@@ -16,7 +16,7 @@ sudo pip install scipy==0.19.0
 sudo pip install psutil
 sudo pip install nltk==3.2.5
 sudo pip install pomegranate==0.7.3
-
+sudo pip install daiquiri==1.3.0
 #wget -P /tmp https://github.com/pgmpy/pgmpy/archive/dev.zip
 #cd /tmp
 #unzip -u dev.zip
