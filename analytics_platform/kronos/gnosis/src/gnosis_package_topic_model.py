@@ -60,7 +60,7 @@ class GnosisPackageTopicModel(AbstractGnosis):
                 topic_list = package_topic_dict[package]
                 formatted_package = package.lower()
                 formatted_topic_list = [
-                    GNOSIS_PTM_TOPIC_PREFIX + x.lower() for x in topic_list]
+                    GNOSIS_PTM_TOPIC_PREFIX + x.lower() for x in topic_list][:GNOSIS_PTM_TAG_LIMIT]
                 distinct_formatted_topic_list = \
                     set(formatted_topic_list) or cls._create_tags_for_package(package)
                 package_to_topic_dict[formatted_package] = list(distinct_formatted_topic_list)
