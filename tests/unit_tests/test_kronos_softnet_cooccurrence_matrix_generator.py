@@ -58,6 +58,8 @@ class TestCooccurrenceMatrixGenerator(TestCase):
                 cooccurrence_matrix_df = cooccurrence_matrix_obj.get_matrix_dictionary()
                 self.assertTrue(cooccurrence_matrix_df is not None)
                 expected_cooccurrence_matrix_df = expected_cooccurrence_matrix_obj.get_matrix_dictionary()
-                self.assertTrue(expected_cooccurrence_matrix_df is not None)
-                assert_frame_equal(cooccurrence_matrix_df.sort_index(axis=1),
-                                   expected_cooccurrence_matrix_df.sort_index(axis=1), check_names=True)
+                expected_columns = set(expected_cooccurrence_matrix_df.columns)
+                resultant_columns = set(cooccurrence_matrix_df.columns)
+                self.assertTrue(resultant_columns == expected_columns)
+                self.assertTrue(set(cooccurrence_matrix_df).issubset(
+                    set(expected_cooccurrence_matrix_df)))

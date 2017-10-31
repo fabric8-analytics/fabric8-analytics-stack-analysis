@@ -27,6 +27,7 @@ KD_OUTPUT_FOLDER = "data_kronos_dependency"
 KD_BASE_FILENAME = "kronos_dependency.json"
 
 COM_OUTPUT_FOLDER = "data_co_occurrence_matrix"
+COM_SAMPLE_RATIO = 0.4
 
 """Constants for Kronos Dependency i.e. KD."""
 

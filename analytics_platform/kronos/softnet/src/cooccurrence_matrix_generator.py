@@ -98,4 +98,4 @@ class CooccurrenceMatrixGenerator(object):
                 else:
                     intent_list.append(intent)
 
-        return cooccurrence_matrix
+        return cooccurrence_matrix.sample(frac=COM_SAMPLE_RATIO)

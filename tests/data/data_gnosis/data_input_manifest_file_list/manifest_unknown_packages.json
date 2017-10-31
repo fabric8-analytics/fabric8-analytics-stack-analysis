@@ -1,0 +1,17 @@
+[
+  {
+    "ecosystem": "pypi",
+    "package_list": [
+      [
+        "tox",
+        "pytest",
+        "mock",
+        "pytest-cov",
+        "pytest-httpbin",
+        "docutils",
+        "wheel",
+        "distutils"
+      ]
+    ]
+  }
+]
