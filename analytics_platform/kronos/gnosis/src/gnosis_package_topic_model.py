@@ -1,5 +1,7 @@
 from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
 from analytics_platform.kronos.gnosis.src.gnosis_constants import *
+from nltk.tokenize import wordpunct_tokenize
+import string
 
 
 class GnosisPackageTopicModel(AbstractGnosis):
@@ -134,13 +136,19 @@ class GnosisPackageTopicModel(AbstractGnosis):
         """Create tags for a package based on its name"""
         tags = []
         name_parts = package_name.split(":")[:2]
-        for name_part in name_parts:
-            # Exclude common parts of the package name that are not
-            # useful as tags
-            tags += [
-                GNOSIS_PTM_TOPIC_PREFIX + tag.lower()
-                for tag in name_part.split('.') if
-                tag and tag != 'com' and tag != 'org' and tag != 'io'
-            ]
+
+        if len(name_parts) > 1:
+            # ecosystem is maven, at least based on naming scheme
+            tags_artifact = [tag for tag in wordpunct_tokenize(name_parts[1]) if
+                             tag not in string.punctuation]
+            tags_group = [tag for tag in wordpunct_tokenize(name_parts[0]) if
+                          tag not in string.punctuation and tag not in
+                          ['org', 'com', 'io', 'ch', 'cn']]
+            tags = set(tags_artifact + tags_group)
+        else:
+            # return the tokenized package name
+            tags = set([tag for tag in wordpunct_tokenize(package_name)
+                        if tag not in string.punctuation])
+        tags = [GNOSIS_PTM_TOPIC_PREFIX + tag.lower() for tag in tags][:GNOSIS_PTM_TAG_LIMIT]
         # Make sure there are no duplicates
-        return set(tags[:GNOSIS_PTM_TAG_LIMIT])
+        return set(tags)
