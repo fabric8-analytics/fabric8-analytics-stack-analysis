@@ -4,8 +4,9 @@
 # this script will be executed by aws spark emr during bootstrap process of each node
 # we install python dependencies of our training job here
 # --------------------------------------------------------------------------------------------------
-sudo pip install cython pomegranate uuid boto3 boto pandas sklearn numpy scipy psutil
+sudo pip install cython uuid boto3 boto pandas sklearn numpy scipy psutil
 sudo pip install nltk
+sudo pip install pomegranate
 
 #wget -P /tmp https://github.com/pgmpy/pgmpy/archive/dev.zip
 #cd /tmp
