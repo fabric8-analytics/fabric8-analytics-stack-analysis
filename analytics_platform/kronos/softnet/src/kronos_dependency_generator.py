@@ -1,5 +1,10 @@
 from analytics_platform.kronos.softnet.src.softnet_util import *
 from util.data_store.local_filesystem import LocalFileSystem
+import daiquiri
+import logging
+
+daiquiri.setup(level=logging.INFO)
+_logger = daiquiri.getLogger(__name__)
 
 
 class KronosDependencyGenerator(object):
@@ -21,7 +26,7 @@ class KronosDependencyGenerator(object):
         :param pkg_topic_store: Package Topic graph store.
 
         :return: Object of class KronosDependencyGenerator."""
-
+        _logger.info("Started kronos dependency graph generation")
         package_list = package_to_topic_dict.keys()
         component_class_list = gnosis_ref_arch_dict.get(GNOSIS_RA_COMPONENT_CLASS_LIST)
 
@@ -54,7 +59,7 @@ class KronosDependencyGenerator(object):
         kronos_dependency_dict[KD_EDGE_LIST] = kronos_dependency_edge_list
         kronos_dependency_dict[KD_SIMILAR_PACKAGE_MAP] = similar_package_dict
         kronos_dependency_dict[KD_PACKAGE_TO_TOPIC_MAP] = package_to_topic_dict
-
+        _logger.info("Ended Kronos dependency graph generation")
         return KronosDependencyGenerator(kronos_dependency_dict)
 
     def save(self, data_store, filename):
@@ -80,6 +85,7 @@ class KronosDependencyGenerator(object):
     def _generate_component_class_to_package_edge_list_and_dict(cls, package_list,
                                                                 component_class_list,
                                                                 package_topic_map,):
+        _logger.info("Generating component class to package edge list")
         component_class_to_package_edge_list = list()
         component_class_to_package_dict = dict()
         for package in package_list:
@@ -99,7 +105,7 @@ class KronosDependencyGenerator(object):
         for component_class in component_class_list:
             if component_class not in component_class_to_package_dict:
                 component_class_to_package_dict[component_class] = []
-
+        _logger.info("Done generating component class to package edge list")
         return component_class_to_package_edge_list, component_class_to_package_dict
 
     def get_dictionary(self):
@@ -107,7 +113,7 @@ class KronosDependencyGenerator(object):
 
     @classmethod
     def _generate_similar_package_dict(cls, package_to_topic_dict, topic_to_package_dict):
-
+        _logger.info("Started generating similar package dict")
         similar_package_dict = dict()
         for package in package_to_topic_dict:
             topics = package_to_topic_dict[package]
@@ -122,4 +128,5 @@ class KronosDependencyGenerator(object):
                 package_list=distinct_package_list,
                 package_to_topic_dict=package_to_topic_dict)
             similar_package_dict[package] = similar_package_dict_list
+        _logger.info("Done generating similar package dict")
         return similar_package_dict

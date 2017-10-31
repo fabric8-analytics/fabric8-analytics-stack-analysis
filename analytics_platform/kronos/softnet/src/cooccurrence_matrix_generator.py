@@ -1,4 +1,10 @@
 from analytics_platform.kronos.softnet.src.softnet_util import *
+import daiquiri
+import logging
+import time
+
+daiquiri.setup(level=logging.INFO)
+_logger = daiquiri.getLogger(__name__)
 
 
 class CooccurrenceMatrixGenerator(object):
@@ -60,6 +66,7 @@ class CooccurrenceMatrixGenerator(object):
     def _generate_cooccurrence_matrix_for_ecosystem(cls, list_of_package_list, node_list,
                                                     kronos_component_dependency_dict,
                                                     kronos_intent_dependency_dict):
+        _logger.info("Co-occurence matrix generation for ecosystem started")
         row_count = len(list_of_package_list)
         cooccurrence_matrix = create_empty_pandas_df(rowsize=row_count, columns_list=node_list)
         component_class_list = kronos_component_dependency_dict.keys()
@@ -97,5 +104,8 @@ class CooccurrenceMatrixGenerator(object):
                     temp_node_list.append(intent)
                 else:
                     intent_list.append(intent)
-
-        return cooccurrence_matrix.sample(frac=COM_SAMPLE_RATIO)
+        _logger.info("Complete Co-occurence matrix generated")
+        t0 = time.time()
+        sampled = cooccurrence_matrix.sample(frac=COM_SAMPLE_RATIO)
+        _logger.info("Sampling took: {}".format(time.time() - t0))
+        return sampled
