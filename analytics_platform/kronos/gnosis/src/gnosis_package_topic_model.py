@@ -144,7 +144,6 @@ class GnosisPackageTopicModel(AbstractGnosis):
             tags_group = [tag for tag in wordpunct_tokenize(name_parts[0]) if
                           tag not in string.punctuation and tag not in
                           ['org', 'com', 'io', 'ch', 'cn']]
-            print(tags_group)
             tags = set(tags_artifact + tags_group)
         else:
             # return the tokenized package name
