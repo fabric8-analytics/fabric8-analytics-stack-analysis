@@ -47,7 +47,7 @@ if __name__ == '__main__':
     t0 = time.time()
     generate_and_save_cooccurrence_matrices_s3(training_data_url=training_data_url)
     _logger.info(
-        "Co-occurence matrix Training Ended in {} seonds".format(time.time() - t0))
+        "Co-occurence matrix Training Ended in {} seconds".format(time.time() - t0))
 
     t0 = time.time()
     _logger.info("Kronos Training Started")
