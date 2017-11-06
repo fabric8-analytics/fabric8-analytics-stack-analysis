@@ -125,4 +125,4 @@ BODY: JSON data
 ## Latest Depolyment
 
 * Maven
-	* Retrained on: 2017-09-15 17:05 (UTC+5:30)
+	* Retrained on: 2017-11-03 20:31 (UTC+5:30)

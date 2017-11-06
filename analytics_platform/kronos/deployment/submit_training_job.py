@@ -120,7 +120,7 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
             },
             {
                 'Name': 'setup - copy files',
-                'ActionOnFailure': 'CANCEL_AND_WAIT',
+                'ActionOnFailure': 'TERMINATE_CLUSTER',
                 'HadoopJarStep': {
                     'Jar': 'command-runner.jar',
                     'Args': ['aws', 's3', 'cp', s3_uri, '/home/hadoop/']
@@ -128,7 +128,7 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
             },
             {
                 'Name': 'setup - unzip files',
-                'ActionOnFailure': 'CANCEL_AND_WAIT',
+                'ActionOnFailure': 'TERMINATE_CLUSTER',
                 'HadoopJarStep': {
                     'Jar': 'command-runner.jar',
                     'Args': ['unzip', '/home/hadoop/' + s3_key, '-d', '/home/hadoop']
@@ -136,7 +136,7 @@ def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_
             },
             {
                 'Name': 'Run Spark',
-                'ActionOnFailure': 'CANCEL_AND_WAIT',
+                'ActionOnFailure': 'TERMINATE_CLUSTER',
                 'HadoopJarStep': {
                     'Jar': 'command-runner.jar',
                     'Args': ['spark-submit',
