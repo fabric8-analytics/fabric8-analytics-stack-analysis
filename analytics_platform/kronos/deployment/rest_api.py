@@ -12,6 +12,7 @@ from analytics_platform.kronos.src.config import (
     AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION)
 from analytics_platform.kronos.src.kronos_online_scoring import *
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
+from tagging_platform.helles.deployment.submit_npm_tagging_job import submit_tagging_job
 
 if sys.version_info.major == 2:
     reload(sys)
@@ -93,6 +94,14 @@ def predict_and_score():
 
     return flask.jsonify(response)
 
+
+@app.route('/api/v2/npm_tagging', methods=['POST'])
+def tag_npm_packages_textrank():
+    input_json = request.get_json()
+    # if 'package_name' in input_json:
+    response = submit_tagging_job(input_bootstrap_file='/bootstrap_action.sh',
+                                    input_src_code_file='/tmp/tagging.zip')
+    return flask.jsonify(response)
 
 if __name__ == "__main__":
     app.run()
