@@ -6,7 +6,6 @@ RUN yum install -y epel-release && \
     yum install -y python-pip python-devel gcc && \
     yum -y install tkinter && \
     yum-config-manager --disable testing-devtools-2-centos-7 && \
-    yum -y install openblas && \
     yum -y install gcc-c++.x86_64 && \
     yum clean all
 
