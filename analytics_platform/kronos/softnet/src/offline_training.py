@@ -8,7 +8,7 @@ from analytics_platform.kronos.softnet.src.kronos_dependency_generator import \
 from analytics_platform.kronos.softnet.src.softnet_constants import *
 from analytics_platform.kronos.src import config
 from util.data_store.s3_data_store import S3DataStore
-from util.analytics_platform_util import trunc_string_at
+from util.analytics_platform_util import get_path_names
 
 
 def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, additional_path):
@@ -57,10 +57,8 @@ def generate_and_save_kronos_dependency(input_gnosis_data_store, input_package_t
 
 
 def generate_and_save_kronos_dependency_s3(training_data_url):
-    input_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
-    output_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
-    additional_path = trunc_string_at(training_data_url, "/", 3, -1)
-
+    input_bucket_name, output_bucket_name, additional_path = get_path_names(
+        training_data_url)
     input_gnosis_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                           access_key=config.AWS_S3_ACCESS_KEY_ID,
                                           secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
@@ -108,10 +106,8 @@ def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store,
 
 
 def generate_and_save_cooccurrence_matrices_s3(training_data_url):
-    input_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
-    output_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
-    additional_path = trunc_string_at(training_data_url, "/", 3, -1)
-
+    input_bucket_name, output_bucket_name, additional_path = get_path_names(
+        training_data_url)
     input_kronos_dependency_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                                      access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                      secret_key=config.AWS_S3_SECRET_ACCESS_KEY)

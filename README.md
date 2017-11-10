@@ -6,6 +6,12 @@
 * [Gnosis](/analytics_platform/kronos/gnosis)
 * [Pgm](/analytics_platform/kronos/pgm)
 * [Softnet](/analytics_platform/kronos/softnet)
+* [Apollo](/analytics_platform/kronos/apollo)
+
+## To Test Locally
+
+`python -m unittest discover tests  -v`
+
 
 
 ## To test

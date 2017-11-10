@@ -4,7 +4,7 @@ import time
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.pgm.src.pgm_constants import *
 from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
-from util.analytics_platform_util import trunc_string_at
+from util.analytics_platform_util import get_path_names
 from util.data_store.s3_data_store import S3DataStore
 
 
@@ -81,14 +81,14 @@ def train_and_save_kronos_list(input_kronos_dependency_data_store, input_co_occu
                                                 package_occurrence_df=cooccurrence_matrix_df)
             filename = KRONOS_OUTPUT_FOLDER + "/" + str(user_category) + "/" + "kronos" + "_" + str(
                 ecosystem) + ".json"
-            kronos_model.save(data_store=output_data_store, filename=additional_path + filename)
+            kronos_model.save(data_store=output_data_store,
+                              filename=additional_path + filename)
 
 
 def train_and_save_kronos_list_s3(training_data_url):
-    input_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
-    output_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
-    additional_path = trunc_string_at(training_data_url, "/", 3, -1)
 
+    input_bucket_name, output_bucket_name, additional_path = get_path_names(
+        training_data_url)
     input_kronos_dependency_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                                      access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                      secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
