@@ -9,7 +9,7 @@ from pyspark.mllib.fpm import FPGrowth
 from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
 from gnosis_constants import *
-from gnosis_util import *
+from util.gnosis_util import *
 
 
 class GnosisReferenceArchitecture(AbstractGnosis):

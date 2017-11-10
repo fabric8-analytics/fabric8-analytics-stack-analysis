@@ -1,4 +1,4 @@
-from analytics_platform.kronos.softnet.src.softnet_util import *
+from util.softnet_util import *
 import daiquiri
 import logging
 import time

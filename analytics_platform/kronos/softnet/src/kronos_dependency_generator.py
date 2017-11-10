@@ -1,4 +1,4 @@
-from analytics_platform.kronos.softnet.src.softnet_util import *
+from util.softnet_util import *
 from util.data_store.local_filesystem import LocalFileSystem
 import daiquiri
 import logging
