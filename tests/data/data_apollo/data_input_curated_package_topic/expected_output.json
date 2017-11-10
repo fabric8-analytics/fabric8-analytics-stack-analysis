@@ -22,7 +22,7 @@
   {
     "ecosystem": "ruby",
     "package_topic_map": {
-      "service_identity": ["service_identity" ]
+      "service_identity": ["service_identity"]
     }
   }
 ]

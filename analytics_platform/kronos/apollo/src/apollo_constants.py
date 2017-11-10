@@ -6,7 +6,7 @@ APOLLO_PACKAGE_LIST = "package_topic_map"
 
 """Constants for output Manifest file."""
 
-PACKAGE_LIST_INPUT_CURATED_FILEPATH = "data_input_curated_package_topic/"
+PACKAGE_LIST_OUTPUT_FILEPATH = "data_input_curated_package_topic/"
 
 """Max tags for PGM."""
 
