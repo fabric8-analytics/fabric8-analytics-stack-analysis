@@ -30,7 +30,6 @@ class TestGnosisPackageTopicModel(TestCase):
 
         expected_package_topic_model = GnosisPackageTopicModel.load(
             data_store=output_data_store, filename="data_package_topic/expected_package_topic.json")
-
         self.assertTrue(expected_package_topic_model is not None)
 
         expected_output_result = expected_package_topic_model.get_dictionary()
