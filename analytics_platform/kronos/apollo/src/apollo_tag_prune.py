@@ -1,6 +1,10 @@
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.apollo.src.apollo_constants import (
-    APOLLO_ECOSYSTEM, APOLLO_INPUT_PATH, APOLLO_PACKAGE_LIST, PACKAGE_LIST_OUTPUT_FILEPATH, MAX_TAG_COUNT)
+    APOLLO_ECOSYSTEM,
+    APOLLO_INPUT_PATH,
+    APOLLO_PACKAGE_LIST,
+    PACKAGE_LIST_OUTPUT_FILEPATH,
+    MAX_TAG_COUNT)
 
 from util.analytics_platform_util import create_tags_for_package
 from collections import Counter
@@ -21,7 +25,7 @@ class TagListPruner(object):
         """Generate the clean aggregated package_topic list as required by Gnosis.
 
         :param input_package_topic_data_store: The Data store to pick the package_topic files from.
-        :param output_package_topic_data_store: The Data store to save the clean package_topic files to.
+        :param output_package_topic_data_store: The Data store to save the clean package_topic to.
         :param additional_path: The directory to pick the package_topic files from."""
 
         package_list_files = input_package_topic_data_store.list_files(
@@ -94,7 +98,8 @@ class TagListPruner(object):
 
         for package_name, tag_list in package_list.items():
             if len(tag_list) == 0:
-                tag_list = create_tags_for_package(package_name)
+                tag_list = create_tags_for_package(
+                    package_name)
                 # TODO: Update Crowsourcing DB with package_name for tagging.
             if len(tag_list) > MAX_TAG_COUNT:
                 package_tag_count = Counter()
@@ -114,7 +119,7 @@ class TagListPruner(object):
 
            :param package_file: The raw package_topic file name.
            :param content_json_list: The raw package_topic json content.
-           :param output_package_topic_data_store: The data source to save clean package_topic json."""
+           :param output_package_topic_data_store: Save clean package_topic json here."""
 
         result_package_topic_json = []
         for package_topic_content_json in content_json_list:
@@ -127,5 +132,7 @@ class TagListPruner(object):
             temp_eco_values[APOLLO_PACKAGE_LIST] = pruned_package__topic_list
             result_package_topic_json.append(temp_eco_values)
         # TODO: use singleton object, with updated package_topic_list
-        TagListPruner.generate_save_obj(
-            result_package_topic_json, package_file, output_package_topic_data_store, additional_path)
+        TagListPruner.generate_save_obj(result_package_topic_json,
+                                        package_file,
+                                        output_package_topic_data_store,
+                                        additional_path)
