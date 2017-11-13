@@ -5,7 +5,7 @@
 # --------------------------------------------------------------------------------------------------
 
 zip -r /tmp/training.zip /analytics_platform /util
-zip -r /tmp/tagging.zip /tagging_platform /util
+zip -r /tmp/tagging.zip /tagging_platform /util /analytics_platform
 
 gunicorn --pythonpath / -b 0.0.0.0:$SERVICE_PORT --workers=2 -k gevent -t $SERVICE_TIMEOUT rest_api:app
 

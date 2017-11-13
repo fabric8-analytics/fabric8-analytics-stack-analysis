@@ -46,9 +46,10 @@ def submit_tagging_job(input_bootstrap_file, input_src_code_file, package_name='
                               region_name='us-east-1')
     script_name = '/home/hadoop/tagging_platform/helles/npm_tagger/pytextrank_textrank_scoring.py'
     if package_name:
-        args = ['/usr/bin/python3', script_name, '--package-name', package_name]
+        args = ["PYTHONPATH='/home/hadoop/'", '/usr/bin/python3', script_name,
+                '--package-name', package_name]
     else:
-        args = ['/usr/bin/python3', script_name]
+        args = ["PYTHONPATH='/home/hadoop/'", '/usr/bin/python3', script_name]
     response = emr_client.run_job_flow(
         Name=config.DEPLOYMENT_PREFIX + "_" + COMPONENT_PREFIX + "_" + str_cur_time,
         LogUri=s3_log_uri,
