@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:7  
 MAINTAINER Tuhin Sharma <tusharma@redhat.com>
 
 RUN yum install -y epel-release && \
