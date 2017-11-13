@@ -99,9 +99,11 @@ def predict_and_score():
 def tag_npm_packages_textrank():
     input_json = request.get_json()
     # if 'package_name' in input_json:
-    response = submit_tagging_job(input_bootstrap_file='/bootstrap_action.sh',
-                                    input_src_code_file='/tmp/tagging.zip')
+    response = submit_tagging_job(input_bootstrap_file='/helles_bootstrap_action.sh',
+                                  input_src_code_file='/tmp/tagging.zip',
+                                  input_json.get('package_name', ''))
     return flask.jsonify(response)
+
 
 if __name__ == "__main__":
     app.run()

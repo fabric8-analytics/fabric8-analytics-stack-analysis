@@ -1,9 +1,10 @@
 import json
+import os
 
 import boto3
 import botocore
 import pandas as pd
-from abstract_data_store import AbstractDataStore
+from util.data_store.abstract_data_store import AbstractDataStore
 import numpy as np
 
 
@@ -21,10 +22,13 @@ class S3DataStore(AbstractDataStore):
 
     def read_json_file(self, filename):
         """Read JSON file from the S3 bucket"""
+        return json.loads(self.read_generic_file(filename))
 
+    def read_generic_file(self, filename):
+        """Read a file from the S3 bucket."""
         obj = self.s3_resource.Object(self.bucket_name, filename).get()['Body'].read()
         utf_data = obj.decode("utf-8")
-        return json.loads(utf_data)
+        return utf_data
 
     def list_files(self, prefix=None, max_count=None):
         """List all the files in the S3 bucket"""
@@ -86,3 +90,21 @@ class S3DataStore(AbstractDataStore):
     def read_json_file_into_pandas_df(self, filename):
         json_string = self.read_json_file(filename=filename)
         return pd.read_json(json_string, dtype=np.int8)
+
+    def iterate_bucket_items(self, ecosystem='npm'):
+        """
+        Generator that iterates over all objects in a given s3 bucket
+
+        See:
+        https://boto3.readthedocs.io/en/latest/reference/services/s3.html#S3.Client.list_objects_v2
+        for return data format
+        :param bucket: name of s3 bucket
+        :return: dict of metadata for an object
+        """
+        client = self.session.client('s3')
+        page = client.list_objects_v2(Bucket=self.bucket_name, Prefix=ecosystem)
+        yield [obj['Key'] for obj in page['Contents']]
+        while page['IsTruncated'] is True:
+            page = client.list_objects_v2(Bucket=self.bucket_name, Prefix=ecosystem,
+                                          ContinuationToken=page['NextContinuationToken'])
+            yield [obj['Key'] for obj in page['Contents']]

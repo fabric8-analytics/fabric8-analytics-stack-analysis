@@ -25,6 +25,7 @@ RUN python -m spacy download en
 # --------------------------------------------------------------------------------------------------
 COPY ./analytics_platform/kronos/deployment/rest_api.py /rest_api.py
 COPY ./analytics_platform/kronos/scripts/bootstrap_action.sh /
+COPY ./analytics_platform/helles/scripts/bootstrap_action.sh /helles_bootstrap_action.sh
 COPY ./analytics_platform /analytics_platform
 COPY ./tagging_platform /tagging_platform
 COPY ./util /util
