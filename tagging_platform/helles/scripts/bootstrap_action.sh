@@ -11,3 +11,5 @@ sudo /usr/bin/python3 -m pip install pandas==0.19.2 --disable-pip-version-check
 sudo /usr/bin/python3 -m pip install numpy==1.13.0 --disable-pip-version-check
 sudo /usr/bin/python3 -m pip install click==6.7 --disable-pip-version-check
 sudo /usr/bin/python3 -m spacy download en
+
+export PYTHONPATH='/home/hadoop/'
