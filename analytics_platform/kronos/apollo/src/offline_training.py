@@ -6,7 +6,7 @@ from util.analytics_platform_util import get_path_names
 
 
 def train_and_save_pruned_tag_list_s3(training_data_url,
-                                      mode="test"):
+                                      mode):
     """Return the clean package_topic present in the given s3 training URL.
         :param training_data_url: The Location where data is read from and written to."""
 

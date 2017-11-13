@@ -27,6 +27,12 @@ class TagListPruner(object):
         :param output_package_topic_data_store: The Data store to save the clean package_topic to.
         :param additional_path: The directory to pick the package_topic files from."""
 
+        if mode == "test":
+            TEMP_DATA_PATH = APOLLO_TEMP_TEST_DATA
+        else:
+            TEMP_DATA_PATH = APOLLO_TEMP_DATA
+        local_data_obj = LocalFileSystem(TEMP_DATA_PATH)
+
         package_list_files = input_package_topic_data_store.list_files(
             additional_path + APOLLO_INPUT_RAW_PATH)
         for package_file_name in package_list_files:
