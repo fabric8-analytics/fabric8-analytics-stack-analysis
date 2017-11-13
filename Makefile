@@ -1,5 +1,5 @@
 REGISTRY?=registry.devshift.net 
-REPOSITORY?=bayesian/kronos
+REPOSITORY?="bayesian/kronos"
 DEFAULT_TAG=latest
 
 .PHONY: all docker-build fast-docker-build get-image-name get-image-repository
@@ -7,7 +7,7 @@ DEFAULT_TAG=latest
 all: fast-docker-build
 
 docker-build:
-	docker build --no-cache -t $(REGISTRY)/$(REPOSITORY):$(DEFAULT_TAG) .
+	docker build --no-cache -t "$(REGISTRY)/$(REPOSITORY):$(DEFAULT_TAG)" .
 
 fast-docker-build:
 	docker build -t $(REGISTRY)/$(REPOSITORY):$(DEFAULT_TAG) .
