@@ -44,6 +44,11 @@ def submit_tagging_job(input_bootstrap_file, input_src_code_file, package_name='
                               aws_access_key_id=config.AWS_S3_ACCESS_KEY_ID,
                               aws_secret_access_key=config.AWS_S3_SECRET_ACCESS_KEY,
                               region_name='us-east-1')
+    if package_name:
+        args = ['/usr/bin/python3', 'pytextrank_textrank_scoring.py',
+                '--package-name', package_name]
+    else:
+        args = ['/usr/bin/python3', 'pytextrank_textrank_scoring.py']
     response = emr_client.run_job_flow(
         Name=config.DEPLOYMENT_PREFIX + "_" + COMPONENT_PREFIX + "_" + str_cur_time,
         LogUri=s3_log_uri,
@@ -122,9 +127,8 @@ def submit_tagging_job(input_bootstrap_file, input_src_code_file, package_name='
                 'Name': 'Run a tagging job',
                 'ActionOnFailure': 'TERMINATE_CLUSTER',
                 'HadoopJarStep': {
-                    'Jar': 'script-runner.jar',
-                    'Args': ['/usr/bin/python3', 'pytextrank_textrank_scoring.py',
-                             '--package-name', package_name]
+                    'Jar': 'command-runner.jar',
+                    'Args': args
                 }
             }
         ],

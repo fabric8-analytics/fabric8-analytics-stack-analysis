@@ -58,7 +58,6 @@ def main(bucket_name, package_name):
         for readme_batch in s3_bucket.iterate_bucket_items():
             for idx, readme_filename in enumerate(readme_batch, 1):
                 process_readme(idx, readme_filename, s3_bucket)
-            break
         write_tag_batch_to_s3(tags_dict, single=False)
         print("Total packages tagged: {}".format(len(tags_dict)))
     else:
