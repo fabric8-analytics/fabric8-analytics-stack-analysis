@@ -5,7 +5,6 @@ from analytics_platform.kronos.apollo.src.apollo_constants import (
     APOLLO_PACKAGE_LIST,
     PACKAGE_LIST_INPUT_CURATED_FILEPATH,
     MAX_TAG_COUNT)
-
 from util.analytics_platform_util import create_tags_for_package
 from collections import Counter
 
@@ -39,8 +38,7 @@ class TagListPruner(object):
     def save(self, data_store, filename):
         """Saves the package_topic object in json format.
 
-        :param data_store: Data store to save package_topic in.
-        :param filename: the file into which the package_topic is to be saved."""
+        : param data_store: Data store to save package_topic in.        : param filename: the file into which the package_topic is to be saved."""
 
         data_store.write_json_file(
             filename=filename, contents=self.package_list)
@@ -49,8 +47,8 @@ class TagListPruner(object):
     def load(cls, data_store, filename):
         """Load the Package Topic Model.
 
-        :param data_store: Data store to keep the model.
-        :param filename: Name of the file that contains model."""
+        : param data_store: Data store to keep the model.
+        : param filename: Name of the file that contains model."""
 
         package_topic_list = data_store.read_json_file(filename)
         return cls(pruned_package_list=package_topic_list)
@@ -62,15 +60,14 @@ class TagListPruner(object):
                           additional_path):
         """Create and save the object of TagListPruner class.
 
-           :param result_package_topic_json: The clean package_topic json to be saved.
-           :param package_file: The output filename for clean package_topic.
-           :param output_package_topic_data_store:
+           : param result_package_topic_json: The clean package_topic json to be saved.: param package_file: The output filename for clean package_topic.
+            : param output_package_topic_data_store:
                 The output data store where clean package_topics are saved.
-           :param additional_path: The directory to pick the package_topic files from."""
+            : param additional_path: The directory to pick the package_topic files from."""
 
         package_topic_formatter_obj = cls(result_package_topic_json)
-        output_filename = additional_path + \
-            PACKAGE_LIST_INPUT_CURATED_FILEPATH + \
+        output_filename = additional_path +
+            PACKAGE_LIST_INPUT_CURATED_FILEPATH +
             package_file_name.split("/")[-1]
         package_topic_formatter_obj.save(
             output_package_topic_data_store, output_filename)
@@ -79,9 +76,9 @@ class TagListPruner(object):
     def prune_tag_list_max_count(package_list):
         """Prune the  package list based on maximum count.
 
-           :param package_list: The complete package_list.
+           : param package_list: The complete package_list.
 
-           :return pruned_package_list: The prune and clean package_list."""
+           : return pruned_package_list: The prune and clean package_list."""
 
         pruned_package_list = {}
         stop_word = set(['vertx', 'spring', 'java', 'apache',
@@ -117,13 +114,14 @@ class TagListPruner(object):
                    additional_path):
         """Prepare the clean package_topic data and save it.
 
-           :param package_file_name: The raw package_topic file name.
-           :param content_json_list: The raw package_topic json content.
-           :param output_package_topic_data_store: Save clean package_topic json here.
-           :param additional_path: The directory to pick the package_topic files from."""
+           : param package_file_name: The raw package_topic file name.
+           : param content_json_list: The raw package_topic json content.           
+           : param output_package_topic_data_store: Save clean package_topic json here.           
+           : param additional_path: The directory to pick the package_topic files from."""
 
         content_json_list = input_package_topic_data_store.read_json_file(
             filename=package_file_name)
+
         result_package_topic_json = []
         for package_topic_content_json in content_json_list:
             ecosystem = package_topic_content_json.get(APOLLO_ECOSYSTEM)
