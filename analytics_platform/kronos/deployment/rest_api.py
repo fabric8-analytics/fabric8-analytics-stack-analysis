@@ -102,7 +102,7 @@ def tag_npm_packages_textrank():
     response = submit_tagging_job(input_bootstrap_file='/helles_bootstrap_action.sh',
                                   input_src_code_file='/tmp/tagging.zip',
                                   package_name=input_json.get('package_name', ''),
-                                  manifest_filepath=input_json.get('manifest_path', ''))
+                                  manifest_path=input_json.get('manifest_path', ''))
     return flask.jsonify(response)
 
 
