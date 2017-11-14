@@ -1,4 +1,4 @@
-REGISTRY?=registry.devshift.net 
+REGISTRY?=registry.devshift.net
 REPOSITORY?=bayesian/kronos
 DEFAULT_TAG=latest
 
