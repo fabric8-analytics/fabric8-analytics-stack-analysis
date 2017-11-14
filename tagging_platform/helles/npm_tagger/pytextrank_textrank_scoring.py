@@ -90,7 +90,12 @@ def process_readme(idx, readme_filename, s3_bucket):
         package_name = readme_filename[len('npm/'):]
     if package_name.endswith('/README.json'):
         package_name = package_name[:-len('/README.json')]
-    readme_content = s3_bucket.read_json_file(readme_filename)
+    try:
+        readme_content = s3_bucket.read_json_file(readme_filename)
+    except Exception:
+        _logger.warning("[MISSING_DATA] Readme/NPMJS description for package {} does "
+                             "not exist in S3.".format(package_name))
+        return
     if not readme_content:
         npmjs_description = getNPMdescription(package_name)
         if not npmjs_description:
@@ -121,6 +126,7 @@ def process_readme(idx, readme_filename, s3_bucket):
         try:
             tags = run_pipeline(curfilename)
             if tags:
+                print(tags)
                 tags_dict[package_name] = tags
         except Exception:
             _logger.warning("[CONTENT] Could not get tags for {}".format(package_name))
