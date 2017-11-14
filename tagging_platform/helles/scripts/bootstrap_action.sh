@@ -2,6 +2,8 @@
 
 sudo /usr/bin/python3 -m pip install html5lib==1.0b8 --disable-pip-version-check
 sudo /usr/bin/python3 -m pip install daiquiri==1.3.0 --disable-pip-version-check
+sudo /usr/bin/python3 -m pip install networkx==1.11 --disable-pip-version-check
+sudo /usr/bin/python3 -m pip install spacy==1.8.2 --disable-pip-version-check
 sudo /usr/bin/python3 -m pip install pytextrank==1.1.0 --disable-pip-version-check
 sudo /usr/bin/python3 -m pip install bs4==0.0.1 --disable-pip-version-check
 sudo /usr/bin/python3 -m pip install mistune==0.7.4 --disable-pip-version-check

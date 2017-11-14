@@ -6,9 +6,12 @@ import mistune
 from bs4 import BeautifulSoup
 import daiquiri
 import logging
-from util.data_store import s3_data_store
-from analytics_platform.kronos.src import config
 import click
+import sys
+# To run on EMR
+sys.path.append('/home/hadoop/')
+from util.data_store import s3_data_store # noqa
+from analytics_platform.kronos.src import config # noqa
 
 
 daiquiri.setup(level=logging.WARN)
@@ -102,7 +105,6 @@ def process_readme(idx, readme_filename, s3_bucket):
         try:
             tags = run_pipeline(curfilename)
             if tags:
-                # print(tags)
                 tags_dict[package_name] = tags
         except Exception:
             _logger.warning("[CONTENT] Could not get tags for {}".format(package_name))
