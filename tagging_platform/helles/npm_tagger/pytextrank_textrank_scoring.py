@@ -20,7 +20,8 @@ _logger = daiquiri.getLogger(__name__)
 stopwords = set([])
 master_tag_list = set()
 
-PATH_PREFIX = '/tmp/'
+os.mkdir('/tmp/npm_tagging/')
+PATH_PREFIX = '/tmp/npm_tagging/'
 stage1_output_path = 'stage1_output'
 final_output_path = 'output_tags'
 tags_dict = {}
@@ -64,7 +65,11 @@ def main(bucket_name, package_name, manifest_path):
     if not package_name and not manifest_path:
         for readme_batch in s3_bucket.iterate_bucket_items():
             for idx, readme_filename in enumerate(readme_batch, 1):
-                process_readme(idx, readme_filename, s3_bucket)
+                try:
+                    process_readme(idx, readme_filename, s3_bucket)
+                except Exception:
+                    _logger.warning("[UNEXPECTED] An unknown error occured")
+                    continue
         write_tag_batch_to_s3(tags_dict, single=False)
         print("Total packages tagged: {}".format(len(tags_dict)))
     elif manifest_path:
@@ -80,11 +85,18 @@ def main(bucket_name, package_name, manifest_path):
         for manifest in manifest_json:
             package_list_set = package_list_set.union(set(list(manifest)))
         for i, package_name in enumerate(package_list_set):
-            process_readme(
-                i, "npm/{}/README.json".format(package_name), s3_bucket)
+            try:
+                process_readme(
+                    i, "npm/{}/README.json".format(package_name), s3_bucket)
+            except Exception:
+                _logger.warning("[UNEXPECTED] An unknown error occured")
+                continue
         write_tag_batch_to_s3(tags_dict, manifest=True)
     else:
-        process_readme(1, "npm/{}/README.json".format(package_name), s3_bucket)
+        try:
+            process_readme(1, "npm/{}/README.json".format(package_name), s3_bucket)
+        except Exception:
+            _logger.warning("[UNEXPECTED] An unknown error occured")
         if tags_dict:
             write_tag_batch_to_s3(tags_dict, single=True)
 
