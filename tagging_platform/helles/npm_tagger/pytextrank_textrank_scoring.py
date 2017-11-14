@@ -10,8 +10,8 @@ import click
 import sys
 # To run on EMR
 sys.path.append('/home/hadoop/')
-from util.data_store import s3_data_store # noqa
-from analytics_platform.kronos.src import config # noqa
+from util.data_store import s3_data_store  # noqa
+from analytics_platform.kronos.src import config  # noqa
 
 
 daiquiri.setup(level=logging.WARN)
@@ -31,7 +31,8 @@ def getNPMdescription(package_name):
     npmjs_bucket = s3_data_store.S3DataStore(src_bucket_name='prod-repository-description',
                                              access_key=config.AWS_S3_ACCESS_KEY_ID,
                                              secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
-    matches = npmjs_bucket.list_files(prefix='npm/{}.txt'.format(package_name), max_count=1)
+    matches = npmjs_bucket.list_files(
+        prefix='npm/{}.txt'.format(package_name), max_count=1)
     if not matches:
         return False
     return npmjs_bucket.read_generic_file(matches[0])
@@ -68,16 +69,19 @@ def main(bucket_name, package_name, manifest_path):
         print("Total packages tagged: {}".format(len(tags_dict)))
     elif manifest_path:
         manifest_bucket_name = manifest_path.split('//')[1].split('/')[0]
-        path_to_manifest = '/'.join(manifest_path.split('//')[1].split('/')[1:])
+        path_to_manifest = '/'.join(manifest_path.split('//')
+                                    [1].split('/')[1:])
         manifest_bucket = s3_data_store.S3DataStore(src_bucket_name=manifest_bucket_name,
                                                     access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                     secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
-        manifest_json = manifest_bucket.read_json_file(path_to_manifest)['package_list']
+        manifest_json = manifest_bucket.read_json_file(path_to_manifest)[
+            'package_list']
         package_list_set = set()
         for manifest in manifest_json:
             package_list_set = package_list_set.union(set(list(manifest)))
         for i, package_name in enumerate(package_list_set):
-            process_readme(i, "npm/{}/README.json".format(package_name), s3_bucket)
+            process_readme(
+                i, "npm/{}/README.json".format(package_name), s3_bucket)
         write_tag_batch_to_s3(tags_dict, manifest=True)
     else:
         process_readme(1, "npm/{}/README.json".format(package_name), s3_bucket)
@@ -94,7 +98,7 @@ def process_readme(idx, readme_filename, s3_bucket):
         readme_content = s3_bucket.read_json_file(readme_filename)
     except Exception:
         _logger.warning("[MISSING_DATA] Readme/NPMJS description for package {} does "
-                             "not exist in S3.".format(package_name))
+                        "not exist in S3.".format(package_name))
         return
     if not readme_content:
         npmjs_description = getNPMdescription(package_name)
@@ -115,8 +119,13 @@ def process_readme(idx, readme_filename, s3_bucket):
                             " ascii".format(package_name))
             return
         if readme_content['type'] == 'Markdown':
-            readme_content = markdown_preprocess(
-                readme_content['content'])
+            try:
+                readme_content = markdown_preprocess(
+                    readme_content['content'])
+            except Exception:
+                _logger.warning(
+                    "[CONTENT] Could not get tags for {}".format(package_name))
+                return
         else:
             readme_content = readme_content['content']
         with open(os.path.join(PATH_PREFIX, package_name.replace('/', ':::')), 'w') as of:
@@ -129,7 +138,8 @@ def process_readme(idx, readme_filename, s3_bucket):
                 print(tags)
                 tags_dict[package_name] = tags
         except Exception:
-            _logger.warning("[CONTENT] Could not get tags for {}".format(package_name))
+            _logger.warning(
+                "[CONTENT] Could not get tags for {}".format(package_name))
         os.remove(curfilename)
     else:
         _logger.warning("[FORMAT] Skipping {}, content is not in markdown format"
