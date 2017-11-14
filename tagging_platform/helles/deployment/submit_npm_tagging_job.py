@@ -8,7 +8,8 @@ from analytics_platform.kronos.src import config
 COMPONENT_PREFIX = "helles"
 
 
-def submit_tagging_job(input_bootstrap_file, input_src_code_file, package_name=''):
+def submit_tagging_job(input_bootstrap_file, input_src_code_file, package_name='',
+                       manifest_path=''):
     str_cur_time = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
 
     # S3 bucket/key, where the input spark job ( src code ) will be uploaded
@@ -45,11 +46,11 @@ def submit_tagging_job(input_bootstrap_file, input_src_code_file, package_name='
                               aws_secret_access_key=config.AWS_S3_SECRET_ACCESS_KEY,
                               region_name='us-east-1')
     script_name = '/home/hadoop/tagging_platform/helles/npm_tagger/pytextrank_textrank_scoring.py'
+    args = ['/usr/bin/python3', script_name]
     if package_name:
-        args = ['/usr/bin/python3', script_name,
-                '--package-name', package_name]
-    else:
-        args = ['/usr/bin/python3', script_name]
+        args = args + ['--package-name', package_name]
+    elif manifest_path:
+        args = args + ['--manifest-path', manifest_path]
     response = emr_client.run_job_flow(
         Name=config.DEPLOYMENT_PREFIX + "_" + COMPONENT_PREFIX + "_" + str_cur_time,
         LogUri=s3_log_uri,

@@ -53,16 +53,32 @@ def returnContentIfAscii(text):
 @click.option('--package-name',
               help='Particular package for which tags should be extracted, if required',
               default='')
-def main(bucket_name, package_name):
+@click.option('--manifest-path',
+              help='Path to the manifest file collection',
+              default='')
+def main(bucket_name, package_name, manifest_path):
     s3_bucket = s3_data_store.S3DataStore(src_bucket_name=bucket_name,
                                           access_key=config.AWS_S3_ACCESS_KEY_ID,
                                           secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
-    if not package_name:
+    if not package_name and not manifest_path:
         for readme_batch in s3_bucket.iterate_bucket_items():
             for idx, readme_filename in enumerate(readme_batch, 1):
                 process_readme(idx, readme_filename, s3_bucket)
         write_tag_batch_to_s3(tags_dict, single=False)
         print("Total packages tagged: {}".format(len(tags_dict)))
+    elif manifest_path:
+        manifest_bucket_name = manifest_path.split('//')[1].split('/')[0]
+        path_to_manifest = '/'.join(manifest_path.split('//')[1].split('/')[1:])
+        manifest_bucket = s3_data_store.S3DataStore(src_bucket_name=manifest_bucket_name,
+                                                    access_key=config.AWS_S3_ACCESS_KEY_ID,
+                                                    secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
+        manifest_json = manifest_bucket.read_json_file(path_to_manifest)['package_list']
+        package_list_set = set()
+        for manifest in manifest_json:
+            package_list_set = package_list_set.union(set(list(manifest)))
+        for i, package_name in enumerate(package_list_set):
+            process_readme(i, "npm/{}/README.json".format(package_name), s3_bucket)
+        write_tag_batch_to_s3(tags_dict, manifest=True)
     else:
         process_readme(1, "npm/{}/README.json".format(package_name), s3_bucket)
         if tags_dict:
@@ -177,12 +193,14 @@ def run_pipeline(stage0_filename):
     return tags
 
 
-def write_tag_batch_to_s3(tag_dict, single=False):
+def write_tag_batch_to_s3(tag_dict, single=False, manifest=False):
     tags_output_bucket = s3_data_store.S3DataStore(src_bucket_name='avgupta-stack-analysis-dev',
                                                    access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                    secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
-    if not single:
+    if not single and not manifest:
         filename = 'package_tag_map'
+    elif manifest:
+        filename = 'ptm_manifest'
     else:
         filename = list(tags_dict.keys())[0]
     tags_output_bucket.write_json_file('package_tag_maps/npm/{}.json'.format(filename),
