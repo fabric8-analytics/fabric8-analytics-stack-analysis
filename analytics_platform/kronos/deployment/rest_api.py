@@ -13,6 +13,9 @@ from analytics_platform.kronos.src.config import (
 from analytics_platform.kronos.src.kronos_online_scoring import *
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
 from tagging_platform.helles.deployment.submit_npm_tagging_job import submit_tagging_job
+from tagging_platform.helles.npm_tagger.get_descriptions_from_s3 import run as \
+    run_description_collection
+
 
 if sys.version_info.major == 2:
     reload(sys)
@@ -104,6 +107,13 @@ def tag_npm_packages_textrank():
                                   package_name=input_json.get('package_name', ''),
                                   manifest_path=input_json.get('manifest_path', ''))
     return flask.jsonify(response)
+
+
+@app.route('/api/v2/npm_descriptions', methods=['POST'])
+def collect_npm_descriptions():
+    input_json = request.get_json()
+    run_description_collection(input_data_path=input_json.get('input_data_path'))
+    return flask.jsonify({"status": "Job completed"})
 
 
 if __name__ == "__main__":
