@@ -1,7 +1,8 @@
 import logging
 
 from analytics_platform.kronos.src import config
-from analytics_platform.kronos.softnet.src.kronos_dependency_generator import KronosDependencyGenerator
+from analytics_platform.kronos.softnet.src.kronos_dependency_generator \
+    import KronosDependencyGenerator
 from util.data_store.local_filesystem import LocalFileSystem
 
 logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
@@ -21,13 +22,15 @@ class TestKronosDependencyGenerator(TestCase):
             "tests/data/data_softnet/output-kd-data")
         self.assertTrue(output_data_store is not None)
 
-        gnosis_ref_arch_json = input_data_store.read_json_file(filename="data_gnosis/gnosis_ref_arch.json")
+        gnosis_ref_arch_json = input_data_store.read_json_file(
+            filename="data_gnosis/gnosis_ref_arch.json")
         self.assertTrue(gnosis_ref_arch_json is not None)
 
         gnosis_ref_arch_dict = dict(gnosis_ref_arch_json)
         self.assertTrue(gnosis_ref_arch_dict is not None)
 
-        package_topic_json = input_data_store.read_json_file("data_package_topic/package_topic.json")
+        package_topic_json = input_data_store.read_json_file(
+            "data_package_topic/package_topic.json")
         self.assertTrue(package_topic_json is not None)
 
         package_topic_dict = dict(package_topic_json)
@@ -63,8 +66,9 @@ class TestKronosDependencyGenerator(TestCase):
 
             expected_filename_formatted = filename_formatted.replace("/", "/expected_")
 
-            expected_kronos_dependency_obj = KronosDependencyGenerator.load(data_store=output_data_store,
-                                                                            filename=expected_filename_formatted)
+            expected_kronos_dependency_obj = KronosDependencyGenerator.load(
+                data_store=output_data_store, filename=expected_filename_formatted)
+
             self.assertTrue(expected_kronos_dependency_obj is not None)
 
             expected_kronos_dependency_dict = expected_kronos_dependency_obj.get_dictionary()

@@ -3,8 +3,10 @@ import logging
 from pandas.util.testing import assert_frame_equal
 
 from analytics_platform.kronos.src import config
-from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator import CooccurrenceMatrixGenerator
-from analytics_platform.kronos.softnet.src.offline_training import load_eco_to_kronos_dependency_dict
+from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator \
+    import CooccurrenceMatrixGenerator
+from analytics_platform.kronos.softnet.src.offline_training \
+    import load_eco_to_kronos_dependency_dict
 from util.data_store.local_filesystem import LocalFileSystem
 
 logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
@@ -25,7 +27,7 @@ class TestCooccurrenceMatrixGenerator(TestCase):
         self.assertTrue(output_data_store is not None)
 
         eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
-            input_kronos_dependency_data_store=input_data_store,additional_path="")
+            input_kronos_dependency_data_store=input_data_store, additional_path="")
         self.assertTrue(eco_to_kronos_dependency_dict is not None)
 
         manifest_filenames = input_data_store.list_files("data_input_manifest_file_list")
@@ -43,7 +45,8 @@ class TestCooccurrenceMatrixGenerator(TestCase):
                 kronos_dependency_dict = eco_to_kronos_dependency_dict[ecosystem]
                 list_of_package_list = manifest_content_dict.get("package_list")
                 cooccurrence_matrix_obj = CooccurrenceMatrixGenerator.generate_cooccurrence_matrix(
-                    kronos_dependency_dict=kronos_dependency_dict, list_of_package_list=list_of_package_list)
+                    kronos_dependency_dict=kronos_dependency_dict,
+                    list_of_package_list=list_of_package_list)
                 self.assertTrue(cooccurrence_matrix_obj is not None)
                 output_filename = "data_co_occurrence_matrix" + "/" + str(
                     user_category) + "/" + "cooccurrence_matrix" + "_" + str(
@@ -52,12 +55,15 @@ class TestCooccurrenceMatrixGenerator(TestCase):
                 expected_output_filename = "data_co_occurrence_matrix" + "/" + str(
                     user_category) + "/" + "expected_cooccurrence_matrix" + "_" + str(
                     ecosystem) + ".json"
-                expected_cooccurrence_matrix_obj = CooccurrenceMatrixGenerator.load(data_store=output_data_store,
-                                                                                    filename=expected_output_filename)
+                expected_cooccurrence_matrix_obj = CooccurrenceMatrixGenerator.load(
+                    data_store=output_data_store, filename=expected_output_filename)
                 self.assertTrue(expected_cooccurrence_matrix_obj is not None)
                 cooccurrence_matrix_df = cooccurrence_matrix_obj.get_matrix_dictionary()
                 self.assertTrue(cooccurrence_matrix_df is not None)
-                expected_cooccurrence_matrix_df = expected_cooccurrence_matrix_obj.get_matrix_dictionary()
+
+                expected_cooccurrence_matrix_df = \
+                    expected_cooccurrence_matrix_obj.get_matrix_dictionary()
+
                 expected_columns = set(expected_cooccurrence_matrix_df.columns)
                 resultant_columns = set(cooccurrence_matrix_df.columns)
                 self.assertTrue(resultant_columns == expected_columns)
