@@ -27,10 +27,12 @@ def run(ecosystem='npm', bucket_name='prod-bayesian-core-data',
     descriptions = {}
 
     for package in package_list:
+        print("Running for: {}".format(package))
         version_folders = sorted(core_data.list_folders(
             prefix=os.path.join(ecosystem, package)), reverse=True)
         if not version_folders:
             logger.warning("No data exists for {}".format(package))
+            continue
         latest_version = version_folders[0]
         try:
             meta = core_data.read_json_file(
@@ -44,7 +46,6 @@ def run(ecosystem='npm', bucket_name='prod-bayesian-core-data',
                 'description', '')
         else:
             descriptions[package] = ''
-
     input_bucket.write_json_file(
         'tagging/npm/missing_data/missing_data.json', json.dumps(descriptions))
 
