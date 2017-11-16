@@ -1,4 +1,5 @@
 import logging
+import os
 
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
@@ -42,8 +43,8 @@ class TestKronosPomegranate(TestCase):
                 kronos_model = PGMPomegranate.train(kronos_dependency_dict=kronos_dependency_dict,
                                                     package_occurrence_df=cooccurrence_matrix_df)
                 self.assertTrue(kronos_model is not None)
-                filename = "data_kronos_user_eco" + "/" + str(user_category) + "/" + "kronos" + "_" + str(
-                    ecosystem) + ".json"
+                filename = os.path.join("data_kronos_user_eco", str(user_category), "kronos",
+                                        "_" + str(ecosystem) + ".json")
                 kronos_model.save(data_store=output_data_store, filename=filename)
 
     def test_score_eco_user_package_dict(self):
@@ -55,13 +56,15 @@ class TestKronosPomegranate(TestCase):
             "tests/data/data_pgm/output-score-data")
         self.assertTrue(output_data_store is not None)
 
-        user_eco_kronos_dict = load_user_eco_to_kronos_model_dict(input_kronos_data_store=input_data_store,
-                                                                  additional_path="")
+        user_eco_kronos_dict = load_user_eco_to_kronos_model_dict(
+            input_kronos_data_store=input_data_store, additional_path="")
 
         self.assertTrue(user_eco_kronos_dict is not None)
 
-        eco_to_kronos_dependency_dict = get_eco_to_kronos_dependency_dict(data_store=input_data_store,
-                                                                          folderpath="data_kronos_dependency")
+        eco_to_kronos_dependency_dict = get_eco_to_kronos_dependency_dict(
+            data_store=input_data_store,
+            folderpath="data_kronos_dependency")
+
         self.assertTrue(eco_to_kronos_dependency_dict is not None)
 
         user_request = [{"ecosystem": "pypi", "comp_package_count_threshold": 10,
@@ -76,8 +79,10 @@ class TestKronosPomegranate(TestCase):
                              "np1"
                          ]}]
 
-        response = score_eco_user_package_dict(user_request, user_eco_kronos_dict=user_eco_kronos_dict,
-                                               eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict, all_package_list_obj=None)
+        response = score_eco_user_package_dict(
+            user_request, user_eco_kronos_dict=user_eco_kronos_dict,
+            eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict, all_package_list_obj=None)
+
         self.assertTrue(response is not None)
 
         output_data_store.write_json_file(filename="response.json", contents=response)

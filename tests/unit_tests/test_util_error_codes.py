@@ -16,4 +16,5 @@ class UtilExceptionChecker(TestCase):
             raise AnalyticsException(error_codes.ERR_MODEL_NOT_AVAILABLE)
         except AnalyticsException as e:
             self.assertTrue(str(
-                e) == "ERR_MODEL_NOT_AVAILABLE: Model does not seem to be available! It should be either trained or loaded before scoring.")
+                e) == "ERR_MODEL_NOT_AVAILABLE: Model does not seem to be available! " +
+                "It should be either trained or loaded before scoring.")
