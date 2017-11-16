@@ -23,7 +23,7 @@ class TestGnosisPackageTopicModel(TestCase):
 
         package_topic_model = GnosisPackageTopicModel.curate(
             data_store=input_data_store,
-            ilename="data_input_curated_package_topic/package_topic.json")
+            filename="data_input_curated_package_topic/package_topic.json")
 
         self.assertTrue(package_topic_model is not None)
         output_result = package_topic_model.get_dictionary()

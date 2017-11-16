@@ -1,4 +1,5 @@
 import logging
+import os
 
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
@@ -42,8 +43,8 @@ class TestKronosPomegranate(TestCase):
                 kronos_model = PGMPomegranate.train(kronos_dependency_dict=kronos_dependency_dict,
                                                     package_occurrence_df=cooccurrence_matrix_df)
                 self.assertTrue(kronos_model is not None)
-                filename = "data_kronos_user_eco" + "/" + str(user_category) + "/" + "kronos" + \
-                    "_" + str(ecosystem) + ".json"
+                filename = os.path.join("data_kronos_user_eco", str(user_category), "kronos",
+                                        "_" + str(ecosystem) + ".json")
                 kronos_model.save(data_store=output_data_store, filename=filename)
 
     def test_score_eco_user_package_dict(self):
