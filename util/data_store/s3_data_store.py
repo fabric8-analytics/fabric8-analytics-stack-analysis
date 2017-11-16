@@ -113,5 +113,6 @@ class S3DataStore(AbstractDataStore):
         client = self.session.client('s3')
         result = client.list_objects(Bucket=self.bucket_name, Prefix=prefix + '/', Delimiter='/')
         folders = result.get('CommonPrefixes')
-
+        if not folders:
+            return []
         return [folder['Prefix'] for folder in folders]
