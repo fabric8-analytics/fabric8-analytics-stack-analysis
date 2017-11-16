@@ -110,7 +110,7 @@ class S3DataStore(AbstractDataStore):
             yield [obj['Key'] for obj in page['Contents']]
 
     def list_folders(self, prefix=None):
-        client = boto3.client('s3')
+        client = self.session.client('s3')
         result = client.list_objects(Bucket=self.bucket_name, Prefix=prefix + '/', Delimiter='/')
         folders = result.get('CommonPrefixes')
 
