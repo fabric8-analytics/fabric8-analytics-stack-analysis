@@ -121,7 +121,7 @@ def collect_npm_descriptions():
 @app.route('/api/v2/npm_missing_versions', methods=['POST'])
 def collect_missing_package_versions():
     input_json = request.get_json()
-    requestun_missing_package_version_collection_job(input_json.get('input_data_path'))
+    run_missing_package_version_collection_job(input_json.get('input_data_path'))
     return flask.jsonify({"status": "Job run successfully"})
 
 
