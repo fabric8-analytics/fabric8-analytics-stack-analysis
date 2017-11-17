@@ -28,11 +28,15 @@ def run_job(input_data_path=''):
     version_info = {}
 
     for package in packages:
-        versions = sorted(core_data.list_folders(prefix=os.path.join('npm', package), reverse=True))
+        versions = sorted(core_data.list_folders(prefix=os.path.join('npm', package)), reverse=True)
         if not versions:
-            logger.warning("Do not have data for any versions of this package")
+            logger.warning("[MISSING_DATA] Do not have data for any "
+                           "versions of package {}".format(package))
             continue
-        version = versions[0].split('/')[2]
+        try:
+            version = versions[0].split('/')[2]
+        except Exception:
+            logger.warning("[KEY_FORMAT] Could not get version for {}".format(package))
         version_info[package] = version
         print(count)
         count += 1
