@@ -15,6 +15,8 @@ from analytics_platform.kronos.src.recommendation_validator import Recommendatio
 from tagging_platform.helles.deployment.submit_npm_tagging_job import submit_tagging_job
 from tagging_platform.helles.npm_tagger.get_descriptions_from_s3 import run as \
     run_description_collection
+from tagging_platform.helles.npm_tagger.get_version_info_for_missing_packages import run_job as \
+    run_missing_package_version_collection_job
 
 
 if sys.version_info.major == 2:
@@ -114,6 +116,13 @@ def collect_npm_descriptions():
     input_json = request.get_json()
     run_description_collection(input_data_path=input_json.get('input_data_path'))
     return flask.jsonify({"status": "Job completed"})
+
+
+@app.route('/api/v2/npm_missing_versions', methods=['POST'])
+def collect_missing_package_versions():
+    input_json = request.get_json()
+    requestun_missing_package_version_collection_job(input_json.get('input_data_path'))
+    return flask.jsonify({"status": "Job run successfully"})
 
 
 if __name__ == "__main__":
