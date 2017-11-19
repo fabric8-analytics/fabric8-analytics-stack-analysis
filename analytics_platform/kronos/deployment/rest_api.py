@@ -2,7 +2,8 @@ import logging
 import sys
 
 import flask
-from flask import Flask, request
+import datetime
+from flask import Flask, request, g
 from flask_cors import CORS
 
 from analytics_platform.kronos.deployment.submit_training_job import submit_job
@@ -44,6 +45,17 @@ if KRONOS_SCORING_REGION != "":
                     app.all_package_list_obj.get_all_list_package_length())
 else:
     app.scoring_status = False
+
+
+@app.before_request
+def before_request():
+    g.request_start = datetime.datetime.utcnow()
+
+
+@app.teardown_request
+def teardown_request(_):
+    app.logger.debug('Response time: {t} seconds'.format(
+        t=(datetime.datetime.utcnow() - g.request_start).total_seconds()))
 
 
 @app.route('/')
