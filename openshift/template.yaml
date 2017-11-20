@@ -47,6 +47,8 @@ objects:
               secretKeyRef:
                 key: s3-secret-access-key
                 name: aws
+          - name: FLASK_LOGGING_LEVEL
+            value: ${FLASK_LOGGING_LEVEL}
           name: bayesian-kronos
           image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
           ports:
@@ -134,3 +136,8 @@ parameters:
   name: KRONOS_SCORING_REGION
   value: "pypi"
 
+- description: "Flask logging level (see: https://docs.python.org/3/library/logging.html#levels)"
+  displayName: Flask logging level
+  required: false
+  name: FLASK_LOGGING_LEVEL
+  value: "WARNING"

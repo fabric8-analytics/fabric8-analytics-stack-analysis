@@ -1,8 +1,10 @@
 import logging
 import sys
+import os
 
 import flask
-from flask import Flask, request
+import datetime
+from flask import Flask, request, g
 from flask_cors import CORS
 
 from analytics_platform.kronos.deployment.submit_training_job import submit_job
@@ -24,7 +26,22 @@ if sys.version_info.major == 2:
     sys.setdefaultencoding('UTF8')
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+
+def setup_logging(flask_app):
+    if not flask_app.debug:
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter(
+            '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'))
+        log_level = os.environ.get('FLASK_LOGGING_LEVEL', logging.getLevelName(logging.WARNING))
+        handler.setLevel(log_level)
+        flask_app.logger.addHandler(handler)
+
+
 app = Flask(__name__)
+setup_logging(app)
+
+
 CORS(app)
 
 global user_eco_kronos_dict
@@ -50,6 +67,17 @@ if KRONOS_SCORING_REGION != "":
                     app.all_package_list_obj.get_all_list_package_length())
 else:
     app.scoring_status = False
+
+
+@app.before_request
+def before_request():
+    g.request_start = datetime.datetime.utcnow()
+
+
+@app.teardown_request
+def teardown_request(_):
+    app.logger.debug('Response time: {t} seconds'.format(
+        t=(datetime.datetime.utcnow() - g.request_start).total_seconds()))
 
 
 @app.route('/')
