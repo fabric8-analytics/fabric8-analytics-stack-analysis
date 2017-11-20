@@ -52,4 +52,4 @@ def run(ecosystem='npm', bucket_name='prod-bayesian-core-data',
         else:
             descriptions[package] = ''
     input_bucket.write_json_file(
-        'tagging/npm/missing_data/missing_data.json', descriptions)
+        'tagging/npm/package_descriptions.json', descriptions)
