@@ -1,3 +1,8 @@
+"""
+This script collects the description(s) for a tagged package from S3 core-data bucket,
+and dumps the aggregated output into the input bucket from where the package tag map
+was read.
+"""
 from util.data_store.s3_data_store import S3DataStore
 from analytics_platform.kronos.src import config
 import json
@@ -22,7 +27,7 @@ def run(ecosystem='npm', bucket_name='prod-bayesian-core-data',
                                access_key=config.AWS_S3_ACCESS_KEY_ID,
                                secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
 
-    package_tag_map = json.loads(input_bucket.read_json_file(key))
+    package_tag_map = input_bucket.read_json_file(key)
     package_list = list(package_tag_map.keys())
     descriptions = {}
 
@@ -47,9 +52,4 @@ def run(ecosystem='npm', bucket_name='prod-bayesian-core-data',
         else:
             descriptions[package] = ''
     input_bucket.write_json_file(
-        'tagging/npm/missing_data/missing_data.json', json.dumps(descriptions))
-
-
-if __name__ == '__main__':
-    run(input_data_path='s3://avgupta-stack-analysis-dev/package_tag_maps/'
-        'npm/package_tag_map.json')
+        'tagging/npm/missing_data/missing_data.json', descriptions)

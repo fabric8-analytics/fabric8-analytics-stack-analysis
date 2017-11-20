@@ -1,3 +1,8 @@
+"""
+This job collects the latest version available in the core-data bucket for
+a package and dumps an aggregated map of the package_name:version_name mapping
+into the bucket from where the input missing package list was read.
+"""
 from util.data_store.s3_data_store import S3DataStore
 from analytics_platform.kronos.src import config
 import json
@@ -40,9 +45,4 @@ def run_job(input_data_path=''):
         version_info[package] = version
         print(count)
         count += 1
-    input_bucket.write_json_file('s3://avgupta-stack-analysis-dev/tagging/npm/missing_data/'
-                                 'missing_version_info.json', json.dumps(version_info))
-
-
-if __name__ == '__main__':
-    run_job(input_data_path='s3://avgupta-stack-analysis-dev/missing_data.json')
+    input_bucket.write_json_file('tagging/npm/missing_data/missing_version_info.json', version_info)

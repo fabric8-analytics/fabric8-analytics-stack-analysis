@@ -232,7 +232,7 @@ def write_tag_batch_to_s3(tag_dict, single=False, manifest=False):
     else:
         filename = list(tags_dict.keys())[0]
     tags_output_bucket.write_json_file('package_tag_maps/npm/{}.json'.format(filename),
-                                       json.dumps(tag_dict))
+                                       tag_dict)
 
 
 if __name__ == '__main__':
