@@ -1,5 +1,6 @@
 import logging
 import sys
+import os
 
 import flask
 import datetime
@@ -19,7 +20,22 @@ if sys.version_info.major == 2:
     sys.setdefaultencoding('UTF8')
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+
+def setup_logging(flask_app):
+    if not flask_app.debug:
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter(
+            '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'))
+        log_level = os.environ.get('FLASK_LOGGING_LEVEL', logging.getLevelName(logging.WARNING))
+        handler.setLevel(log_level)
+        flask_app.logger.addHandler(handler)
+
+
 app = Flask(__name__)
+setup_logging(app)
+
+
 CORS(app)
 
 global user_eco_kronos_dict
