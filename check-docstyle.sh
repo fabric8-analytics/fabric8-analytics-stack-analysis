@@ -1,4 +1,4 @@
-directories="analytics_platform util tests"
+directories="analytics_platform tagging_platform util tests"
 pass=0
 fail=0
 
