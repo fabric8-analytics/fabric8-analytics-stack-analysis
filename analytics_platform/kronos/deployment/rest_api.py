@@ -12,6 +12,12 @@ from analytics_platform.kronos.src.config import (
     AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION)
 from analytics_platform.kronos.src.kronos_online_scoring import *
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
+from tagging_platform.helles.deployment.submit_npm_tagging_job import submit_tagging_job
+from tagging_platform.helles.npm_tagger.get_descriptions_from_s3 import run as \
+    run_description_collection
+from tagging_platform.helles.npm_tagger.get_version_info_for_missing_packages import run_job as \
+    run_missing_package_version_collection_job
+
 
 if sys.version_info.major == 2:
     reload(sys)
@@ -92,6 +98,31 @@ def predict_and_score():
     app.logger.info(response)
 
     return flask.jsonify(response)
+
+
+@app.route('/api/v2/npm_tagging', methods=['POST'])
+def tag_npm_packages_textrank():
+    input_json = request.get_json()
+    # if 'package_name' in input_json:
+    response = submit_tagging_job(input_bootstrap_file='/helles_bootstrap_action.sh',
+                                  input_src_code_file='/tmp/tagging.zip',
+                                  package_name=input_json.get('package_name', ''),
+                                  manifest_path=input_json.get('manifest_path', ''))
+    return flask.jsonify(response)
+
+
+@app.route('/api/v2/npm_descriptions', methods=['POST'])
+def collect_npm_descriptions():
+    input_json = request.get_json()
+    run_description_collection(input_data_path=input_json.get('input_data_path'))
+    return flask.jsonify({"status": "Job completed"})
+
+
+@app.route('/api/v2/npm_missing_versions', methods=['POST'])
+def collect_missing_package_versions():
+    input_json = request.get_json()
+    run_missing_package_version_collection_job(input_json.get('input_data_path'))
+    return flask.jsonify({"status": "Job run successfully"})
 
 
 if __name__ == "__main__":
