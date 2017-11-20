@@ -24,16 +24,18 @@ class TestGnosisReferenceArchitecture(TestCase):
             "tests/data/data_gnosis/output-ra-data")
         self.assertTrue(output_data_store is not None)
 
-        gnosis_ra_obj = GnosisReferenceArchitecture.train(data_store=input_data_store, min_support_count=40,
-                                                          min_intent_topic_count=2,fp_num_partition=12)
+        gnosis_ra_obj = GnosisReferenceArchitecture.train(data_store=input_data_store,
+                                                          min_support_count=40,
+                                                          min_intent_topic_count=2,
+                                                          fp_num_partition=12)
 
         self.assertTrue(gnosis_ra_obj is not None)
         output_result = gnosis_ra_obj.get_dictionary()
 
         self.assertTrue(output_result is not None)
 
-        expected_gnosis_ra_obj = GnosisReferenceArchitecture.load(data_store=output_data_store,
-                                                                  filename="data_gnosis/expected_gnosis_ref_arch.json")
+        expected_gnosis_ra_obj = GnosisReferenceArchitecture.load(
+            data_store=output_data_store, filename="data_gnosis/expected_gnosis_ref_arch.json")
 
         self.assertTrue(expected_gnosis_ra_obj is not None)
 
@@ -43,4 +45,5 @@ class TestGnosisReferenceArchitecture(TestCase):
 
         self.assertDictEqual(output_result, expected_output_result)
 
-        gnosis_ra_obj.save(data_store=output_data_store, filename="data_gnosis/gnosis_ref_arch.json")
+        gnosis_ra_obj.save(data_store=output_data_store,
+                           filename="data_gnosis/gnosis_ref_arch.json")
