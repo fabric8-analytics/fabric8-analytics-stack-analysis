@@ -1,4 +1,4 @@
-directories="analytics_platform util"
+directories="analytics_platform util tests"
 fail=0
 
 function prepare_venv() {
