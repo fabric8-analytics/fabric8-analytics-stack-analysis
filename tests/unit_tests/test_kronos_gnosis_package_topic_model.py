@@ -25,18 +25,18 @@ class TestGnosisPackageTopicModel(TestCase):
         output_result = package_topic_model.get_dictionary()
         self.assertTrue(output_result is not None)
 
-    package_topic_model.save(
-        data_store=output_data_store, filename="data_package_topic/package_topic.json")
+        package_topic_model.save(
+            data_store=output_data_store, filename="data_package_topic/package_topic.json")
 
-    expected_package_topic_model = GnosisPackageTopicModel.load(data_store=output_data_store,
-                                                                filename="data_package_topic/expected_package_topic.json")
+        expected_package_topic_model = GnosisPackageTopicModel.load(
+            data_store=output_data_store, filename="data_package_topic/expected_package_topic.json")
 
-    self.assertTrue(expected_package_topic_model is not None)
+        self.assertTrue(expected_package_topic_model is not None)
 
-    expected_output_result = expected_package_topic_model.get_dictionary()
+        expected_output_result = expected_package_topic_model.get_dictionary()
 
-    self.assertTrue(expected_output_result is not None)
-    self.assertDictEqual(output_result, expected_output_result)
+        self.assertTrue(expected_output_result is not None)
+        self.assertDictEqual(output_result, expected_output_result)
 
     def test_manifest_missing_packages(self):
         input_data_store = LocalFileSystem(

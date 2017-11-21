@@ -18,22 +18,11 @@ def trunc_string_at(s, d, n1, n2):
 
 def create_tags_for_package(package_name):
     """Create tags for a package based on its name."""
-
+    stop_words = set(['org', 'com', 'io', 'ch', 'cn'])
     tags = []
-    name_parts = package_name.split(":")[:2]
-    if len(name_parts) > 1:
-        # ecosystem is maven, at least based on naming scheme
-        tags_artifact = [tag for tag in wordpunct_tokenize(name_parts[1]) if
-                         tag not in string.punctuation]
-        tags_group = [tag for tag in wordpunct_tokenize(name_parts[0]) if
-                      tag not in string.punctuation and tag not in
-                      ['org', 'com', 'io', 'ch', 'cn']]
-        tags = set(tags_artifact + tags_group)
-    else:
-        # return the tokenized package name
-        tags = set([tag for tag in wordpunct_tokenize(package_name)
-                    if tag not in string.punctuation])
-    tags = [tag.lower()
-            for tag in tags][:MAX_TAG_COUNT]
-    # Make sure there are no duplicates
-    return list(set(tags))
+
+    tags = set([tag.lower() for tag in wordpunct_tokenize(package_name) if
+                tag not in string.punctuation and tag not in stop_words
+                ])
+
+    return list(tags)[:MAX_TAG_COUNT]

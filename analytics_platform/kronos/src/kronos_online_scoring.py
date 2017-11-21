@@ -1,6 +1,6 @@
 from analytics_platform.kronos.pgm.src.pgm_constants import *
 from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
-from util.pgm_util import *
+from util.pgm_util import generate_evidence_map_from_transaction_list
 
 from analytics_platform.kronos.src import config
 from util.data_store.s3_data_store import S3DataStore

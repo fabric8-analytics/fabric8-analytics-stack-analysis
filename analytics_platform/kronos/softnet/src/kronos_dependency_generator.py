@@ -1,4 +1,4 @@
-from util.softnet_util import *
+import util.softnet_util as utils
 from util.data_store.local_filesystem import LocalFileSystem
 import daiquiri
 import logging
@@ -28,37 +28,45 @@ class KronosDependencyGenerator(object):
         :return: Object of class KronosDependencyGenerator."""
         _logger.info("Started kronos dependency graph generation")
         package_list = package_to_topic_dict.keys()
-        component_class_list = gnosis_ref_arch_dict.get(GNOSIS_RA_COMPONENT_CLASS_LIST)
+        component_class_list = gnosis_ref_arch_dict.get(
+            utils.GNOSIS_RA_COMPONENT_CLASS_LIST)
 
         component_class_to_package_edge_list, component_class_to_package_dict = \
             cls._generate_component_class_to_package_edge_list_and_dict(
                 package_list, component_class_list, package_to_topic_dict)
 
-        gnosis_ref_arch_intent_list = gnosis_ref_arch_dict.get(GNOSIS_RA_INTENT_LIST)
+        gnosis_ref_arch_intent_list = gnosis_ref_arch_dict.get(
+            utils.GNOSIS_RA_INTENT_LIST)
         kronos_intent_list = gnosis_ref_arch_intent_list + component_class_list
         kronos_node_list = package_list + kronos_intent_list
 
-        gnosis_ref_arch_edge_list = gnosis_ref_arch_dict.get(GNOSIS_RA_EDGE_LIST)
+        gnosis_ref_arch_edge_list = gnosis_ref_arch_dict.get(
+            utils.GNOSIS_RA_EDGE_LIST)
 
         kronos_dependency_edge_list = gnosis_ref_arch_edge_list + \
             component_class_to_package_edge_list
 
-        parent_tuple_list = generate_parent_tuple_list(kronos_node_list,
-                                                       kronos_dependency_edge_list)
+        parent_tuple_list = utils.generate_parent_tuple_list(kronos_node_list,
+                                                             kronos_dependency_edge_list)
         parent_tuple_list_string = LocalFileSystem.convert_list_of_tuples_to_string(
             parent_tuple_list)
         similar_package_dict = cls._generate_similar_package_dict(package_to_topic_dict,
                                                                   topic_to_package_dict)
 
         kronos_dependency_dict = dict()
-        kronos_dependency_dict[KD_PACKAGE_LIST] = package_list
-        kronos_dependency_dict[KD_INTENT_LIST] = kronos_intent_list
-        kronos_dependency_dict[KD_INTENT_DEPENDENCY_MAP] = gnosis_ref_arch_dict.get(GNOSIS_RA_DICT)
-        kronos_dependency_dict[KD_COMPONENT_DEPENDENCY_MAP] = component_class_to_package_dict
-        kronos_dependency_dict[KD_PARENT_TUPLE_LIST] = parent_tuple_list_string
-        kronos_dependency_dict[KD_EDGE_LIST] = kronos_dependency_edge_list
-        kronos_dependency_dict[KD_SIMILAR_PACKAGE_MAP] = similar_package_dict
-        kronos_dependency_dict[KD_PACKAGE_TO_TOPIC_MAP] = package_to_topic_dict
+        kronos_dependency_dict[utils.KD_PACKAGE_LIST] = package_list
+        kronos_dependency_dict[utils.KD_INTENT_LIST] = kronos_intent_list
+        kronos_dependency_dict[
+            utils.KD_INTENT_DEPENDENCY_MAP] = gnosis_ref_arch_dict.get(utils.GNOSIS_RA_DICT)
+        kronos_dependency_dict[
+            utils.KD_COMPONENT_DEPENDENCY_MAP] = component_class_to_package_dict
+        kronos_dependency_dict[
+            utils.KD_PARENT_TUPLE_LIST] = parent_tuple_list_string
+        kronos_dependency_dict[utils.KD_EDGE_LIST] = kronos_dependency_edge_list
+        kronos_dependency_dict[
+            utils.KD_SIMILAR_PACKAGE_MAP] = similar_package_dict
+        kronos_dependency_dict[
+            utils.KD_PACKAGE_TO_TOPIC_MAP] = package_to_topic_dict
         _logger.info("Ended Kronos dependency graph generation")
         return KronosDependencyGenerator(kronos_dependency_dict)
 
@@ -92,13 +100,15 @@ class KronosDependencyGenerator(object):
             package_component_class_list = package_topic_map.get(package)
             for component_class in package_component_class_list:
                 edge_dict = dict()
-                edge_dict[EDGE_DICT_FROM] = component_class
-                edge_dict[EDGE_DICT_TO] = package
+                edge_dict[utils.EDGE_DICT_FROM] = component_class
+                edge_dict[utils.EDGE_DICT_TO] = package
                 component_class_to_package_edge_list.append(edge_dict)
                 if component_class in component_class_to_package_dict:
-                    temp_package_list = component_class_to_package_dict[component_class]
+                    temp_package_list = component_class_to_package_dict[
+                        component_class]
                     temp_package_list.append(package)
-                    component_class_to_package_dict[component_class] = temp_package_list
+                    component_class_to_package_dict[
+                        component_class] = temp_package_list
                 else:
                     component_class_to_package_dict[component_class] = [package]
 
@@ -123,7 +133,7 @@ class KronosDependencyGenerator(object):
                 list_of_package_list.append(topic_package_list)
             distinct_package_list = list(set(sum(list_of_package_list, [])))
             distinct_package_list.remove(package)
-            similar_package_dict_list = get_similar_package_dict_list(
+            similar_package_dict_list = utils.get_similar_package_dict_list(
                 package=package,
                 package_list=distinct_package_list,
                 package_to_topic_dict=package_to_topic_dict)

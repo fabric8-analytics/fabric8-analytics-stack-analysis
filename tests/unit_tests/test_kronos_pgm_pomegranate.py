@@ -7,6 +7,7 @@ from analytics_platform.kronos.src.kronos_online_scoring import score_eco_user_p
 from util.data_store.local_filesystem import LocalFileSystem
 
 from unittest import TestCase
+import os
 
 
 class TestKronosPomegranate(TestCase):
@@ -40,7 +41,7 @@ class TestKronosPomegranate(TestCase):
                 kronos_model = PGMPomegranate.train(kronos_dependency_dict=kronos_dependency_dict,
                                                     package_occurrence_df=cooccurrence_matrix_df)
                 self.assertTrue(kronos_model is not None)
-                filename = os.path.join("data_kronos_user_eco", str(user_category), "kronos",
+                filename = os.path.join("data_kronos_user_eco", str(user_category), "kronos" +
                                         "_" + str(ecosystem) + ".json")
                 kronos_model.save(
                     data_store=output_data_store, filename=filename)

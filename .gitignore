@@ -5,3 +5,4 @@ cache/
 config.py
 docker-compose*
 error.log
+*.ipynb

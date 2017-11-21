@@ -64,3 +64,4 @@ class TestCooccurrenceMatrixGenerator(TestCase):
                 self.assertTrue(resultant_columns == expected_columns)
                 self.assertTrue(set(cooccurrence_matrix_df).issubset(
                     set(expected_cooccurrence_matrix_df)))
+                output_data_store.remove_json_file(output_filename)
