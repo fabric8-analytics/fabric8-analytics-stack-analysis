@@ -7,6 +7,11 @@
 * [Pgm](/analytics_platform/kronos/pgm)
 * [Softnet](/analytics_platform/kronos/softnet)
 
+
+## To test
+
+`python -m unittest discover tests  -v`
+
 ## Deploy to openshift cluster
 
 - Create project
@@ -125,4 +130,4 @@ BODY: JSON data
 ## Latest Depolyment
 
 * Maven
-	* Retrained on: 2017-11-03 20:31 (UTC+5:30)
+	* Retrained on: 2017-11-22 17:53 (UTC+5:30)
