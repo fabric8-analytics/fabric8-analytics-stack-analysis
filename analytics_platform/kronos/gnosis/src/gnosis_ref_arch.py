@@ -236,7 +236,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                 item_list, key=lambda x: x[1], reverse=False)
             topic_num_to_itemset_dict[key] = sorted_item_list
 
-        item_dict = {z: 2 for z in package_list}
+        item_dict = {z: 10 for z in package_list}
         intent_dict = dict()
         for key_value in topic_num_to_itemset_dict:
             k_itemset_list = topic_num_to_itemset_dict[key_value]
