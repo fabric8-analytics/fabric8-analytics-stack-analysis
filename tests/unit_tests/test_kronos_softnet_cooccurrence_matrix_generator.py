@@ -1,5 +1,3 @@
-import logging
-
 from pandas.util.testing import assert_frame_equal
 
 from analytics_platform.kronos.src import config
@@ -8,9 +6,6 @@ from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator \
 from analytics_platform.kronos.softnet.src.offline_training \
     import load_eco_to_kronos_dependency_dict
 from util.data_store.local_filesystem import LocalFileSystem
-
-logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 from unittest import TestCase
 
@@ -69,3 +64,4 @@ class TestCooccurrenceMatrixGenerator(TestCase):
                 self.assertTrue(resultant_columns == expected_columns)
                 self.assertTrue(set(cooccurrence_matrix_df).issubset(
                     set(expected_cooccurrence_matrix_df)))
+                output_data_store.remove_json_file(output_filename)

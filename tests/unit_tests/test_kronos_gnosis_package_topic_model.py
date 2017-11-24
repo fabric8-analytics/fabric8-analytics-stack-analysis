@@ -1,11 +1,7 @@
-import logging
-
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
 from util.data_store.local_filesystem import LocalFileSystem
-
-logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+from util.analytics_platform_util import create_tags_for_package
 
 from unittest import TestCase
 
@@ -27,12 +23,13 @@ class TestGnosisPackageTopicModel(TestCase):
 
         self.assertTrue(package_topic_model is not None)
         output_result = package_topic_model.get_dictionary()
-
         self.assertTrue(output_result is not None)
 
+        package_topic_model.save(
+            data_store=output_data_store, filename="data_package_topic/package_topic.json")
+
         expected_package_topic_model = GnosisPackageTopicModel.load(
-            data_store=output_data_store,
-            filename="data_package_topic/expected_package_topic.json")
+            data_store=output_data_store, filename="data_package_topic/expected_package_topic.json")
 
         self.assertTrue(expected_package_topic_model is not None)
 
@@ -40,9 +37,6 @@ class TestGnosisPackageTopicModel(TestCase):
 
         self.assertTrue(expected_output_result is not None)
         self.assertDictEqual(output_result, expected_output_result)
-
-        package_topic_model.save(data_store=output_data_store,
-                                 filename="data_package_topic/package_topic.json")
 
     def test_manifest_missing_packages(self):
         input_data_store = LocalFileSystem(
@@ -70,7 +64,7 @@ class TestGnosisPackageTopicModel(TestCase):
         self.assertTrue(ptm_json)
         package_names = ptm_json[0]['package_topic_map']
         for package_name in package_names:
-            tag_list = GnosisPackageTopicModel._create_tags_for_package(
+            tag_list = create_tags_for_package(
                 package_name)
             # At least one tag should be generated for each package
             self.assertTrue(tag_list)

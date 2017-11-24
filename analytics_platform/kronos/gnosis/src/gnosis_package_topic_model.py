@@ -1,7 +1,6 @@
 from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
 from analytics_platform.kronos.gnosis.src.gnosis_constants import *
-from nltk.tokenize import wordpunct_tokenize
-import string
+from util.analytics_platform_util import create_tags_for_package
 
 
 class GnosisPackageTopicModel(AbstractGnosis):
@@ -58,12 +57,16 @@ class GnosisPackageTopicModel(AbstractGnosis):
                 package_topic_dict))
             for package in package_topic_dict.keys():
                 topic_list = package_topic_dict[package]
+                if len(topic_list) == 0:
+                    topic_list = create_tags_for_package(package)
                 formatted_package = package.lower()
                 formatted_topic_list = [
-                    GNOSIS_PTM_TOPIC_PREFIX + x.lower() for x in topic_list][:GNOSIS_PTM_TAG_LIMIT]
-                distinct_formatted_topic_list = \
-                    set(formatted_topic_list) or cls._create_tags_for_package(package)
-                package_to_topic_dict[formatted_package] = list(distinct_formatted_topic_list)
+                    GNOSIS_PTM_TOPIC_PREFIX + x.lower() for x in
+                    topic_list]
+                distinct_formatted_topic_list = set(
+                    formatted_topic_list)
+                package_to_topic_dict[formatted_package] = list(
+                    distinct_formatted_topic_list)
 
                 for formatted_topic in distinct_formatted_topic_list:
                     if formatted_topic not in topic_to_package_dict:
@@ -130,25 +133,3 @@ class GnosisPackageTopicModel(AbstractGnosis):
                                              for x in package_list
                                              if x not in package_topic_dict})
         return unknown_packages
-
-    @classmethod
-    def _create_tags_for_package(cls, package_name):
-        """Create tags for a package based on its name"""
-        tags = []
-        name_parts = package_name.split(":")[:2]
-
-        if len(name_parts) > 1:
-            # ecosystem is maven, at least based on naming scheme
-            tags_artifact = [tag for tag in wordpunct_tokenize(name_parts[1]) if
-                             tag not in string.punctuation]
-            tags_group = [tag for tag in wordpunct_tokenize(name_parts[0]) if
-                          tag not in string.punctuation and tag not in
-                          ['org', 'com', 'io', 'ch', 'cn']]
-            tags = set(tags_artifact + tags_group)
-        else:
-            # return the tokenized package name
-            tags = set([tag for tag in wordpunct_tokenize(package_name)
-                        if tag not in string.punctuation])
-        tags = [GNOSIS_PTM_TOPIC_PREFIX + tag.lower() for tag in tags][:GNOSIS_PTM_TAG_LIMIT]
-        # Make sure there are no duplicates
-        return set(tags)

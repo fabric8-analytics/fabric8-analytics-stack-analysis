@@ -2,7 +2,7 @@ from pomegranate import *
 
 from analytics_platform.kronos.pgm.src.abstract_pgm import AbstractPGM
 from analytics_platform.kronos.pgm.src.pgm_constants import *
-from analytics_platform.kronos.pgm.src.pgm_util import *
+import util.pgm_util as utils
 from util.data_store.local_filesystem import LocalFileSystem
 from util.data_store.s3_data_store import S3DataStore
 import pickle
@@ -56,12 +56,13 @@ class PGMPomegranate(AbstractPGM):
         kronos_dependency_list_string = kronos_dependency_dict[KD_PARENT_TUPLE_LIST]
         kronos_node_list = kronos_dependency_dict[KD_PACKAGE_LIST] + \
             kronos_dependency_dict[KD_INTENT_LIST]
-        kronos_node_string_list = [node_name.encode('utf-8') for node_name in kronos_node_list]
-        kronos_dependency_list = generate_kronos_dependency_list_for_pomegranate(
+        kronos_node_string_list = [node_name.encode(
+            'utf-8') for node_name in kronos_node_list]
+        kronos_dependency_list = utils.generate_kronos_dependency_list_for_pomegranate(
             kronos_dependency_list_string)
 
-        package_occurrence_matrix = generate_matrix_from_pandas_df(package_occurrence_df,
-                                                                   kronos_node_list)
+        package_occurrence_matrix = utils.generate_matrix_from_pandas_df(package_occurrence_df,
+                                                                         kronos_node_list)
 
         pgm_model = BayesianNetwork.from_structure(package_occurrence_matrix,
                                                    structure=kronos_dependency_list,

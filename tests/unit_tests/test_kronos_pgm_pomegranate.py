@@ -1,6 +1,3 @@
-import logging
-import os
-
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict, \
@@ -9,10 +6,8 @@ from analytics_platform.kronos.src.kronos_online_scoring import score_eco_user_p
     load_user_eco_to_kronos_model_dict, get_eco_to_kronos_dependency_dict
 from util.data_store.local_filesystem import LocalFileSystem
 
-logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
 from unittest import TestCase
+import os
 
 
 class TestKronosPomegranate(TestCase):
@@ -36,16 +31,20 @@ class TestKronosPomegranate(TestCase):
         self.assertTrue(user_eco_to_cooccurrence_matrix_dict is not None)
 
         for user_category in user_eco_to_cooccurrence_matrix_dict.keys():
-            eco_to_cooccurrence_matrix_dict = user_eco_to_cooccurrence_matrix_dict[user_category]
+            eco_to_cooccurrence_matrix_dict = user_eco_to_cooccurrence_matrix_dict[
+                user_category]
             for ecosystem in eco_to_cooccurrence_matrix_dict.keys():
-                kronos_dependency_dict = eco_to_kronos_dependency_dict[ecosystem]
-                cooccurrence_matrix_df = eco_to_cooccurrence_matrix_dict[ecosystem]
+                kronos_dependency_dict = eco_to_kronos_dependency_dict[
+                    ecosystem]
+                cooccurrence_matrix_df = eco_to_cooccurrence_matrix_dict[
+                    ecosystem]
                 kronos_model = PGMPomegranate.train(kronos_dependency_dict=kronos_dependency_dict,
                                                     package_occurrence_df=cooccurrence_matrix_df)
                 self.assertTrue(kronos_model is not None)
-                filename = os.path.join("data_kronos_user_eco", str(user_category), "kronos",
+                filename = os.path.join("data_kronos_user_eco", str(user_category), "kronos" +
                                         "_" + str(ecosystem) + ".json")
-                kronos_model.save(data_store=output_data_store, filename=filename)
+                kronos_model.save(
+                    data_store=output_data_store, filename=filename)
 
     def test_score_eco_user_package_dict(self):
         input_data_store = LocalFileSystem(
@@ -85,9 +84,11 @@ class TestKronosPomegranate(TestCase):
 
         self.assertTrue(response is not None)
 
-        output_data_store.write_json_file(filename="response.json", contents=response)
+        output_data_store.write_json_file(
+            filename="response.json", contents=response)
 
-        expected_response = output_data_store.read_json_file(filename="expected_response.json")
+        expected_response = output_data_store.read_json_file(
+            filename="expected_response.json")
         self.assertTrue(expected_response is not None)
 
         self.assertDictEqual(response[0], expected_response[0])

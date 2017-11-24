@@ -1,11 +1,6 @@
-import logging
-
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
 from util.data_store.local_filesystem import LocalFileSystem
-
-logging.basicConfig(filename=config.LOGFILE_PATH, level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 from unittest import TestCase
 

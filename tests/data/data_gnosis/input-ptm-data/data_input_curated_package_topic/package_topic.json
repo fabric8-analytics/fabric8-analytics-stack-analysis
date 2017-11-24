@@ -22,9 +22,7 @@
         "secure",
         "socket layer",
         "server",
-        "client",
-        "security",
-        "encryption"
+        "client"
       ]
     }
   },

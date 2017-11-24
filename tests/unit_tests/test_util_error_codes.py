@@ -1,5 +1,6 @@
 from util.error import error_codes
 from util.error.analytics_exception import AnalyticsException
+
 from unittest import TestCase
 
 

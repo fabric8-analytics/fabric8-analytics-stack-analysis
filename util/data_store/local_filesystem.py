@@ -36,6 +36,10 @@ class LocalFileSystem(AbstractDataStore):
         list_filenames.sort()
         return list_filenames
 
+    def remove_json_file(self, filename):
+        """Remove JSON file from the data_input source file path"""
+        return os.remove(os.path.join(self.src_dir, filename))
+
     def read_json_file(self, filename):
         """Read JSON file from the data_input source"""
         return LocalFileSystem.byteify(json.load(open(os.path.join(self.src_dir, filename))))
