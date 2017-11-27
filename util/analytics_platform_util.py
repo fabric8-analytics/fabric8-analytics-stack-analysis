@@ -20,31 +20,11 @@ def create_tags_for_package(package_name):
     """Create tags for a package based on its name."""
     stop_words = set(['org', 'com', 'io', 'ch', 'cn'])
     tags = []
-<<<<<<< 8bb3b4a7211c4c6e2d79d79e422b967066152047
-
     tags = set([tag.lower() for tag in wordpunct_tokenize(package_name) if
                 tag not in string.punctuation and tag not in stop_words
                 ])
 
     return list(tags)[:MAX_TAG_COUNT]
-=======
-    name_parts = package_name.split(":")[:2]
-    if len(name_parts) > 1:
-        # ecosystem is maven, at least based on naming scheme
-        tags_artifact = [tag for tag in wordpunct_tokenize(name_parts[1]) if
-                         tag not in string.punctuation]
-        tags_group = [tag for tag in wordpunct_tokenize(name_parts[0]) if
-                      tag not in string.punctuation and tag not in
-                      ['org', 'com', 'io', 'ch', 'cn']]
-        tags = set(tags_artifact + tags_group)
-    else:
-        # return the tokenized package name
-        tags = set([tag for tag in wordpunct_tokenize(package_name)
-                    if tag not in string.punctuation])
-    tags = [tag.lower()
-            for tag in tags][:MAX_TAG_COUNT]
-    # Make sure there are no duplicates
-    return list(set(tags))
 
 
 def get_path_names(training_data_url):
@@ -55,4 +35,3 @@ def get_path_names(training_data_url):
     output_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
     additional_path = trunc_string_at(training_data_url, "/", 3, -1)
     return input_bucket_name, output_bucket_name, additional_path
->>>>>>> Add code for pruning taglist in apollo module.

@@ -16,6 +16,6 @@ def train_and_save_pruned_tag_list_s3(training_data_url):
     output_package_topic_data_store = S3DataStore(src_bucket_name=output_bucket_name,
                                                   access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                   secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
-    return TagListPruner.get_prune_list(input_package_topic_data_store,
+    return TagListPruner.prune_tag_list(input_package_topic_data_store,
                                         output_package_topic_data_store,
                                         additional_path)
