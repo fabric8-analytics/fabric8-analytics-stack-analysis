@@ -1,0 +1,28 @@
+[
+  {
+    "ecosystem": "pypi",
+    "package_topic_map": {
+      "pytest-pep8": ["pep8", "pytest", "plugin"],
+      "service_identity": ["security", "indentity", "cryptography", "plugin"]
+    }
+  },
+  {
+    "ecosystem": "maven",
+    "package_topic_map": {
+      "backports.ssl-match-hostname": ["secure", "cryptography", "encryption", "server"],
+      "org.bouncycastle:bcpkix-jdk15on": ["encryption","cryptography"],
+      "org.pac4j:pac4j-mongo": ["authentication", "mongo", "secure"],
+      "org.apache.mina:mina-core": ["network","socket"] 
+    }
+  },
+  {
+    "ecosystem": "npm",
+    "package_topic_map": {}
+  },
+  {
+    "ecosystem": "ruby",
+    "package_topic_map": {
+      "service_identity": ["service_identity" ]
+    }
+  }
+]

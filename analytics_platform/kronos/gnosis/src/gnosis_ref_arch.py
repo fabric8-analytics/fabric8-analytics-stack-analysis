@@ -251,7 +251,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                 keys_to_remove = list()
                 for key, value in item_dict.iteritems():
                     if value == 0:
-                        k_itemset_list = modify_list(key, k_itemset_list, index)
+                        k_itemset_list = utils.modify_list(
+                            key, k_itemset_list, index)
                         keys_to_remove.append(key)
                 for key in keys_to_remove:
                     del item_dict[key]

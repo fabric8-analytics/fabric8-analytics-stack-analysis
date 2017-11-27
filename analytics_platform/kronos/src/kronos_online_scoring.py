@@ -17,7 +17,8 @@ def load_user_eco_to_kronos_model_dict(input_kronos_data_store, additional_path)
         user_category = kronos_model_filename.split("/")[-2]
         if user_category not in user_category_list:
             user_category_list.append(user_category)
-        ecosystem = kronos_model_filename.split("/")[-1].split(".")[0].split("_")[-1]
+        ecosystem = kronos_model_filename.split(
+            "/")[-1].split(".")[0].split("_")[-1]
         if ecosystem not in ecosystem_list:
             ecosystem_list.append(ecosystem)
         kronos_model = PGMPomegranate.load(data_store=input_kronos_data_store,
@@ -48,7 +49,8 @@ def load_user_eco_to_kronos_model_dict_s3(bucket_name, additional_path):
 
 
 def get_sorted_companion_package_probabilities(res, node_list, non_companion_packages):
-    result = get_sorted_companion_node_probabilities(res, node_list, non_companion_packages)
+    result = get_sorted_companion_node_probabilities(
+        res, node_list, non_companion_packages)
     return result
 
 
@@ -111,9 +113,11 @@ def generated_evidence_dict_list_and_potential_outlier_index_list(observed_packa
         node = observed_package_list[i]
         potential_outlier_index_list.append(node_list.index(node))
         temp_list.pop(i)
-        temp_evidence_list = generate_evidence_map_from_transaction_list(temp_list)
+        temp_evidence_list = generate_evidence_map_from_transaction_list(
+            temp_list)
         evidence_dict_list.append(temp_evidence_list)
-    evidence_dict_list.append(generate_evidence_map_from_transaction_list(observed_package_list))
+    evidence_dict_list.append(
+        generate_evidence_map_from_transaction_list(observed_package_list))
     return evidence_dict_list, potential_outlier_index_list
 
 
@@ -148,7 +152,8 @@ def get_kronos_recommendation(kronos, observed_package_list, node_list, outlier_
     num_outlier_packages = len(sorted_outlier_dict_list)
     if num_outlier_packages > outlier_package_count_threshold:
         num_outlier_packages = outlier_package_count_threshold
-    sorted_outlier_dict_list_pruned = sorted_outlier_dict_list[:num_outlier_packages]
+    sorted_outlier_dict_list_pruned = sorted_outlier_dict_list[
+        :num_outlier_packages]
 
     return companion_recommendation_dict, sorted_outlier_dict_list_pruned
 
@@ -167,7 +172,8 @@ def get_non_companion_packages(alternate_package_dict, observed_package_list):
 def get_observed_and_missing_package_list(requested_package_list, unknown_package_ratio_threshold,
                                           package_list):
     observed_package_list = None
-    existing_package_set = set(requested_package_list).intersection(package_list)
+    existing_package_set = set(
+        requested_package_list).intersection(package_list)
     missing_package_set = set(requested_package_list) - existing_package_set
     missing_package_list = list(missing_package_set)
     acceptable_existing_package_count = \

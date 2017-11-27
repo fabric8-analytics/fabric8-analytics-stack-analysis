@@ -30,7 +30,8 @@ class PGMPomegranate(AbstractPGM):
     def save(self, data_store, filename):
         pgm_model = self.model
         if type(data_store) is LocalFileSystem:
-            data_store.write_pomegranate_model(model=pgm_model, filename=filename)
+            data_store.write_pomegranate_model(
+                model=pgm_model, filename=filename)
         if type(data_store) is S3DataStore:
             local_filename = "/tmp/kronos.json"
             with open(local_filename, 'wb') as f:
@@ -53,7 +54,8 @@ class PGMPomegranate(AbstractPGM):
     @classmethod
     def _train_kronos_for_ecosystem(cls, kronos_dependency_dict, package_occurrence_df):
 
-        kronos_dependency_list_string = kronos_dependency_dict[KD_PARENT_TUPLE_LIST]
+        kronos_dependency_list_string = kronos_dependency_dict[
+            KD_PARENT_TUPLE_LIST]
         kronos_node_list = kronos_dependency_dict[KD_PACKAGE_LIST] + \
             kronos_dependency_dict[KD_INTENT_LIST]
         kronos_node_string_list = [node_name.encode(

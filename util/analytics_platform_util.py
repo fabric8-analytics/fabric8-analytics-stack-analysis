@@ -20,9 +20,18 @@ def create_tags_for_package(package_name):
     """Create tags for a package based on its name."""
     stop_words = set(['org', 'com', 'io', 'ch', 'cn'])
     tags = []
-
     tags = set([tag.lower() for tag in wordpunct_tokenize(package_name) if
                 tag not in string.punctuation and tag not in stop_words
                 ])
 
     return list(tags)[:MAX_TAG_COUNT]
+
+
+def get_path_names(training_data_url):
+    """Return the bucket name and additiona path.
+        :param training_data)url: The location where data is read from and written to."""
+
+    input_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
+    output_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
+    additional_path = trunc_string_at(training_data_url, "/", 3, -1)
+    return input_bucket_name, output_bucket_name, additional_path

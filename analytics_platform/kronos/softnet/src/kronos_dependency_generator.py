@@ -77,7 +77,8 @@ class KronosDependencyGenerator(object):
         :param file_name: Name of the file that will contain model."""
 
         kronos_dependency_dict = self._dictionary
-        data_store.write_json_file(filename=filename, contents=kronos_dependency_dict)
+        data_store.write_json_file(
+            filename=filename, contents=kronos_dependency_dict)
 
     @classmethod
     def load(cls, data_store, filename):
