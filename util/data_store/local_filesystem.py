@@ -11,10 +11,12 @@ from util.data_store.abstract_data_store import AbstractDataStore
 
 
 class LocalFileSystem(AbstractDataStore):
+
     def __init__(self, src_dir):
         self.src_dir = src_dir
         # ensure path ends with a forward slash
-        self.src_dir = self.src_dir if self.src_dir.endswith("/") else self.src_dir + "/"
+        self.src_dir = self.src_dir if self.src_dir.endswith(
+            "/") else self.src_dir + "/"
 
     def get_name(self):
         return "Local filesytem dir: " + self.src_dir

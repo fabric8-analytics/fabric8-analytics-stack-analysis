@@ -7,7 +7,7 @@ APOLLO_TEMP_DATA = "analytics_platform/kronos/apollo/temp_data"
 APOLLO_TEMP_TEST_DATA = "tests/data/data_apollo/data_apollo_gremlin"
 """Constants for output Manifest file."""
 
-PACKAGE_LIST_OUTPUT_FILEPATH = "data_input_curated_package_topic/"
+PACKAGE_LIST_INPUT_CURATED_FILEPATH = "data_input_curated_package_topic/"
 
 """Max tags for PGM."""
 

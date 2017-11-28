@@ -4,7 +4,10 @@ from analytics_platform.kronos.apollo.src.apollo_constants import (
     APOLLO_INPUT_RAW_PATH,
     APOLLO_PACKAGE_LIST,
     PACKAGE_LIST_INPUT_CURATED_FILEPATH,
-    MAX_TAG_COUNT)
+    MAX_TAG_COUNT,
+    APOLLO_TEMP_DATA,
+    APOLLO_TEMP_TEST_DATA)
+from util.data_store.local_filesystem import LocalFileSystem
 from util.analytics_platform_util import create_tags_for_package
 from collections import Counter
 
@@ -20,7 +23,8 @@ class TagListPruner(object):
     @staticmethod
     def prune_tag_list(input_package_topic_data_store,
                        output_package_topic_data_store,
-                       additional_path):
+                       additional_path,
+                       mode="test"):
         """Generate the clean aggregated package_topic list as required by Gnosis.
 
         :param input_package_topic_data_store: The Data store to pick the package_topic files from.
@@ -36,15 +40,18 @@ class TagListPruner(object):
         package_list_files = input_package_topic_data_store.list_files(
             additional_path + APOLLO_INPUT_RAW_PATH)
         for package_file_name in package_list_files:
-            TagListPruner.clean_file(package_file_name,
-                                     input_package_topic_data_store,
-                                     output_package_topic_data_store,
-                                     additional_path)
+            untagged_pakcage_data = TagListPruner.clean_file(package_file_name,
+                                                             input_package_topic_data_store,
+                                                             output_package_topic_data_store,
+                                                             additional_path)
+            local_data_obj.write_json_file(
+                package_file_name.split("/")[-1], untagged_pakcage_data)
 
     def save(self, data_store, filename):
         """Saves the package_topic object in json format.
 
-        : param data_store: Data store to save package_topic in.        : param filename: the file into which the package_topic is to be saved."""
+        : param data_store: Data store to save package_topic in.
+        : param filename: the file into which the package_topic is to be saved."""
 
         data_store.write_json_file(
             filename=filename, contents=self.package_list)
@@ -66,14 +73,14 @@ class TagListPruner(object):
                           additional_path):
         """Create and save the object of TagListPruner class.
 
-           : param result_package_topic_json: The clean package_topic json to be saved.: param package_file: The output filename for clean package_topic.
-            : param output_package_topic_data_store:
-                The output data store where clean package_topics are saved.
-            : param additional_path: The directory to pick the package_topic files from."""
+        : param result_package_topic_json: The clean package_topic json to be saved.
+        : param package_file: The output filename for clean package_topic.
+        : param output_package_topic_data_store:
+            The output data store where clean package_topics are saved.
+        : param additional_path: The directory to pick the package_topic files from."""
 
         package_topic_formatter_obj = cls(result_package_topic_json)
-        output_filename = additional_path +
-            PACKAGE_LIST_INPUT_CURATED_FILEPATH +
+        output_filename = additional_path + PACKAGE_LIST_INPUT_CURATED_FILEPATH + \
             package_file_name.split("/")[-1]
         package_topic_formatter_obj.save(
             output_package_topic_data_store, output_filename)
@@ -87,6 +94,7 @@ class TagListPruner(object):
            : return pruned_package_list: The prune and clean package_list."""
 
         pruned_package_list = {}
+        untagged_packages = set()
         stop_word = set(['vertx', 'spring', 'java', 'apache',
                          'vert.x', 'io', 'com', 'commons', 'algorithms', 'language'])
         word_count = Counter()
@@ -103,7 +111,7 @@ class TagListPruner(object):
             if len(tag_list) == 0:
                 tag_list = create_tags_for_package(
                     package_name)
-                # TODO: Update Crowsourcing DB with package_name for tagging.
+                untagged_packages.add(package_name)
             if len(tag_list) > MAX_TAG_COUNT:
                 package_tag_count = Counter()
                 for tag in tag_list:
@@ -111,7 +119,7 @@ class TagListPruner(object):
                 tag_list = [package_tag[0].lower()
                             for package_tag in package_tag_count.most_common(4)]
             pruned_package_list[package_name] = tag_list
-        return pruned_package_list
+        return pruned_package_list, untagged_packages
 
     @classmethod
     def clean_file(cls, package_file_name,
@@ -121,25 +129,34 @@ class TagListPruner(object):
         """Prepare the clean package_topic data and save it.
 
            : param package_file_name: The raw package_topic file name.
-           : param content_json_list: The raw package_topic json content.           
-           : param output_package_topic_data_store: Save clean package_topic json here.           
+           : param content_json_list: The raw package_topic json content.
+           : param output_package_topic_data_store: Save clean package_topic json here.
            : param additional_path: The directory to pick the package_topic files from."""
 
         content_json_list = input_package_topic_data_store.read_json_file(
             filename=package_file_name)
 
         result_package_topic_json = []
+        untagged_pakcage_data = {}
         for package_topic_content_json in content_json_list:
             ecosystem = package_topic_content_json.get(APOLLO_ECOSYSTEM)
             package_tag_list = package_topic_content_json.get(
                 APOLLO_PACKAGE_LIST)
-            pruned_package__topic_list = cls.prune_tag_list_max_count(
+            pruned_package__topic_list, untagged_packages_set = cls.prune_tag_list_max_count(
                 package_tag_list)
             temp_eco_values = {APOLLO_ECOSYSTEM: ecosystem,
                                APOLLO_PACKAGE_LIST: pruned_package__topic_list}
             result_package_topic_json.append(temp_eco_values)
-        # TODO: use singleton object, with updated package_topic_list
+            if ecosystem in untagged_pakcage_data.keys():
+                current_untagged_set = set(untagged_pakcage_data[ecosystem])
+                new_untagged_set = current_untagged_list.union(
+                    untagged_packages_set)
+                untagged_pakcage_data[ecosystem] = list(new_untagged_set)
+            else:
+                untagged_pakcage_data[ecosystem] = list(untagged_packages_set)
+                # TODO: use singleton object, with updated package_topic_list
         cls.generate_save_obj(result_package_topic_json,
                               package_file_name,
                               output_package_topic_data_store,
                               additional_path)
+        return untagged_pakcage_data

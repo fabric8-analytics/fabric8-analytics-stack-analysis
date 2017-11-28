@@ -58,10 +58,8 @@ class GraphUpdater(object):
 
             :return pay_load: The formated gremlin query."""
 
-        str_gremlin_query = "g.V().has('ecosystem', '{}').\
-                            has('name', within(str_packages)).\
-                            property('manual_tagging_required', true).\
-                            valueMap();".format(ecosystem)
+        str_gremlin_query = "g.V().has('ecosystem', '{}')".format(ecosystem) + \
+            ".has('name', within(str_packages)).property('manual_tagging_required', true).valueMap();"
         pay_load = {
             'gremlin': str_gremlin_query,
             'bindings': {'str_packages': package_list}
