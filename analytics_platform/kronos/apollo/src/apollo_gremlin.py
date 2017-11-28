@@ -58,8 +58,11 @@ class GraphUpdater(object):
 
             :return pay_load: The formated gremlin query."""
 
+        # NOTE: This query assumes that the packages in the package_list are already
+        # present in the graph.
         str_gremlin_query = "g.V().has('ecosystem', '{}')".format(ecosystem) + \
-            ".has('name', within(str_packages)).property('manual_tagging_required', true).valueMap();"
+            ".has('name', within(str_packages))." + \
+            "property('manual_tagging_required', true).valueMap();"
         pay_load = {
             'gremlin': str_gremlin_query,
             'bindings': {'str_packages': package_list}
