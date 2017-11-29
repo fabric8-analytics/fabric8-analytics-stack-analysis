@@ -7,16 +7,15 @@
 * [Pgm](/analytics_platform/kronos/pgm)
 * [Softnet](/analytics_platform/kronos/softnet)
 * [Apollo](/analytics_platform/kronos/apollo)
+* [Uranus](/analytics_platform/kronos/uranus)
 
 ## To Test Locally
 
 `python -m unittest discover tests  -v`
 
 
+## To Run Evaluation Script
 
-## To Test
-
-`python -m unittest discover tests  -v`
 
 ## Deploy to openshift cluster
 
