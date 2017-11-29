@@ -10,10 +10,15 @@
 # 1. Improve error handling
 # ----------------------------------------------------------------------------------------------------------------------
 import sys
+import logging
 import boto3
 from time import gmtime, strftime
+import daiquiri
+
 from analytics_platform.kronos.src import config
-from util.logging.project_logger import logger as _logger
+
+daiquiri.setup(level=daiquiri.setup(level=logging.INFO))
+_logger = daiquiri.getLogger(__name__)
 
 COMPONENT_PREFIX = "kronos"
 

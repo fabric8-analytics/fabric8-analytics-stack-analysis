@@ -1,6 +1,9 @@
 import requests
-from util.logging.project_logger import _logger
+import daiquiri
+import logging
 
+daiquiri.setup(level=logging.INFO)
+_logger = daiquiri.getLogger(__name__)
 
 def post(url, json_data):
     response = requests.post(url, json=json_data)
