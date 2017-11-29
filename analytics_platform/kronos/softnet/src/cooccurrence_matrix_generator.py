@@ -1,7 +1,10 @@
-import util.softnet_util as utils
 import daiquiri
 import logging
 import time
+
+import analytics_platform.kronos.softnet.src.softnet_constants as softnet_constants
+import util.softnet_util as utils
+
 
 daiquiri.setup(level=logging.INFO)
 _logger = daiquiri.getLogger(__name__)
@@ -21,11 +24,11 @@ class CooccurrenceMatrixGenerator(object):
     def generate_cooccurrence_matrix(cls, kronos_dependency_dict, list_of_package_list):
 
         kronos_intent_dependency_dict = kronos_dependency_dict.get(
-            utils.KD_INTENT_DEPENDENCY_MAP)
+            softnet_constants.KD_INTENT_DEPENDENCY_MAP)
         kronos_component_dependency_dict = kronos_dependency_dict.get(
-            utils. KD_COMPONENT_DEPENDENCY_MAP)
-        node_list = kronos_dependency_dict.get(utils.KD_PACKAGE_LIST) + \
-            kronos_dependency_dict.get(utils.KD_INTENT_LIST)
+            softnet_constants. KD_COMPONENT_DEPENDENCY_MAP)
+        node_list = kronos_dependency_dict.get(softnet_constants.KD_PACKAGE_LIST) + \
+            kronos_dependency_dict.get(softnet_constants.KD_INTENT_LIST)
 
         cooccurrence_matrix = cls._generate_cooccurrence_matrix_for_ecosystem(
             list_of_package_list=list_of_package_list, node_list=node_list,
@@ -113,6 +116,6 @@ class CooccurrenceMatrixGenerator(object):
                     intent_list.append(intent)
         _logger.info("Complete Co-occurence matrix generated")
         t0 = time.time()
-        sampled = cooccurrence_matrix.sample(frac=utils.COM_SAMPLE_RATIO)
+        sampled = cooccurrence_matrix.sample(frac=softnet_constants.COM_SAMPLE_RATIO)
         _logger.info("Sampling took: {}".format(time.time() - t0))
         return sampled
