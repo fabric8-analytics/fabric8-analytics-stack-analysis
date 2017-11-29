@@ -22,8 +22,8 @@ from tagging_platform.helles.npm_tagger.get_version_info_for_missing_packages im
     run_missing_package_version_collection_job
 import six
 
-if sys.version_info.major == 2:
-    six.reload(sys)
+if six.PY2:
+    reload(sys)
     sys.setdefaultencoding('UTF8')
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)

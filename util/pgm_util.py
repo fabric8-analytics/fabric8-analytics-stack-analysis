@@ -1,5 +1,6 @@
 import ast
 import numpy as np
+import six
 
 
 def generate_list_of_tuples_from_string(string):
@@ -15,7 +16,12 @@ def generate_kronos_dependency_list_for_pomegranate(string):
 
 
 def generate_matrix_from_pandas_df(df, node_list):
-    x = df.as_matrix(columns=node_list)
-    y = np.vstack((x, np.ones((1, len(node_list)))))
-    result = np.vstack((y, np.zeros((1, len(node_list)))))
-    return result
+    start = df.shape[0]
+    # Append a row containing all zeroes, else the inference may fail
+    df.loc[start] = np.zeros(len(node_list))
+    # Append a list of all ones, else the inference may fail
+    df.loc[start + 1] = np.ones(len(node_list))
+    if six.PY2:
+        # Backward compatability with python2 pomegranate.
+        node_list = [str(node_name) for node_name in node_list]
+    return df.as_matrix(columns=node_list)

@@ -17,7 +17,7 @@ import daiquiri
 
 from analytics_platform.kronos.src import config
 
-daiquiri.setup(level=daiquiri.setup(level=logging.INFO))
+daiquiri.setup(level=logging.INFO)
 _logger = daiquiri.getLogger(__name__)
 
 COMPONENT_PREFIX = "kronos"

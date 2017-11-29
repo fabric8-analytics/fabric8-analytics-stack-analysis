@@ -59,8 +59,10 @@ class PGMPomegranate(AbstractPGM):
             pgm_constants.KD_PARENT_TUPLE_LIST]
         kronos_node_list = kronos_dependency_dict[pgm_constants.KD_PACKAGE_LIST] + \
             kronos_dependency_dict[pgm_constants.KD_INTENT_LIST]
+        # Funny construct for python3 compatability and python2 backward compatibility
+        # of pomegranate.
         kronos_node_string_list = [node_name.decode('utf-8')
-                                   if type(node_name) == bytes else node_name
+                                   if type(node_name) == bytes else str(node_name)
                                    for node_name in kronos_node_list]
         kronos_dependency_list = utils.generate_kronos_dependency_list_for_pomegranate(
             kronos_dependency_list_string)
