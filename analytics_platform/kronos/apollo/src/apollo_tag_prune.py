@@ -40,12 +40,12 @@ class TagListPruner(object):
         package_list_files = input_package_topic_data_store.list_files(
             additional_path + APOLLO_INPUT_RAW_PATH)
         for package_file_name in package_list_files:
-            untagged_pakcage_data = TagListPruner.clean_file(package_file_name,
+            untagged_package_data = TagListPruner.clean_file(package_file_name,
                                                              input_package_topic_data_store,
                                                              output_package_topic_data_store,
                                                              additional_path)
             local_data_obj.write_json_file(
-                package_file_name.split("/")[-1], untagged_pakcage_data)
+                package_file_name.split("/")[-1], untagged_package_data)
 
     def save(self, data_store, filename):
         """Saves the package_topic object in json format.
@@ -137,7 +137,7 @@ class TagListPruner(object):
             filename=package_file_name)
 
         result_package_topic_json = []
-        untagged_pakcage_data = {}
+        untagged_package_data = {}
         for package_topic_content_json in content_json_list:
             ecosystem = package_topic_content_json.get(APOLLO_ECOSYSTEM)
             package_tag_list = package_topic_content_json.get(
@@ -147,16 +147,16 @@ class TagListPruner(object):
             temp_eco_values = {APOLLO_ECOSYSTEM: ecosystem,
                                APOLLO_PACKAGE_LIST: pruned_package__topic_list}
             result_package_topic_json.append(temp_eco_values)
-            if ecosystem in untagged_pakcage_data.keys():
-                current_untagged_set = set(untagged_pakcage_data[ecosystem])
-                new_untagged_set = current_untagged_list.union(
+            if ecosystem in untagged_package_data.keys():
+                current_untagged_set = set(untagged_package_data[ecosystem])
+                new_untagged_set = current_untagged_set.union(
                     untagged_packages_set)
-                untagged_pakcage_data[ecosystem] = list(new_untagged_set)
+                untagged_package_data[ecosystem] = list(new_untagged_set)
             else:
-                untagged_pakcage_data[ecosystem] = list(untagged_packages_set)
+                untagged_package_data[ecosystem] = list(untagged_packages_set)
                 # TODO: use singleton object, with updated package_topic_list
         cls.generate_save_obj(result_package_topic_json,
                               package_file_name,
                               output_package_topic_data_store,
                               additional_path)
-        return untagged_pakcage_data
+        return untagged_package_data

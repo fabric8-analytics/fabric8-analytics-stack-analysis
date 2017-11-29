@@ -20,6 +20,14 @@
 PYTHONPATH=`pwd` python evaluation_platform/uranus/src/kronos_offline_evaluation.py
 ```
 
+## Before Training Locally:
+
+
+* `git clone https://github.com/fabric8-analytics/fabric8-analytics-data-model`
+* `cd fabric8-analytics-data-model`
+* `cd local-setup`
+* `docker-compose up`
+
 ## Deploy to openshift cluster
 
 - Create project
