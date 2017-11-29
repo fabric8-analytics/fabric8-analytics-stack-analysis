@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
 
-from analytics_platform.kronos.softnet.src.softnet_constants import *
+import analytics_platform.kronos.softnet.src.softnet_constants as softnet_constants
 
 
 def generate_parent_tuple_list(node_list, edge_dict_list):
     child_to_parent_dict = dict()
     for edge_dict in edge_dict_list:
-        child = edge_dict[EDGE_DICT_TO]
-        parent = edge_dict[EDGE_DICT_FROM]
+        child = edge_dict[softnet_constants.EDGE_DICT_TO]
+        parent = edge_dict[softnet_constants.EDGE_DICT_FROM]
         if child in child_to_parent_dict:
             temp_parent_list = child_to_parent_dict[child]
             temp_parent_list += [node_list.index(parent)]
@@ -29,14 +29,17 @@ def get_similar_package_dict_list(package, package_list, package_to_topic_dict):
     package_score_dict_list = list()
     for package_2 in package_list:
         topic_list_2 = package_to_topic_dict[package_2]
-        actual_topic_list = [x[len(GNOSIS_PTM_TOPIC_PREFIX):] for x in topic_list_2]
+        actual_topic_list = [
+            x[len(softnet_constants.GNOSIS_PTM_TOPIC_PREFIX):] for x in topic_list_2]
         similarity_score = calculate_similarity_score(topic_list_1, topic_list_2)
         package_score_dict_list.append(
-            {KD_PACKAGE_NAME: package_2,
-             KD_SIMILARITY_SCORE: similarity_score,
-             KD_TOPIC_LIST: actual_topic_list})
+            {softnet_constants.KD_PACKAGE_NAME: package_2,
+             softnet_constants.KD_SIMILARITY_SCORE: similarity_score,
+             softnet_constants.KD_TOPIC_LIST: actual_topic_list})
     sorted_package_score_dict_list = sorted(
-        package_score_dict_list, key=lambda x: x[KD_SIMILARITY_SCORE], reverse=True)
+        package_score_dict_list,
+        key=lambda x: x[softnet_constants.KD_SIMILARITY_SCORE],
+        reverse=True)
     return sorted_package_score_dict_list
 
 

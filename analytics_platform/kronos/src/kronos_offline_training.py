@@ -7,7 +7,6 @@ from util.logging.project_logger import logger as _logger
 import sys
 import time
 
-
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         training_data_url = "s3://dev-stack-analysis-clean-data/pypi/github/"

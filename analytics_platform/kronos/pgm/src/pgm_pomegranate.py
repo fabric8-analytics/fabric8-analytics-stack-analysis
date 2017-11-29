@@ -1,8 +1,8 @@
 from pomegranate import BayesianNetwork
 
 from analytics_platform.kronos.pgm.src.abstract_pgm import AbstractPGM
-from analytics_platform.kronos.pgm.src.pgm_constants import *
-from analytics_platform.kronos.pgm.src.pgm_util import *
+import analytics_platform.kronos.pgm.src.pgm_constants as pgm_constants
+import util.pgm_util as utils
 from util.data_store.local_filesystem import LocalFileSystem
 from util.data_store.s3_data_store import S3DataStore
 import pickle
@@ -31,7 +31,8 @@ class PGMPomegranate(AbstractPGM):
     def save(self, data_store, filename):
         pgm_model = self.model
         if type(data_store) is LocalFileSystem:
-            data_store.write_pomegranate_model(model=pgm_model, filename=filename)
+            data_store.write_pomegranate_model(
+                model=pgm_model, filename=filename)
         if type(data_store) is S3DataStore:
             local_filename = "/tmp/kronos.json"
             with open(local_filename, 'wb') as f:
@@ -54,17 +55,18 @@ class PGMPomegranate(AbstractPGM):
     @classmethod
     def _train_kronos_for_ecosystem(cls, kronos_dependency_dict, package_occurrence_df):
 
-        kronos_dependency_list_string = kronos_dependency_dict[KD_PARENT_TUPLE_LIST]
-        kronos_node_list = kronos_dependency_dict[KD_PACKAGE_LIST] + \
-            kronos_dependency_dict[KD_INTENT_LIST]
+        kronos_dependency_list_string = kronos_dependency_dict[
+            pgm_constants.KD_PARENT_TUPLE_LIST]
+        kronos_node_list = kronos_dependency_dict[pgm_constants.KD_PACKAGE_LIST] + \
+            kronos_dependency_dict[pgm_constants.KD_INTENT_LIST]
         kronos_node_string_list = [node_name.decode('utf-8')
                                    if type(node_name) == bytes else node_name
                                    for node_name in kronos_node_list]
-        kronos_dependency_list = generate_kronos_dependency_list_for_pomegranate(
+        kronos_dependency_list = utils.generate_kronos_dependency_list_for_pomegranate(
             kronos_dependency_list_string)
 
-        package_occurrence_matrix = generate_matrix_from_pandas_df(package_occurrence_df,
-                                                                   kronos_node_list)
+        package_occurrence_matrix = utils.generate_matrix_from_pandas_df(package_occurrence_df,
+                                                                         kronos_node_list)
 
         pgm_model = BayesianNetwork.from_structure(package_occurrence_matrix,
                                                    structure=kronos_dependency_list,

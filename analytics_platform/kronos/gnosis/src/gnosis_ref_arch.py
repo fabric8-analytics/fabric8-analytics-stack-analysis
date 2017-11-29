@@ -8,8 +8,8 @@ from pyspark.mllib.fpm import FPGrowth
 
 from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
-from analytics_platform.kronos.gnosis.src.gnosis_constants import *
-from analytics_platform.kronos.gnosis.src.gnosis_util import *
+import analytics_platform.kronos.gnosis.src.gnosis_constants as gnosis_constants
+import util.gnosis_util as utils
 
 
 class GnosisReferenceArchitecture(AbstractGnosis):
@@ -36,12 +36,12 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
         gnosis_ptm_obj = GnosisPackageTopicModel.load(
             data_store=data_store,
-            filename=additional_path + GNOSIS_PTM_OUTPUT_PATH)
+            filename=os.path.join(additional_path, gnosis_constants.GNOSIS_PTM_OUTPUT_PATH))
 
         eco_to_package_topic_dict = gnosis_ptm_obj.get_dictionary()
 
         eco_to_package_to_topic_dict = eco_to_package_topic_dict[
-            GNOSIS_PTM_PACKAGE_TOPIC_MAP]
+            gnosis_constants.GNOSIS_PTM_PACKAGE_TOPIC_MAP]
 
         gnosis_component_class_list = cls._generate_component_class_list_for_eco_package_topic_dict(
             eco_to_package_topic_dict=eco_to_package_to_topic_dict)
@@ -112,7 +112,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
         :return: the list of component classes."""
 
-        component_class_list = generate_value_list_from_dict(
+        component_class_list = utils.generate_value_list_from_dict(
             dictionary=gnosis_intent_component_class_dict)
         return component_class_list
 
@@ -129,9 +129,9 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
         :return: list of edges where edges are represented as tuples."""
 
-        intent_to_component_class_edge_list = generate_key_to_value_edges(
+        intent_to_component_class_edge_list = utils.generate_key_to_value_edges(
             dictionary=gnosis_intent_to_component_class_dict)
-        intent_to_intent_edge_list = generate_key_to_value_edges(
+        intent_to_intent_edge_list = utils.generate_key_to_value_edges(
             dictionary=gnosis_intent_to_intent_dict)
         edge_list = intent_to_component_class_edge_list + intent_to_intent_edge_list
         return edge_list
@@ -147,7 +147,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         :return: list of intents."""
 
         super_intent_list = gnosis_intent_to_intent_dict.keys()
-        sub_intent_list = generate_value_list_from_dict(
+        sub_intent_list = utils.generate_value_list_from_dict(
             gnosis_intent_to_intent_dict)
         intent_list = gnosis_intent_to_component_class_dict.keys()
         node_set = set.union(set(super_intent_list), set(
@@ -171,12 +171,13 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         :return: Gnosis model."""
 
         gnosis_ra_dict = dict()
-        gnosis_ra_dict[GNOSIS_RA_DICT] = dict(gnosis_intent_to_intent_dict,
+        gnosis_ra_dict[gnosis_constants.GNOSIS_RA_DICT] = dict(
+                                              gnosis_intent_to_intent_dict,
                                               **gnosis_intent_to_component_class_dict)
         gnosis_ra_dict[
-            GNOSIS_RA_COMPONENT_CLASS_LIST] = gnosis_component_class_list
-        gnosis_ra_dict[GNOSIS_RA_INTENT_LIST] = gnosis_intent_list
-        gnosis_ra_dict[GNOSIS_RA_EDGE_LIST] = gnosis_edge_list
+            gnosis_constants.GNOSIS_RA_COMPONENT_CLASS_LIST] = gnosis_component_class_list
+        gnosis_ra_dict[gnosis_constants.GNOSIS_RA_INTENT_LIST] = gnosis_intent_list
+        gnosis_ra_dict[gnosis_constants.GNOSIS_RA_EDGE_LIST] = gnosis_edge_list
 
         gnosis_ra_obj = GnosisReferenceArchitecture(dictionary=gnosis_ra_dict)
         return gnosis_ra_obj
@@ -186,15 +187,15 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                                additional_path, fp_num_partition):
         sc = SparkContext()
         manifest_file_list = data_store.list_files(
-            prefix=additional_path + MANIFEST_FILEPATH)
+            prefix=os.path.join(additional_path, gnosis_constants.MANIFEST_FILEPATH))
         list_of_topic_list = list()
         for manifest_file in manifest_file_list:
             eco_to_package_list_json_array = data_store.read_json_file(
                 manifest_file)
             for eco_to_package_list_json in eco_to_package_list_json_array:
-                ecosystem = eco_to_package_list_json.get(MANIFEST_ECOSYSTEM)
+                ecosystem = eco_to_package_list_json.get(gnosis_constants.MANIFEST_ECOSYSTEM)
                 list_of_package_list = eco_to_package_list_json.get(
-                    MANIFEST_PACKAGE_LIST)
+                    gnosis_constants.MANIFEST_PACKAGE_LIST)
                 for package_list in list_of_package_list:
                     package_list_lowercase = [x.lower() for x in package_list]
                     topic_list = cls.get_topic_list_for_package_list(package_list_lowercase,
@@ -251,7 +252,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                 keys_to_remove = list()
                 for key, value in item_dict.items():
                     if value == 0:
-                        k_itemset_list = modify_list(key, k_itemset_list, index)
+                        k_itemset_list = utils.modify_list(
+                            key, k_itemset_list, index)
                         keys_to_remove.append(key)
                 for key in keys_to_remove:
                     del item_dict[key]

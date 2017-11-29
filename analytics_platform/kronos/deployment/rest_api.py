@@ -8,21 +8,22 @@ from flask import Flask, request, g
 from flask_cors import CORS
 
 from analytics_platform.kronos.deployment.submit_training_job import submit_job
-from analytics_platform.kronos.gnosis.src.gnosis_constants import *
+import analytics_platform.kronos.gnosis.src.gnosis_constants as gnosis_constants
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
 from analytics_platform.kronos.src.config import (
     AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION)
-from analytics_platform.kronos.src.kronos_online_scoring import *
+from analytics_platform.kronos.src.kronos_online_scoring import \
+    load_user_eco_to_kronos_model_dict_s3, score_eco_user_package_dict
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
 from tagging_platform.helles.deployment.submit_npm_tagging_job import submit_tagging_job
 from tagging_platform.helles.npm_tagger.get_descriptions_from_s3 import run as \
     run_description_collection
 from tagging_platform.helles.npm_tagger.get_version_info_for_missing_packages import run_job as \
     run_missing_package_version_collection_job
-
+import six
 
 if sys.version_info.major == 2:
-    reload(sys)
+    six.reload(sys)
     sys.setdefaultencoding('UTF8')
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -91,10 +92,13 @@ def train_and_save_kronos():
 
     input_json = request.get_json()
     training_data_url = input_json.get("training_data_url")
-    fp_min_support_count = input_json.get(FP_MIN_SUPPORT_COUNT_NAME, FP_MIN_SUPPORT_COUNT_VALUE)
-    fp_intent_topic_count_threshold = input_json.get(FP_INTENT_TOPIC_COUNT_THRESHOLD_NAME,
-                                                     FP_INTENT_TOPIC_COUNT_THRESHOLD_VALUE)
-    fp_num_partition = input_json.get(FP_NUM_PARTITION_NAME, FP_NUM_PARTITION_VALUE)
+    fp_min_support_count = input_json.get(gnosis_constants.FP_MIN_SUPPORT_COUNT_NAME,
+                                          gnosis_constants.FP_MIN_SUPPORT_COUNT_VALUE)
+    fp_intent_topic_count_threshold = input_json.get(
+        gnosis_constants.FP_INTENT_TOPIC_COUNT_THRESHOLD_NAME,
+        gnosis_constants.FP_INTENT_TOPIC_COUNT_THRESHOLD_VALUE)
+    fp_num_partition = input_json.get(gnosis_constants.FP_NUM_PARTITION_NAME,
+                                      gnosis_constants.FP_NUM_PARTITION_VALUE)
 
     response = submit_job(input_bootstrap_file='/bootstrap_action.sh',
                           input_src_code_file='/tmp/training.zip',
@@ -131,7 +135,6 @@ def predict_and_score():
 @app.route('/api/v2/npm_tagging', methods=['POST'])
 def tag_npm_packages_textrank():
     input_json = request.get_json()
-    # if 'package_name' in input_json:
     response = submit_tagging_job(input_bootstrap_file='/helles_bootstrap_action.sh',
                                   input_src_code_file='/tmp/tagging.zip',
                                   package_name=input_json.get('package_name', ''),
