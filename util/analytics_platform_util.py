@@ -1,8 +1,7 @@
 from nltk.tokenize import wordpunct_tokenize
 from collections import Counter
 import string
-
-from util_constants import MAX_TAG_COUNT
+from util.util_constants import MAX_TAG_COUNT
 
 
 def trunc_string_at(s, d, n1, n2):

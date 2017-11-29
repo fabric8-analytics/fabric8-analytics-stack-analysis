@@ -171,9 +171,9 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         :return: Gnosis model."""
 
         gnosis_ra_dict = dict()
-        gnosis_ra_dict[gnosis_constants.GNOSIS_RA_DICT] = dict(
-                                              gnosis_intent_to_intent_dict,
-                                              **gnosis_intent_to_component_class_dict)
+        gnosis_ra_dict[gnosis_constants.GNOSIS_RA_DICT] = \
+            dict(gnosis_intent_to_intent_dict,
+                 **gnosis_intent_to_component_class_dict)
         gnosis_ra_dict[
             gnosis_constants.GNOSIS_RA_COMPONENT_CLASS_LIST] = gnosis_component_class_list
         gnosis_ra_dict[gnosis_constants.GNOSIS_RA_INTENT_LIST] = gnosis_intent_list
