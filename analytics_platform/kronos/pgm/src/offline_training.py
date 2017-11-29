@@ -82,7 +82,7 @@ def train_and_save_kronos_list(input_kronos_dependency_data_store, input_co_occu
             cooccurrence_matrix_df = eco_to_cooccurrence_matrix_dict[ecosystem]
             kronos_model = PGMPomegranate.train(kronos_dependency_dict=kronos_dependency_dict,
                                                 package_occurrence_df=cooccurrence_matrix_df)
-            filename = os.path.join(pgm_constants.KRONOS_OUTPUT_FOLDER,str(user_category),
+            filename = os.path.join(pgm_constants.KRONOS_OUTPUT_FOLDER, str(user_category),
                                     "kronos_{}.json".format(str(ecosystem)))
             kronos_model.save(data_store=output_data_store,
                               filename=additional_path + filename)
