@@ -88,10 +88,10 @@ class LocalFileSystem(AbstractDataStore):
     def byteify(cls, input):
         if isinstance(input, dict):
             return {LocalFileSystem.byteify(key): LocalFileSystem.byteify(value)
-                    for key, value in input.iteritems()}
+                    for key, value in input.items()}
         elif isinstance(input, list):
             return [LocalFileSystem.byteify(element) for element in input]
-        elif isinstance(input, unicode):
+        elif isinstance(input, str):
             return input.encode('utf-8')
         else:
             return input
