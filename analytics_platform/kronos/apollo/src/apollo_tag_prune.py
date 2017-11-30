@@ -98,7 +98,8 @@ class TagListPruner(object):
         stop_word = set(['vertx', 'spring', 'java', 'apache',
                          'vert.x', 'io', 'com', 'commons', 'algorithms', 'language'])
         word_count = Counter()
-        for package_name, tag_list in package_list.items():
+        for package_name in package_list:
+            tag_list = package_list.get(package_name, [])
             temp_list = set()
             for tag in tag_list:
                 tag = tag.lower()
@@ -107,7 +108,8 @@ class TagListPruner(object):
                 temp_list.add(tag)
             package_list[package_name] = list(temp_list)
 
-        for package_name, tag_list in package_list.items():
+        for package_name in package_list:
+            tag_list = package_list.get(package_name, [])
             if len(tag_list) == 0:
                 tag_list = create_tags_for_package(
                     package_name)
@@ -147,7 +149,7 @@ class TagListPruner(object):
             temp_eco_values = {APOLLO_ECOSYSTEM: ecosystem,
                                APOLLO_PACKAGE_LIST: pruned_package__topic_list}
             result_package_topic_json.append(temp_eco_values)
-            if ecosystem in untagged_package_data.keys():
+            if ecosystem in list(untagged_package_data.keys()):
                 current_untagged_set = set(untagged_package_data[ecosystem])
                 new_untagged_set = current_untagged_set.union(
                     untagged_packages_set)
