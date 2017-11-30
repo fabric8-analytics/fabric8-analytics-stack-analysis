@@ -20,11 +20,7 @@ from tagging_platform.helles.npm_tagger.get_descriptions_from_s3 import run as \
     run_description_collection
 from tagging_platform.helles.npm_tagger.get_version_info_for_missing_packages import run_job as \
     run_missing_package_version_collection_job
-import six
 
-if six.PY2:
-    reload(sys)
-    sys.setdefaultencoding('UTF8')
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
