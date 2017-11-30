@@ -9,7 +9,6 @@
 # TODO:
 # 1. Improve error handling
 # ----------------------------------------------------------------------------------------------------------------------
-import sys
 import logging
 import boto3
 from time import gmtime, strftime
