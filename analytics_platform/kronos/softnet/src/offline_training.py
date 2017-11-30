@@ -1,5 +1,3 @@
-import sys
-import time
 import os
 from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator import \
     CooccurrenceMatrixGenerator
