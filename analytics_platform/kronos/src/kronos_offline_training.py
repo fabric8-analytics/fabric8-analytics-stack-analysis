@@ -4,7 +4,6 @@ from analytics_platform.kronos.softnet.src.offline_training import (
     generate_and_save_kronos_dependency_s3, generate_and_save_cooccurrence_matrices_s3)
 from analytics_platform.kronos.pgm.src.offline_training import train_and_save_kronos_list_s3
 from analytics_platform.kronos.apollo.src.offline_training import train_and_save_pruned_tag_list_s3
-
 import sys
 import time
 import daiquiri
@@ -16,7 +15,7 @@ _logger = daiquiri.getLogger(__name__)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        training_data_url = "s3://dev-stack-analysis-clean-data/python/github/"
+        training_data_url = "s3://dev-stack-analysis-clean-data/pypi/github/"
         fp_min_support_count = 45
         fp_intent_topic_count_threshold = 3
         fp_num_partition = 12

@@ -1,11 +1,9 @@
-import sys
-import time
-
+import os
 from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator import \
     CooccurrenceMatrixGenerator
 from analytics_platform.kronos.softnet.src.kronos_dependency_generator import \
     KronosDependencyGenerator
-from analytics_platform.kronos.softnet.src.softnet_constants import *
+import analytics_platform.kronos.softnet.src.softnet_constants as softnet_constants
 from analytics_platform.kronos.src import config
 from util.data_store.s3_data_store import S3DataStore
 from util.analytics_platform_util import get_path_names
@@ -13,7 +11,8 @@ from util.analytics_platform_util import get_path_names
 
 def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, additional_path):
     eco_to_kronos_dependency_dict = dict()
-    kd_filenames = input_kronos_dependency_data_store.list_files(additional_path + KD_OUTPUT_FOLDER)
+    kd_filenames = input_kronos_dependency_data_store.list_files(
+        os.path.join(additional_path, softnet_constants.KD_OUTPUT_FOLDER))
     for kd_filename in kd_filenames:
         ecosystem = kd_filename.split("/")[-1].split(".")[0].split("_")[-1]
         kronos_dependency_obj = KronosDependencyGenerator.load(
@@ -26,15 +25,19 @@ def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, addit
 
 def generate_and_save_kronos_dependency(input_gnosis_data_store, input_package_topic_data_store,
                                         output_data_store, additional_path):
-    gnosis_ref_arch_json = input_gnosis_data_store.read_json_file(filename=additional_path +
-                                                                  GNOSIS_RA_OUTPUT_PATH)
+    gnosis_ref_arch_json = \
+        input_gnosis_data_store.read_json_file(filename=os.path.join(
+                                               additional_path,
+                                               softnet_constants.GNOSIS_RA_OUTPUT_PATH))
     gnosis_ref_arch_dict = dict(gnosis_ref_arch_json)
-    package_topic_json = input_package_topic_data_store.read_json_file(additional_path +
-                                                                       GNOSIS_PTM_OUTPUT_PATH)
+    package_topic_json = \
+        input_package_topic_data_store.read_json_file(os.path.join(
+                                                      additional_path,
+                                                      softnet_constants.GNOSIS_PTM_OUTPUT_PATH))
     package_topic_dict = dict(package_topic_json)
 
-    eco_to_package_topic_dict = package_topic_dict[GNOSIS_PTM_PACKAGE_TOPIC_MAP]
-    eco_to_topic_package_dict = package_topic_dict[GNOSIS_PTM_TOPIC_PACKAGE_MAP]
+    eco_to_package_topic_dict = package_topic_dict[softnet_constants.GNOSIS_PTM_PACKAGE_TOPIC_MAP]
+    eco_to_topic_package_dict = package_topic_dict[softnet_constants.GNOSIS_PTM_TOPIC_PACKAGE_MAP]
 
     eco_to_kronos_dependency_dict = dict()
 
@@ -51,8 +54,10 @@ def generate_and_save_kronos_dependency(input_gnosis_data_store, input_package_t
 
     for ecosystem in eco_to_kronos_dependency_dict.keys():
         kronos_dependency_obj = eco_to_kronos_dependency_dict[ecosystem]
-        filename = KD_OUTPUT_FOLDER + "/" + KD_BASE_FILENAME
-        filename_formatted = additional_path + filename.replace(".", "_" + ecosystem + ".")
+        filename = os.path.join(softnet_constants.KD_OUTPUT_FOLDER,
+                                softnet_constants.KD_BASE_FILENAME)
+        filename_formatted = os.path.join(additional_path,
+                                          filename.replace(".", "_{}.".format(ecosystem)))
         kronos_dependency_obj.save(data_store=output_data_store, filename=filename_formatted)
 
 
@@ -84,7 +89,8 @@ def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store,
         input_kronos_dependency_data_store=input_kronos_dependency_data_store,
         additional_path=additional_path)
 
-    manifest_filenames = input_manifest_data_store.list_files(additional_path + MANIFEST_FILEPATH)
+    manifest_filenames = input_manifest_data_store.list_files(os.path.join(
+        additional_path, softnet_constants.MANIFEST_FILEPATH))
 
     for manifest_filename in manifest_filenames:
         user_category = manifest_filename.split("/")[-2]
@@ -92,17 +98,18 @@ def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store,
             filename=manifest_filename)
         for manifest_content_json in manifest_content_json_list:
             manifest_content_dict = dict(manifest_content_json)
-            ecosystem = manifest_content_dict[MANIFEST_ECOSYSTEM]
+            ecosystem = manifest_content_dict[softnet_constants.MANIFEST_ECOSYSTEM]
             kronos_dependency_dict = eco_to_kronos_dependency_dict[ecosystem]
-            list_of_package_list = manifest_content_dict.get(MANIFEST_PACKAGE_LIST)
+            list_of_package_list = manifest_content_dict.get(
+                softnet_constants.MANIFEST_PACKAGE_LIST)
             cooccurrence_matrix_obj = CooccurrenceMatrixGenerator.generate_cooccurrence_matrix(
                 kronos_dependency_dict=kronos_dependency_dict,
                 list_of_package_list=list_of_package_list)
-            output_filename = COM_OUTPUT_FOLDER + "/" + str(
-                user_category) + "/" + "cooccurrence_matrix" + "_" + str(
-                ecosystem) + ".json"
+            output_filename = os.path.join(softnet_constants.COM_OUTPUT_FOLDER,
+                                           str(user_category),
+                                           "cooccurrence_matrix_{}.json".format(str(ecosystem)))
             cooccurrence_matrix_obj.save(data_store=output_data_store,
-                                         filename=additional_path + output_filename)
+                                         filename=os.path.join(additional_path, output_filename))
 
 
 def generate_and_save_cooccurrence_matrices_s3(training_data_url):

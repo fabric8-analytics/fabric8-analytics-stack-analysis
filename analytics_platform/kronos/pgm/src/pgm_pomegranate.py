@@ -1,12 +1,13 @@
-from pomegranate import *
+from pomegranate import BayesianNetwork
 
 from analytics_platform.kronos.pgm.src.abstract_pgm import AbstractPGM
-from analytics_platform.kronos.pgm.src.pgm_constants import *
+import analytics_platform.kronos.pgm.src.pgm_constants as pgm_constants
 import util.pgm_util as utils
 from util.data_store.local_filesystem import LocalFileSystem
 from util.data_store.s3_data_store import S3DataStore
 import pickle
 from joblib import Parallel, delayed
+import functools
 
 
 class PGMPomegranate(AbstractPGM):
@@ -55,11 +56,14 @@ class PGMPomegranate(AbstractPGM):
     def _train_kronos_for_ecosystem(cls, kronos_dependency_dict, package_occurrence_df):
 
         kronos_dependency_list_string = kronos_dependency_dict[
-            KD_PARENT_TUPLE_LIST]
-        kronos_node_list = kronos_dependency_dict[KD_PACKAGE_LIST] + \
-            kronos_dependency_dict[KD_INTENT_LIST]
-        kronos_node_string_list = [node_name.encode(
-            'utf-8') for node_name in kronos_node_list]
+            pgm_constants.KD_PARENT_TUPLE_LIST]
+        kronos_node_list = kronos_dependency_dict[pgm_constants.KD_PACKAGE_LIST] + \
+            kronos_dependency_dict[pgm_constants.KD_INTENT_LIST]
+        # Funny construct for python3 compatability and python2 backward compatibility
+        # of pomegranate.
+        kronos_node_string_list = [node_name.decode('utf-8')
+                                   if type(node_name) == bytes else str(node_name)
+                                   for node_name in kronos_node_list]
         kronos_dependency_list = utils.generate_kronos_dependency_list_for_pomegranate(
             kronos_dependency_list_string)
 
@@ -74,14 +78,14 @@ class PGMPomegranate(AbstractPGM):
     def score(self, evidence_dict_list):
         global pgm_model_kronos
         pgm_model_kronos = self.model
-        n = len(evidence_dict_list)
-        n_jobs = n
-        result_array = reduce(list.__add__, Parallel(n_jobs=n_jobs)(
-            delayed(parallel_predict)(evidence_dict_list[
-                int(n / n_jobs * i):int(n / n_jobs * (i + 1))]) for i in
-            range(n_jobs)))
+        n_jobs = len(evidence_dict_list)
+        result_array = functools.reduce(
+            list.__add__,
+            Parallel(n_jobs=n_jobs)(
+                delayed(parallel_predict)([evidence_dict_list[i]]) for i in range(n_jobs))
+        )
         return result_array
 
 
 def parallel_predict(X):
-    return map(pgm_model_kronos.predict_proba, X, [3] * len(X))
+    return list(map(pgm_model_kronos.predict_proba, X, [3] * len(X)))

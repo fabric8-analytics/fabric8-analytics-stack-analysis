@@ -8,7 +8,7 @@ from pyspark.mllib.fpm import FPGrowth
 
 from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
-from gnosis_constants import *
+import analytics_platform.kronos.gnosis.src.gnosis_constants as gnosis_constants
 import util.gnosis_util as utils
 
 
@@ -36,12 +36,12 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
         gnosis_ptm_obj = GnosisPackageTopicModel.load(
             data_store=data_store,
-            filename=additional_path + GNOSIS_PTM_OUTPUT_PATH)
+            filename=os.path.join(additional_path, gnosis_constants.GNOSIS_PTM_OUTPUT_PATH))
 
         eco_to_package_topic_dict = gnosis_ptm_obj.get_dictionary()
 
         eco_to_package_to_topic_dict = eco_to_package_topic_dict[
-            GNOSIS_PTM_PACKAGE_TOPIC_MAP]
+            gnosis_constants.GNOSIS_PTM_PACKAGE_TOPIC_MAP]
 
         gnosis_component_class_list = cls._generate_component_class_list_for_eco_package_topic_dict(
             eco_to_package_topic_dict=eco_to_package_to_topic_dict)
@@ -171,12 +171,13 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         :return: Gnosis model."""
 
         gnosis_ra_dict = dict()
-        gnosis_ra_dict[GNOSIS_RA_DICT] = dict(gnosis_intent_to_intent_dict,
-                                              **gnosis_intent_to_component_class_dict)
+        gnosis_ra_dict[gnosis_constants.GNOSIS_RA_DICT] = \
+            dict(gnosis_intent_to_intent_dict,
+                 **gnosis_intent_to_component_class_dict)
         gnosis_ra_dict[
-            GNOSIS_RA_COMPONENT_CLASS_LIST] = gnosis_component_class_list
-        gnosis_ra_dict[GNOSIS_RA_INTENT_LIST] = gnosis_intent_list
-        gnosis_ra_dict[GNOSIS_RA_EDGE_LIST] = gnosis_edge_list
+            gnosis_constants.GNOSIS_RA_COMPONENT_CLASS_LIST] = gnosis_component_class_list
+        gnosis_ra_dict[gnosis_constants.GNOSIS_RA_INTENT_LIST] = gnosis_intent_list
+        gnosis_ra_dict[gnosis_constants.GNOSIS_RA_EDGE_LIST] = gnosis_edge_list
 
         gnosis_ra_obj = GnosisReferenceArchitecture(dictionary=gnosis_ra_dict)
         return gnosis_ra_obj
@@ -186,15 +187,15 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                                additional_path, fp_num_partition):
         sc = SparkContext()
         manifest_file_list = data_store.list_files(
-            prefix=additional_path + MANIFEST_FILEPATH)
+            prefix=os.path.join(additional_path, gnosis_constants.MANIFEST_FILEPATH))
         list_of_topic_list = list()
         for manifest_file in manifest_file_list:
             eco_to_package_list_json_array = data_store.read_json_file(
                 manifest_file)
             for eco_to_package_list_json in eco_to_package_list_json_array:
-                ecosystem = eco_to_package_list_json.get(MANIFEST_ECOSYSTEM)
+                ecosystem = eco_to_package_list_json.get(gnosis_constants.MANIFEST_ECOSYSTEM)
                 list_of_package_list = eco_to_package_list_json.get(
-                    MANIFEST_PACKAGE_LIST)
+                    gnosis_constants.MANIFEST_PACKAGE_LIST)
                 for package_list in list_of_package_list:
                     package_list_lowercase = [x.lower() for x in package_list]
                     topic_list = cls.get_topic_list_for_package_list(package_list_lowercase,
@@ -236,7 +237,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                 item_list, key=lambda x: x[1], reverse=False)
             topic_num_to_itemset_dict[key] = sorted_item_list
 
-        item_dict = {z: 2 for z in package_list}
+        item_dict = {z: gnosis_constants.FP_TAG_INTENT_LIMIT for z in package_list}
         intent_dict = dict()
         for key_value in topic_num_to_itemset_dict:
             k_itemset_list = topic_num_to_itemset_dict[key_value]
@@ -249,7 +250,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                     if item in item_dict:
                         item_dict[item] -= 1
                 keys_to_remove = list()
-                for key, value in item_dict.iteritems():
+                for key, value in item_dict.items():
                     if value == 0:
                         k_itemset_list = utils.modify_list(
                             key, k_itemset_list, index)

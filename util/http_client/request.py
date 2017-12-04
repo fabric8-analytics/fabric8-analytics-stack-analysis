@@ -1,5 +1,9 @@
 import requests
-import json
+import daiquiri
+import logging
+
+daiquiri.setup(level=logging.INFO)
+_logger = daiquiri.getLogger(__name__)
 
 
 def post(url, json_data):
@@ -7,8 +11,7 @@ def post(url, json_data):
 
     # TODO: check for error and raise exception
     if response.status_code != 200:
-        print("ERROR {s}: {r}".format(s=response.status_code, r=response.reason))
+        _logger.debug("ERROR {s}: {r}".format(s=response.status_code, r=response.reason))
 
     json_response = response.json()
-    # print json.dumps(json_response, indent=4)
     return json_response

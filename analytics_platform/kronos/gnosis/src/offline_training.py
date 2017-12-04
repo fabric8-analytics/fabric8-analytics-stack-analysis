@@ -1,10 +1,10 @@
 import sys
 import time
-
+import os
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
 from analytics_platform.kronos.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
 from analytics_platform.kronos.src import config
-from gnosis_constants import *
+import analytics_platform.kronos.gnosis.src.gnosis_constants as gnosis_constants
 from util.analytics_platform_util import get_path_names
 from util.data_store.s3_data_store import S3DataStore
 
@@ -19,7 +19,8 @@ def train_and_save_gnosis_ref_arch(input_data_store, output_data_store, addition
         min_support_count=fp_min_support_count,
         min_intent_topic_count=fp_intent_topic_count_threshold,
         fp_num_partition=fp_num_partition)
-    gnosis_ref_arch_obj.save(output_data_store, additional_path + GNOSIS_RA_OUTPUT_PATH)
+    gnosis_ref_arch_obj.save(
+        output_data_store, os.path.join(additional_path, gnosis_constants.GNOSIS_RA_OUTPUT_PATH))
     return None
 
 
@@ -60,11 +61,11 @@ def generate_and_save_gnosis_package_topic_model(input_data_store, output_data_s
 
     gnosis_package_topic_model_obj = GnosisPackageTopicModel.curate(
         data_store=input_data_store,
-        filename=additional_path + GNOSIS_PTM_INPUT_PATH,
+        filename=os.path.join(additional_path, gnosis_constants.GNOSIS_PTM_INPUT_PATH),
         additional_path=additional_path)
     gnosis_package_topic_model_obj.save(
         data_store=output_data_store,
-        filename=additional_path + GNOSIS_PTM_OUTPUT_PATH)
+        filename=os.path.join(additional_path, gnosis_constants.GNOSIS_PTM_OUTPUT_PATH))
 
     return None
 

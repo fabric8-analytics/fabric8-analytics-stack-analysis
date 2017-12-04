@@ -1,14 +1,14 @@
 import fnmatch
 import os
 import pickle
-
+import six
 import pandas as pd
 from pomegranate import BayesianNetwork
 import json
 import ast
 import numpy as np
 
-from abstract_data_store import AbstractDataStore
+from util.data_store.abstract_data_store import AbstractDataStore
 
 
 class LocalFileSystem(AbstractDataStore):
@@ -88,10 +88,10 @@ class LocalFileSystem(AbstractDataStore):
     def byteify(cls, input):
         if isinstance(input, dict):
             return {LocalFileSystem.byteify(key): LocalFileSystem.byteify(value)
-                    for key, value in input.iteritems()}
+                    for key, value in input.items()}
         elif isinstance(input, list):
             return [LocalFileSystem.byteify(element) for element in input]
-        elif isinstance(input, unicode):
+        elif six.PY2 and isinstance(input, unicode):
             return input.encode('utf-8')
         else:
             return input

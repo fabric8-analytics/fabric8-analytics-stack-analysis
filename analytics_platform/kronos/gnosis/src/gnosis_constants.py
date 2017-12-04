@@ -33,3 +33,4 @@ FP_NUM_PARTITION_VALUE = 12
 FP_MIN_SUPPORT_COUNT_NAME = "fp_min_support_count"
 FP_INTENT_TOPIC_COUNT_THRESHOLD_NAME = "fp_intent_topic_count_threshold"
 FP_NUM_PARTITION_NAME = "fp_num_partition"
+FP_TAG_INTENT_LIMIT = 10

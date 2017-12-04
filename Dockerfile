@@ -1,6 +1,8 @@
 FROM centos:7
 MAINTAINER Avishkar Gupta <avgupta@redhat.com>
 
+ENV LANG=en_US.UTF-8
+
 RUN yum install -y epel-release && \
     yum install -y zip && \
     yum install -y python-pip python-devel gcc && \

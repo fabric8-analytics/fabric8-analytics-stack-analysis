@@ -1,8 +1,8 @@
 import sys
 import time
-
+import os
 from analytics_platform.kronos.src import config
-from analytics_platform.kronos.pgm.src.pgm_constants import *
+import analytics_platform.kronos.pgm.src.pgm_constants as pgm_constants
 from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
 from util.analytics_platform_util import get_path_names
 from util.data_store.s3_data_store import S3DataStore
@@ -11,7 +11,9 @@ from util.data_store.s3_data_store import S3DataStore
 def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, additional_path):
     eco_to_kronos_dependency_dict = dict()
 
-    filenames = input_kronos_dependency_data_store.list_files(additional_path + KD_OUTPUT_FOLDER)
+    filenames = input_kronos_dependency_data_store.list_files(os.path.join(
+                                                              additional_path,
+                                                              pgm_constants.KD_OUTPUT_FOLDER))
     for filename in filenames:
         ecosystem = filename.split("/")[-1].split(".")[0].split("_")[-1]
         kronos_dependency_json = input_kronos_dependency_data_store.read_json_file(
@@ -33,7 +35,8 @@ def load_eco_to_kronos_dependency_dict_s3(bucket_name, additional_path):
 
 
 def load_user_eco_to_co_occerrence_matrix_dict(input_co_occurrence_data_store, additional_path):
-    com_filenames = input_co_occurrence_data_store.list_files(additional_path + COM_OUTPUT_FOLDER)
+    com_filenames = input_co_occurrence_data_store.list_files(os.path.join(
+        additional_path, pgm_constants.COM_OUTPUT_FOLDER))
 
     temp_user_eco_to_co_occurrence_matrix_dict = dict()
     user_category_list = list()
@@ -79,8 +82,8 @@ def train_and_save_kronos_list(input_kronos_dependency_data_store, input_co_occu
             cooccurrence_matrix_df = eco_to_cooccurrence_matrix_dict[ecosystem]
             kronos_model = PGMPomegranate.train(kronos_dependency_dict=kronos_dependency_dict,
                                                 package_occurrence_df=cooccurrence_matrix_df)
-            filename = KRONOS_OUTPUT_FOLDER + "/" + str(user_category) + "/" + "kronos" + "_" + str(
-                ecosystem) + ".json"
+            filename = os.path.join(pgm_constants.KRONOS_OUTPUT_FOLDER, str(user_category),
+                                    "kronos_{}.json".format(str(ecosystem)))
             kronos_model.save(data_store=output_data_store,
                               filename=additional_path + filename)
 

@@ -1,4 +1,5 @@
-from analytics_platform.kronos.pgm.src.pgm_constants import *
+import os
+import analytics_platform.kronos.pgm.src.pgm_constants as pgm_constants
 from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
 from util.pgm_util import generate_evidence_map_from_transaction_list
 
@@ -8,7 +9,7 @@ from util.data_store.s3_data_store import S3DataStore
 
 def load_user_eco_to_kronos_model_dict(input_kronos_data_store, additional_path):
     kronos_model_filenames = input_kronos_data_store.list_files(
-        additional_path + KRONOS_OUTPUT_FOLDER)
+        os.path.join(additional_path, pgm_constants.KRONOS_OUTPUT_FOLDER))
     temp_user_eco_to_kronos_model_dict = dict()
     user_category_list = list()
     ecosystem_list = list()
@@ -66,16 +67,17 @@ def get_sorted_companion_node_probabilities(res, node_list, non_companion_packag
         if non_companion_packages is not None:
             if node not in non_companion_packages:
                 result_dict = dict()
-                result_dict[KRONOS_COMPANION_PACKAGE_NAME] = node
-                result_dict[KRONOS_COMPANION_PROBABILITY] = res[i].values()[1]
+                result_dict[pgm_constants.KRONOS_COMPANION_PACKAGE_NAME] = node
+                result_dict[pgm_constants.KRONOS_COMPANION_PROBABILITY] = res[i].values()[1]
                 result_dict_list.append(result_dict)
         else:
             result_dict = dict()
-            result_dict[KRONOS_COMPANION_INTENT_NAME] = node
-            result_dict[KRONOS_COMPANION_PROBABILITY] = res[i].values()[1]
+            result_dict[pgm_constants.KRONOS_COMPANION_INTENT_NAME] = node
+            result_dict[pgm_constants.KRONOS_COMPANION_PROBABILITY] = res[i].values()[1]
             result_dict_list.append(result_dict)
     sorted_result_dict_list = sorted(result_dict_list,
-                                     key=lambda x: x[KRONOS_COMPANION_PROBABILITY], reverse=True)
+                                     key=lambda x: x[pgm_constants.KRONOS_COMPANION_PROBABILITY],
+                                     reverse=True)
     return sorted_result_dict_list
 
 
@@ -123,7 +125,7 @@ def generated_evidence_dict_list_and_potential_outlier_index_list(observed_packa
 
 def get_clean_topics_for_package(package_to_topic_dict, package):
     topic_list = package_to_topic_dict[package]
-    clean_topic_list = [x[len(GNOSIS_PTM_TOPIC_PREFIX):] for x in topic_list]
+    clean_topic_list = [x[len(pgm_constants.GNOSIS_PTM_TOPIC_PREFIX):] for x in topic_list]
     return clean_topic_list
 
 
@@ -142,13 +144,14 @@ def get_kronos_recommendation(kronos, observed_package_list, node_list, outlier_
         outlier_score = outlier_result.values()[0]
         if outlier_score > outlier_threshold:
             outlier_dict = dict()
-            outlier_dict[KRONOS_OUTLIER_PACKAGE_NAME] = observed_package_list[i]
-            outlier_dict[KRONOS_OUTLIER_PROBABILITY] = outlier_score
-            outlier_dict[KD_TOPIC_LIST] = get_clean_topics_for_package(package_to_topic_dict,
-                                                                       observed_package_list[i])
+            outlier_dict[pgm_constants.KRONOS_OUTLIER_PACKAGE_NAME] = observed_package_list[i]
+            outlier_dict[pgm_constants.KRONOS_OUTLIER_PROBABILITY] = outlier_score
+            outlier_dict[pgm_constants.KD_TOPIC_LIST] = \
+                get_clean_topics_for_package(package_to_topic_dict, observed_package_list[i])
             outlier_dict_list.append(outlier_dict)
     sorted_outlier_dict_list = sorted(outlier_dict_list,
-                                      key=lambda x: x[KRONOS_OUTLIER_PROBABILITY], reverse=True)
+                                      key=lambda x: x[pgm_constants.KRONOS_OUTLIER_PROBABILITY],
+                                      reverse=True)
     num_outlier_packages = len(sorted_outlier_dict_list)
     if num_outlier_packages > outlier_package_count_threshold:
         num_outlier_packages = outlier_package_count_threshold
@@ -161,7 +164,7 @@ def get_kronos_recommendation(kronos, observed_package_list, node_list, outlier_
 def get_non_companion_packages(alternate_package_dict, observed_package_list):
     alternate_package_list = list()
     for package in alternate_package_dict:
-        alternate_package_list_of_package = [item.get(KD_PACKAGE_NAME)
+        alternate_package_list_of_package = [item.get(pgm_constants.KD_PACKAGE_NAME)
                                              for item in alternate_package_dict[package]]
         alternate_package_list += alternate_package_list_of_package
 
@@ -188,8 +191,8 @@ def get_observed_and_missing_package_list(requested_package_list, unknown_packag
 def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package_count_threshold,
                  alt_package_count_threshold, outlier_probability_threshold,
                  unknown_package_ratio_threshold, outlier_package_count_threshold):
-    package_list = kronos_dependency.get(KD_PACKAGE_LIST)
-    intent_list = kronos_dependency.get(KD_INTENT_LIST)
+    package_list = kronos_dependency.get(pgm_constants.KD_PACKAGE_LIST)
+    intent_list = kronos_dependency.get(pgm_constants.KD_INTENT_LIST)
     node_list = package_list + intent_list
 
     observed_package_list, missing_package_list = get_observed_and_missing_package_list(
@@ -201,9 +204,9 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
     observed_package_to_topic_dict = {}
 
     if observed_package_list is not None:
-        similar_package_json = kronos_dependency.get(KD_SIMILAR_PACKAGE_MAP)
+        similar_package_json = kronos_dependency.get(pgm_constants.KD_SIMILAR_PACKAGE_MAP)
         similar_package_dict = dict(similar_package_json)
-        package_to_topic_json = kronos_dependency.get(KD_PACKAGE_TO_TOPIC_MAP)
+        package_to_topic_json = kronos_dependency.get(pgm_constants.KD_PACKAGE_TO_TOPIC_MAP)
         package_to_topic_dict = dict(package_to_topic_json)
         alternate_package_dict = get_alternate_packages_for_packages(
             similar_package_dict=similar_package_dict,
@@ -232,9 +235,9 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
         for companion_package in companion_package_dict_same_name_pruned:
             topic_list = get_clean_topics_for_package(
                 package_to_topic_dict=package_to_topic_dict,
-                package=companion_package[KRONOS_COMPANION_PACKAGE_NAME])
+                package=companion_package[pgm_constants.KRONOS_COMPANION_PACKAGE_NAME])
 
-            companion_package[KD_TOPIC_LIST] = topic_list
+            companion_package[pgm_constants.KD_TOPIC_LIST] = topic_list
 
         for observed_package in observed_package_list:
             observed_package_to_topic_dict[observed_package] = get_clean_topics_for_package(
@@ -242,11 +245,11 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
                 package=observed_package)
 
     result = dict()
-    result[KRONOS_ALTERNATE_PACKAGES] = alternate_package_dict
-    result[KRONOS_COMPANION_PACKAGES] = companion_package_dict_same_name_pruned
-    result[KRONOS_OUTLIER_PACKAGES] = outlier_package_dict_list
-    result[KRONOS_MISSING_PACKAGES] = missing_package_list
-    result[KRONOS_PACKAGE_TO_TOPIC_DICT] = observed_package_to_topic_dict
+    result[pgm_constants.KRONOS_ALTERNATE_PACKAGES] = alternate_package_dict
+    result[pgm_constants.KRONOS_COMPANION_PACKAGES] = companion_package_dict_same_name_pruned
+    result[pgm_constants.KRONOS_OUTLIER_PACKAGES] = outlier_package_dict_list
+    result[pgm_constants.KRONOS_MISSING_PACKAGES] = missing_package_list
+    result[pgm_constants.KRONOS_PACKAGE_TO_TOPIC_DICT] = observed_package_to_topic_dict
     return result
 
 
@@ -276,30 +279,30 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
 
     response_json_list = list()
     for request_json in request_json_list:
-        ecosystem = request_json.get(KRONOS_SCORE_ECOSYSTEM)
-        user_category = request_json.get(KRONOS_SCORE_USER_PERSONA, "1")
+        ecosystem = request_json.get(pgm_constants.KRONOS_SCORE_ECOSYSTEM)
+        user_category = request_json.get(pgm_constants.KRONOS_SCORE_USER_PERSONA, "1")
 
         comp_package_count_threshold = request_json.get(
-            KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_NAME,
-            KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_VALUE)
+            pgm_constants.KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_NAME,
+            pgm_constants.KRONOS_COMPANION_PACKAGE_COUNT_THRESHOLD_VALUE)
 
         alt_package_count_threshold = request_json.get(
-            KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_NAME,
-            KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_VALUE)
+            pgm_constants.KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_NAME,
+            pgm_constants.KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_VALUE)
 
         outlier_probability_threshold = request_json.get(
-            KRONOS_OUTLIER_PROBABILITY_THRESHOLD_NAME,
-            KRONOS_OUTLIER_PROBABILITY_THRESHOLD_VALUE)
+            pgm_constants.KRONOS_OUTLIER_PROBABILITY_THRESHOLD_NAME,
+            pgm_constants.KRONOS_OUTLIER_PROBABILITY_THRESHOLD_VALUE)
 
         unknown_package_ratio_threshold = request_json.get(
-            KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_NAME,
-            KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_VALUE)
+            pgm_constants.KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_NAME,
+            pgm_constants.KRONOS_UNKNOWN_PACKAGE_RATIO_THRESHOLD_VALUE)
 
         outlier_package_count_threshold = request_json.get(
-            KRONOS_OUTLIER_COUNT_THRESHOLD_NAME,
-            KRONOS_OUTLIER_COUNT_THRESHOLD_VALUE)
+            pgm_constants.KRONOS_OUTLIER_COUNT_THRESHOLD_NAME,
+            pgm_constants.KRONOS_OUTLIER_COUNT_THRESHOLD_VALUE)
 
-        requested_package_list = request_json.get(KRONOS_SCORE_PACKAGE_LIST)
+        requested_package_list = request_json.get(pgm_constants.KRONOS_SCORE_PACKAGE_LIST)
         package_list_lower_case = [x.lower() for x in requested_package_list]
         kronos = user_eco_kronos_dict[user_category][ecosystem]
         kronos_dependency = eco_to_kronos_dependency_dict[ecosystem]
@@ -312,8 +315,8 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
             outlier_probability_threshold=outlier_probability_threshold,
             unknown_package_ratio_threshold=unknown_package_ratio_threshold,
             outlier_package_count_threshold=outlier_package_count_threshold)
-        prediction_result_dict[KRONOS_SCORE_USER_PERSONA] = user_category
-        prediction_result_dict[KRONOS_SCORE_ECOSYSTEM] = ecosystem
+        prediction_result_dict[pgm_constants.KRONOS_SCORE_USER_PERSONA] = user_category
+        prediction_result_dict[pgm_constants.KRONOS_SCORE_ECOSYSTEM] = ecosystem
 
         if all_package_list_obj is not None:
             input_list = all_package_list_obj.get_filtered_input_list(
