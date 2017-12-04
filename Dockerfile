@@ -5,20 +5,23 @@ ENV LANG=en_US.UTF-8
 
 RUN yum install -y epel-release && \
     yum install -y zip && \
-    yum install -y python-pip python-devel gcc && \
+    yum install -y gcc && \
     yum -y install tkinter && \
     yum-config-manager --disable testing-devtools-2-centos-7 && \
     yum -y install gcc-c++.x86_64 && \
     yum clean all
 
+RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+RUN yum -y install python36u && \
+    yum -y install python36u-pip && \
+    yum -y install python36u-devel
 
 # --------------------------------------------------------------------------------------------------
 # install python packages
 # --------------------------------------------------------------------------------------------------
 COPY ./analytics_platform/kronos/requirements.txt /
-RUN pip install -r /requirements.txt && rm /requirements.txt
-RUN pip install pomegranate==0.7.3
-
+RUN python3.6 -m pip install -r /requirements.txt && rm /requirements.txt
+RUN python3.6 -m pip install pomegranate==0.7.3
 
 # --------------------------------------------------------------------------------------------------
 # copy src code and scripts into root dir /
