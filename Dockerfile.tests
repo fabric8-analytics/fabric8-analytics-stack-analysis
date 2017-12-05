@@ -13,7 +13,7 @@ RUN yum install -y java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64 wge
     wget https://downloads.lightbend.com/scala/2.12.2/scala-2.12.2.tgz && \
     tar -xvf scala-2.12.2.tgz && \
     mv scala-2.12.2 /usr/local/scala && \
-    wget https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz && \
+    wget https://archive.apache.org/dist/spark/spark-2.1.1/spark-2.1.1-bin-hadoop2.7.tgz && \
     tar -xvf spark-2.1.1-bin-hadoop2.7.tgz && \
     mv spark-2.1.1-bin-hadoop2.7 /usr/local/spark
 
