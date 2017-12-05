@@ -2,7 +2,9 @@
 import time
 
 from analytics_platform.kronos.src.config import KRONOS_SCORING_REGION
-from analytics_platform.kronos.uranus.src.uranus_constants import ALTERNATE_COUNT_THRESHOLD
+from analytics_platform.kronos.uranus.src.uranus_constants import (
+    ALTERNATE_COUNT_THRESHOLD,
+    URANUS_OUTPUT_PATH)
 from analytics_platform.kronos.uranus.src.super_class import Accuracy
 
 
@@ -12,17 +14,40 @@ class AlternateAccuracy(Accuracy):
         super(AlternateAccuracy, self).__init__()
         self.freq_items_4 = []
         self.unique_package_dict = {}
+        self.test_set_len = 0
 
-    def generate_package_index(self):
-        """For each unique package in the manifest generate the reverse index for the package."""
+    @staticmethod
+    def load(input_data_store, filename):
+        """Load a file from within a datastore.
 
-        for counter, each_stack in enumerate(self.freq_items_4):
-            for each_package in each_stack:
-                current_list = []
-                if each_package in self.unique_package_dict:
-                    current_list = self.unique_package_dict[each_package]
-                current_list.append(counter)
-                self.unique_package_dict[each_package] = current_list
+        :param input_data_store: The datastore from where file is picked.
+        :param filename: The file to be loaded."""
+
+        return input_data_store.read_json_file(
+            filename)
+
+    def load_attributes(self, input_data_store, additional_path):
+        """Load the required attributes of the class object.
+
+        :param input_data_store: The datastore where test data is present.
+        :param additional_path: The directory where test data is loaded from."""
+
+        input_filename = additional_path + \
+            URANUS_OUTPUT_PATH + "reverse_dict.json"
+        self.unique_package_dict = self.load(
+            input_data_store,
+            input_filename)
+        self.test_set_len = len(self.unique_package_dict)
+
+        input_filename = additional_path + \
+            URANUS_OUTPUT_PATH + "freq_4.json"
+        self.freq_items_4 = self.load(
+            input_data_store,
+            input_filename)
+
+        self.load_search_set(
+            input_data_store,
+            additional_path)
 
     def generate_alternate_dependency_set(self, input_list, alternate_package, alternate_to):
         """Replace the  alternate package in the current input list to generate a new test stack.
@@ -32,6 +57,7 @@ class AlternateAccuracy(Accuracy):
         :param alternate_to: The user package for which alternate is recommended.
 
         :return: A set() of user_stack + alternate_package - alternate_to."""
+
         if alternate_package is None or alternate_to is None or len(input_list) == 0:
             return frozenset()
         return frozenset([alternate_package if package == alternate_to else package
@@ -41,10 +67,13 @@ class AlternateAccuracy(Accuracy):
         """Test all similarity packages.
         For each alternate recommendation check its presence in the original manifest list.
         If alternate subset matches increase the true positive counter
-            else the false positive counter."""
+            else the false positive counter.
 
+        :return alternate_precision_result: The evaluation result for alternate packages."""
+
+        alternate_precision_result = {
+            "Number of Test Cases": self.test_set_len}
         t0 = time.time()
-        counter = 1
         true_positives = 0.
         false_positives = 0.
         similarity_data = self.eco_to_kronos_dependency_dict[
@@ -62,23 +91,18 @@ class AlternateAccuracy(Accuracy):
                 else:
                     false_positives += 1
 
-            print(counter)
-            counter += 1
-
-        print("\n")
-        print(("For {} test cases it took {} seconds to test.".format(
-            counter - 1, time.time() - t0)))
-        print(("Alternate: True Positives = {}".format(true_positives)))
-        print(("Alternate: False Positives = {}".format(false_positives)))
-        print(("Alternate: Precision Percentage = {}".format(
-            true_positives / (true_positives + false_positives) * 100)))
+        alternate_precision_result["Time taken(sec)"] = time.time() - t0
+        alternate_precision_result["True Positives"] = true_positives
+        alternate_precision_result["False Positives"] = false_positives
+        alternate_precision_result["Precision Percentage"] = true_positives / \
+            (true_positives + false_positives) * 100
+        return alternate_precision_result
 
 
 if __name__ == '__main__':
-    training_data_url = "s3://dev-stack-analysis-clean-data/maven/github/"
+    training_url = "s3://dev-stack-analysis-clean-data/maven/github/"
+    input_data_store, additional_path = AlternateAccuracy.get_input_data_store(
+        training_url)
     alt_acc_obj = AlternateAccuracy()
-    alt_acc_obj.load_package_list(training_data_url)
-    alt_acc_obj.freq_items_4 = alt_acc_obj.generate_freq_items(4)
-    alt_acc_obj.generate_whole_set()
-    alt_acc_obj.generate_package_index()
-    alt_acc_obj.alternate_precision()
+    alt_acc_obj.load_attributes(input_data_store, additional_path)
+    print alt_acc_obj.alternate_precision()

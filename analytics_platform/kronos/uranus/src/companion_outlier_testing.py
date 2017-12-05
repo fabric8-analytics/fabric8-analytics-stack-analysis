@@ -13,7 +13,8 @@ from analytics_platform.kronos.uranus.src.uranus_constants import (
     COMPANION_COUNT_THRESHOLD,
     ALTERNATE_COUNT_THRESHOLD,
     OUTLIER_PROBABILITY_THRESHOLD,
-    UNKNOWN_PROBABILITY_THRESHOLD)
+    UNKNOWN_PROBABILITY_THRESHOLD,
+    URANUS_OUTPUT_PATH)
 from analytics_platform.kronos.uranus.src.super_class import Accuracy
 
 
@@ -25,6 +26,20 @@ class CompanionOutlierAccuracy(Accuracy):
             bucket_name=AWS_BUCKET_NAME, additional_path=KRONOS_MODEL_PATH)
         self.test_set = set()
         self.unique_items_len = 0
+
+    def load_attributes(self, input_data_store, additional_path):
+        """Load the attributes of the class object.
+
+        :param input_data_store: The place to fetch the data from.
+        :param additional_path: The directory to pick the manifest files from."""
+
+        pickle_filename = "comp_test_set.pickle"
+        complete_output_filename = additional_path + \
+            URANUS_OUTPUT_PATH + pickle_filename
+        self.test_set = input_data_store.load_pickle_file(
+            filename=complete_output_filename)
+        self.unique_items_len = self.get_unique_item_len()
+        self.load_search_set(input_data_store, additional_path)
 
     def predict_and_score(self, input_json):
         """Call the scoring fcuntion of Kronos Online Scoring.
@@ -56,30 +71,29 @@ class CompanionOutlierAccuracy(Accuracy):
             }
         ]
 
-    def generate_test_set(self):
-        """Generate the test data set using freq item sets."""
+    def get_unique_item_len(self):
+        """Return the number of unique packages present in the test set."""
 
-        freq_items_5 = self.generate_freq_items(5)
-        unique_pck = set()
-
-        for each_item_list in freq_items_5:
-            for each_package in each_item_list:
-                unique_pck.add(each_package)
-            combinations_4 = list(combinations(each_item_list, 4))
-            for each_combination in combinations_4:
-                self.test_set.add(frozenset(each_combination))
-        self.unique_items_len = float(len(unique_pck))
+        unique_count = 0
+        for each_set in self.test_set:
+            unique_count += len(each_set)
+        return unique_count
 
     def companion_outlier_precision(self):
         """Score each test set and generate the recommendations.
         For each companion recommendation check its presence in the search set.
         If companion subset matches increase the true positive counter
             else the false positive counter.
-        For each outlier recommendation, increase the count for number of outliers found."""
+        For each outlier recommendation, increase the count for number of outliers found.
 
+        :return companion_precision_result: The evaluation result for companion packages.
+        :return outliers_precision_result: The evaluation result for outliers packages."""
+
+        companion_precision_result = {
+            "Number of Test Cases": self.unique_items_len}
+        outlier_precision_result = {
+            "Number of Test Cases": self.unique_items_len}
         t0 = time.time()
-        time_for_pgm = 0
-        counter = 1
         true_positives = 0.
         false_positives = 0.
         total_outliers = 0.
@@ -98,27 +112,28 @@ class CompanionOutlierAccuracy(Accuracy):
                     true_positives += 1
                 else:
                     false_positives += 1
-            print(counter)
-            counter += 1
+            break
+        time_taken = time.time() - t0
 
-        print("\n")
-        print(("For {} test cases it took {} seconds to test.".format(
-            counter - 1, time.time() - t0)))
-        print("\n")
-        print(("Companion: True Positives = {}".format(true_positives)))
-        print(("Companion: False Positives = {}".format(false_positives)))
-        print(("Companion: Precision Percentage = {}".format(
-            true_positives / (true_positives + false_positives) * 100)))
-        print("\n")
-        print(("Outlier: Number of outliers = {}".format(total_outliers)))
-        print(("Outlier: Ratio of Outlier to Unique Freq. Items = {}".format(
-            total_outliers / self.unique_items_len)))
+        companion_precision_result["Time taken(sec)"] = time_taken
+        companion_precision_result["True Positives"] = true_positives
+        companion_precision_result["False Positives"] = false_positives
+        companion_precision_result[
+            "Precision Percentage"] = true_positives / \
+            (true_positives + false_positives) * 100
+
+        outlier_precision_result["Time taken(sec)"] = time_taken
+        outlier_precision_result["Number of Outliers"] = total_outliers
+        outlier_precision_result[
+            "Ratio of Outlier to Unique Freq. items"] = total_outliers / self.unique_items_len
+
+        return companion_precision_result, outlier_precision_result
 
 
 if __name__ == '__main__':
-    training_data_url = "s3://dev-stack-analysis-clean-data/maven/github/"
+    training_url = "s3://dev-stack-analysis-clean-data/maven/github/"
+    input_data_store, additional_path = CompanionOutlierAccuracy.get_input_data_store(
+        training_url)
     co_acc_obj = CompanionOutlierAccuracy()
-    co_acc_obj.load_package_list(training_data_url)
-    co_acc_obj.generate_test_set()
-    co_acc_obj.generate_whole_set()
-    co_acc_obj.companion_outlier_precision()
+    co_acc_obj.load_attributes(input_data_store, additional_path)
+    print co_acc_obj.companion_outlier_precision()

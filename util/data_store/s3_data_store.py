@@ -1,4 +1,5 @@
 import json
+import pickle
 import os
 
 import boto3
@@ -72,6 +73,19 @@ class S3DataStore(AbstractDataStore):
         """Write JSON file into S3 bucket"""
         self.s3_resource.Object(self.bucket_name, filename).put(Body=json.dumps(contents))
         return None
+
+    def write_pickle_file(self, complete_filename, pickle_filename):
+        """Write Pickle file into S3 bucket"""
+
+        self.s3_resource.Object(self.bucket_name, complete_filename).put(
+            Body=open('/tmp/' + pickle_filename, 'rb'))
+
+    def load_pickle_file(self, filename):
+        """Load Pickle file from S3 bucket"""
+
+        pickle_obj = self.s3_resource.Object(self.bucket_name, filename).get()[
+            'Body'].read()
+        return pickle.loads(pickle_obj)
 
     def upload_file(self, src, target):
         """Upload file into data store"""
