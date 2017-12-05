@@ -24,7 +24,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
     @classmethod
     def train(cls, data_store, additional_path="", min_support_count=None,
-              min_intent_topic_count=None, fp_num_partition=None):
+              min_intent_topic_count=None, fp_num_partition=None, fp_tag_intent_limit=None):
         """Generates the Gnosis Reference Architecture.
 
         :param data_store: input data store containing the processed package
@@ -54,7 +54,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
         gnosis_intent_to_component_class_dict = cls._generate_intent_component_class_dict_fp_growth(
             model=fp_growth_model, min_intent_topic_count=min_intent_topic_count,
-            package_list=gnosis_component_class_list)
+            package_list=gnosis_component_class_list,
+            fp_tag_intent_limit=fp_tag_intent_limit)
 
         # TODO: modify this while implementing multiple levels in the reference
         # architecture
@@ -213,8 +214,10 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         return model
 
     @classmethod
-    def _generate_intent_component_class_dict_fp_growth(cls, model, min_intent_topic_count,
-                                                        package_list):
+    def _generate_intent_component_class_dict_fp_growth(
+            cls, model, min_intent_topic_count, package_list,
+            fp_tag_intent_limit=None):
+        fp_tag_intent_limit = fp_tag_intent_limit or gnosis_constants.FP_TAG_INTENT_LIMIT
         result = model.freqItemsets().collect()
 
         itemset_freq_tuple_list = [(fi.items, fi.freq) for fi in result]
@@ -237,7 +240,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
                 item_list, key=lambda x: x[1], reverse=False)
             topic_num_to_itemset_dict[key] = sorted_item_list
 
-        item_dict = {z: gnosis_constants.FP_TAG_INTENT_LIMIT for z in package_list}
+        item_dict = {z: fp_tag_intent_limit for z in package_list}
         intent_dict = dict()
         for key_value in topic_num_to_itemset_dict:
             k_itemset_list = topic_num_to_itemset_dict[key_value]

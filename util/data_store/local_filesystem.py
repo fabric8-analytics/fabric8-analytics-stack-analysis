@@ -1,7 +1,6 @@
 import fnmatch
 import os
 import pickle
-import six
 import pandas as pd
 from pomegranate import BayesianNetwork
 import json
@@ -91,8 +90,6 @@ class LocalFileSystem(AbstractDataStore):
                     for key, value in input.items()}
         elif isinstance(input, list):
             return [LocalFileSystem.byteify(element) for element in input]
-        elif six.PY2 and isinstance(input, unicode):
-            return input.encode('utf-8')
         else:
             return input
 
