@@ -20,7 +20,9 @@ from tagging_platform.helles.npm_tagger.get_descriptions_from_s3 import run as \
     run_description_collection
 from tagging_platform.helles.npm_tagger.get_version_info_for_missing_packages import run_job as \
     run_missing_package_version_collection_job
-
+from analytics_platform.kronos.uranus.src.evaluation_requests import (
+    submit_evaluation,
+    get_evalution_result)
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
@@ -125,6 +127,28 @@ def predict_and_score():
     app.logger.info("Sending back Kronos Response")
     app.logger.info(response)
 
+    return flask.jsonify(response)
+
+
+@app.route('/api/v1/schemas/submit_kronos_evaluation', methods=['POST'])
+def submit_kronos_evaluation():
+    app.logger.info("Submitting the testing job")
+    response = {"message": "Failed to load model, Kronos Region not available"}
+
+    if app.scoring_status:
+        input_json = request.get_json()
+        training_data_url = input_json.get("training_data_url")
+        response = submit_evaluation(training_data_url=training_data_url)
+    return flask.jsonify(response)
+
+
+@app.route('/api/v1/schemas/get_kronos_evaluation/<evaluation_id>', methods=['GET'])
+def get_kronos_evaluation(evaluation_id):
+    app.logger.info("Submitting the testing job")
+    response = {"message": "Failed to load model, Kronos Region not available"}
+
+    if app.scoring_status:
+        response = get_evalution_result(evaluation_id=evaluation_id)
     return flask.jsonify(response)
 
 

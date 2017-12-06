@@ -1,4 +1,4 @@
-# NOTE: Works only with S3DataStore
+# NOTE: Currenlty works only with S3DataStore
 import time
 
 from analytics_platform.kronos.src.config import KRONOS_SCORING_REGION
@@ -6,6 +6,12 @@ from analytics_platform.kronos.uranus.src.uranus_constants import (
     ALTERNATE_COUNT_THRESHOLD,
     URANUS_OUTPUT_PATH)
 from analytics_platform.kronos.uranus.src.super_class import Accuracy
+
+import daiquiri
+import logging
+
+daiquiri.setup(level=logging.INFO)
+_logger = daiquiri.getLogger(__name__)
 
 
 class AlternateAccuracy(Accuracy):
@@ -96,13 +102,10 @@ class AlternateAccuracy(Accuracy):
         alternate_precision_result["False Positives"] = false_positives
         alternate_precision_result["Precision Percentage"] = true_positives / \
             (true_positives + false_positives) * 100
+
+        _logger.info("Alternate testing ended in {} seconds".format(
+            alternate_precision_result["Time taken(sec)"]))
+        _logger.info("Alternate precision is {} %".format(
+            alternate_precision_result["Precision Percentage"]))
+
         return alternate_precision_result
-
-
-if __name__ == '__main__':
-    training_url = "s3://dev-stack-analysis-clean-data/maven/github/"
-    input_data_store, additional_path = AlternateAccuracy.get_input_data_store(
-        training_url)
-    alt_acc_obj = AlternateAccuracy()
-    alt_acc_obj.load_attributes(input_data_store, additional_path)
-    print alt_acc_obj.alternate_precision()

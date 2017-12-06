@@ -22,8 +22,9 @@ COPY ./util /util
 COPY ./analytics_platform/kronos/src/config.py.template /analytics_platform/kronos/src/config.py
 
 # --------------------------------------------------------------------------------------------------
-# add entrypoint for the container
+# add entrypoint scripts for the container
 # --------------------------------------------------------------------------------------------------
+ADD ./analytics_platform/kronos/scripts/pre_rest_api.sh /bin/pre_rest_api.sh
 ADD ./analytics_platform/kronos/scripts/entrypoint.sh /bin/entrypoint.sh
 
 ENTRYPOINT ["/bin/entrypoint.sh"]

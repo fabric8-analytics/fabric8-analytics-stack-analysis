@@ -1,4 +1,4 @@
-# NOTE: Works only with S3DataStore
+# NOTE: Currenlty works only with S3DataStore
 from itertools import combinations
 import time
 
@@ -16,6 +16,12 @@ from analytics_platform.kronos.uranus.src.uranus_constants import (
     UNKNOWN_PROBABILITY_THRESHOLD,
     URANUS_OUTPUT_PATH)
 from analytics_platform.kronos.uranus.src.super_class import Accuracy
+
+import daiquiri
+import logging
+
+daiquiri.setup(level=logging.INFO)
+_logger = daiquiri.getLogger(__name__)
 
 
 class CompanionOutlierAccuracy(Accuracy):
@@ -125,15 +131,13 @@ class CompanionOutlierAccuracy(Accuracy):
         outlier_precision_result["Time taken(sec)"] = time_taken
         outlier_precision_result["Number of Outliers"] = total_outliers
         outlier_precision_result[
-            "Ratio of Outlier to Unique Freq. items"] = total_outliers / self.unique_items_len
+            "Outlier Percentage"] = total_outliers / self.unique_items_len * 100
+
+        _logger.info(
+            "Companion and outlier testing ended in {} seconds".format(time_taken))
+        _logger.info("Companion precision is {} %".format(
+            companion_precision_result["Precision Percentage"]))
+        _logger.info("Outlier Percentage is {}".format(outlier_precision_result[
+            "Outlier Percentage"]))
 
         return companion_precision_result, outlier_precision_result
-
-
-if __name__ == '__main__':
-    training_url = "s3://dev-stack-analysis-clean-data/maven/github/"
-    input_data_store, additional_path = CompanionOutlierAccuracy.get_input_data_store(
-        training_url)
-    co_acc_obj = CompanionOutlierAccuracy()
-    co_acc_obj.load_attributes(input_data_store, additional_path)
-    print co_acc_obj.companion_outlier_precision()

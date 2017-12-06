@@ -1,4 +1,4 @@
-# NOTE: Works only with S3DataStore
+# NOTE: Currenlty works only with S3DataStore
 import time
 
 from analytics_platform.kronos.src.config import (
@@ -40,16 +40,3 @@ class Accuracy(object):
             URANUS_OUTPUT_PATH + pickle_filename
         self.search_set = input_data_store.load_pickle_file(
             filename=input_filename)
-
-    @staticmethod
-    def get_input_data_store(training_url):
-        """Returns the input datastore and the additional path from a given URL.
-
-        :param training_url: The URL where test data is read from and written into."""
-
-        input_bucket_name, _, additional_path = get_path_names(
-            training_url)
-        input_data_store = S3DataStore(src_bucket_name=input_bucket_name,
-                                       access_key=AWS_S3_ACCESS_KEY_ID,
-                                       secret_key=AWS_S3_SECRET_ACCESS_KEY)
-        return input_data_store, additional_path
