@@ -1,7 +1,4 @@
 from analytics_platform.kronos.src.config import GREMLIN_REST_URL
-from analytics_platform.kronos.apollo.src.apollo_constants import (
-    APOLLO_TEMP_DATA,
-    APOLLO_TEMP_TEST_DATA)
 from util.data_store.local_filesystem import LocalFileSystem
 from util.request_util import get_session_retry
 import json
@@ -20,12 +17,8 @@ class GraphUpdater(object):
         self.untagged_data = untagged_data
 
     @classmethod
-    def generate_and_update_packages(cls, mode="test"):
-        if mode == "test":
-            TEMP_DATA_PATH = APOLLO_TEMP_TEST_DATA
-        else:
-            TEMP_DATA_PATH = APOLLO_TEMP_DATA
-        local_data_obj = LocalFileSystem(TEMP_DATA_PATH)
+    def generate_and_update_packages(cls, apollo_temp_path):
+        local_data_obj = LocalFileSystem(apollo_temp_path)
         file_list = local_data_obj.list_files()
         for file_name in file_list:
             data = local_data_obj.read_json_file(file_name)

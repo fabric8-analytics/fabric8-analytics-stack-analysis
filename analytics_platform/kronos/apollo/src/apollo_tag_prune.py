@@ -4,9 +4,7 @@ from analytics_platform.kronos.apollo.src.apollo_constants import (
     APOLLO_INPUT_RAW_PATH,
     APOLLO_PACKAGE_LIST,
     PACKAGE_LIST_INPUT_CURATED_FILEPATH,
-    MAX_TAG_COUNT,
-    APOLLO_TEMP_DATA,
-    APOLLO_TEMP_TEST_DATA)
+    MAX_TAG_COUNT)
 from util.data_store.local_filesystem import LocalFileSystem
 from util.analytics_platform_util import create_tags_for_package
 from collections import Counter
@@ -24,18 +22,16 @@ class TagListPruner(object):
     def prune_tag_list(input_package_topic_data_store,
                        output_package_topic_data_store,
                        additional_path,
-                       mode="test"):
+                       apollo_temp_path):
         """Generate the clean aggregated package_topic list as required by Gnosis.
 
         :param input_package_topic_data_store: The Data store to pick the package_topic files from.
         :param output_package_topic_data_store: The Data store to save the clean package_topic to.
-        :param additional_path: The directory to pick the package_topic files from."""
+        :param additional_path: The directory to pick the package_topic files from.
+        :param apollo_temp_path: The location where to be updated packages
+            will be temporarily stored."""
 
-        if mode == "test":
-            TEMP_DATA_PATH = APOLLO_TEMP_TEST_DATA
-        else:
-            TEMP_DATA_PATH = APOLLO_TEMP_DATA
-        local_data_obj = LocalFileSystem(TEMP_DATA_PATH)
+        local_data_obj = LocalFileSystem(apollo_temp_path)
 
         package_list_files = input_package_topic_data_store.list_files(
             additional_path + APOLLO_INPUT_RAW_PATH)

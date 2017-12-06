@@ -23,7 +23,7 @@ class TestPruneAndUpdate(TestCase):
         TagListPruner.prune_tag_list(input_data_store,
                                      output_data_store,
                                      additional_path="",
-                                     mode="test")
+                                     apollo_temp_path=APOLLO_TEMP_TEST_DATA)
 
         saved_unknown_data_obj = LocalFileSystem(APOLLO_TEMP_TEST_DATA)
         self.assertTrue(saved_unknown_data_obj is not None)
