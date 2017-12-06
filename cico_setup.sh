@@ -17,7 +17,8 @@ prep() {
 }
 
 build_image() {
-    make docker-build
+    # Also runs the recipe for docker-build
+    make docker-build-test
 }
 
 tag_push() {

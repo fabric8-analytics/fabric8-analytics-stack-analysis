@@ -1,24 +1,13 @@
-FROM centos:7
-MAINTAINER Avishkar Gupta <avgupta@redhat.com>
-
-ENV LANG=en_US.UTF-8
-
-RUN yum install -y epel-release && \
-    yum install -y zip && \
-    yum install -y python-pip python-devel gcc && \
-    yum -y install tkinter && \
-    yum-config-manager --disable testing-devtools-2-centos-7 && \
-    yum -y install gcc-c++.x86_64 && \
-    yum clean all
-
+FROM registry.devshift.net/fabric8-analytics/f8a-kronos-base:latest
+LABEL maintainer="Avishkar Gupta <avgupta@redhat.com>"
 
 # --------------------------------------------------------------------------------------------------
 # install python packages
 # --------------------------------------------------------------------------------------------------
 COPY ./analytics_platform/kronos/requirements.txt /
+# To accomodate for any additional requirements that are not
+# added to base for some reason, ex: local testing.
 RUN pip install -r /requirements.txt && rm /requirements.txt
-RUN pip install pomegranate==0.7.3
-
 
 # --------------------------------------------------------------------------------------------------
 # copy src code and scripts into root dir /
