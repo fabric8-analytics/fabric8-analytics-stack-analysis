@@ -76,7 +76,7 @@ class CooccurrenceMatrixGenerator(object):
         row_count = len(list_of_package_list)
         cooccurrence_matrix = utils.create_empty_pandas_df(
             rowsize=row_count, columns_list=node_list)
-        component_class_list = kronos_component_dependency_dict.keys()
+        component_class_list = list(kronos_component_dependency_dict.keys())
 
         for row_id in range(0, row_count):
             package_list = list_of_package_list[row_id]
@@ -98,7 +98,7 @@ class CooccurrenceMatrixGenerator(object):
                     [row_id], component_class] = component_class_occurrence
 
             temp_node_list = list(component_class_list)
-            intent_list = kronos_intent_dependency_dict.keys()
+            intent_list = list(kronos_intent_dependency_dict.keys())
 
             for intent in intent_list:
                 children_intent_list = kronos_intent_dependency_dict[intent]
