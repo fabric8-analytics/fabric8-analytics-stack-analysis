@@ -6,3 +6,5 @@ config.py
 docker-compose*
 error.log
 *.ipynb
+derby.log
+metastore_db/
