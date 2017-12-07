@@ -118,7 +118,7 @@ class CompanionOutlierAccuracy(Accuracy):
                     true_positives += 1
                 else:
                     false_positives += 1
-            break
+
         time_taken = time.time() - t0
 
         companion_precision_result["Time taken(sec)"] = time_taken

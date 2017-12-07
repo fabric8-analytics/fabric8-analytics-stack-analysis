@@ -14,8 +14,7 @@
 `python -m unittest discover tests  -v`
 
 
-## To Run Evaluation Script
-
+## To Run Evaluation Script Locally
 
 ## Deploy to openshift cluster
 
