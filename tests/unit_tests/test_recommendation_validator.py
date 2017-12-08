@@ -1,3 +1,4 @@
+from analytics_platform.kronos.src import config
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
 
 from unittest import TestCase
@@ -89,7 +90,7 @@ class TestRecommendationValidator(TestCase):
         companion_package = 'D'
         comp_set = obj.generate_companion_dependency_set(
             input_list, companion_package)
-        self.assertEqual(comp_set, {'A', 'B', 'C', 'D'})
+        self.assertTrue(comp_set == set(['A', 'B', 'C', 'D']))
 
     def test_generate_alternate_set(self):
         obj = RecommendationValidator.load_package_list_local(
@@ -99,29 +100,35 @@ class TestRecommendationValidator(TestCase):
         alternate_to = 'B'
         alt_set = obj.generate_alternate_dependency_set(
             input_list, alternate_package, alternate_to)
-        self.assertEqual(alt_set, {'A', 'B123', 'C'})
+        self.assertTrue(alt_set == set(['A', 'B123', 'C']))
 
     def test_alternate_recommendation(self):
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path, self.input_ecosystem)
-        recommended_dependency_set = {'A', 'F', 'C', 'D'}
-        count = obj.check_companion_or_alternate_recommendation_validity(
+        recommended_dependency_set = set(['A', 'F', 'C', 'D'])
+        count = obj.check_alternate_recommendation_validity(
             recommended_dependency_set)
-        self.assertEqual(count, 2)
-        recommended_dependency_set = {'A', 'W', 'C', 'D'}
-        count = obj.check_companion_or_alternate_recommendation_validity(
+        self.assertTrue(count == 2)
+        recommended_dependency_set = set(['A', 'W', 'C', 'D'])
+        count = obj.check_alternate_recommendation_validity(
             recommended_dependency_set)
-        self.assertEqual(count, 0)
+        self.assertTrue(count == 0)
 
     def test_companion_recommendation(self):
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path, self.input_ecosystem)
-        recommended_dependency_set = {'A', 'B', 'C', 'D', 'E'}
-        count = obj.check_companion_or_alternate_recommendation_validity(recommended_dependency_set)
-        self.assertEqual(count, 2)
-        recommended_dependency_set = {'A', 'B', 'C', 'D', 'Q'}
-        count = obj.check_companion_or_alternate_recommendation_validity(recommended_dependency_set)
-        self.assertEqual(count, 0)
+        obj = RecommendationValidator.load_package_list_local(
+            self.input_folder_name, self.additional_path, self.input_ecosystem)
+        input_list = ['A', 'B', 'C', 'D']
+        recommended_dependency_set = set(['A', 'B', 'C', 'D', 'E'])
+        diff_list = obj.check_companion_recommendation_validity(
+            recommended_dependency_set, input_list)
+        self.assertTrue(len(diff_list) == 3)
+        self.assertTrue(diff_list == ['E', 'E', 'F'])
+        recommended_dependency_set = set(['A', 'B', 'C', 'D', 'Q'])
+        diff_list = obj.check_companion_recommendation_validity(
+            recommended_dependency_set, input_list)
+        self.assertTrue(len(diff_list) == 0)
 
     def test_check_alternate_recommendation(self):
         obj = RecommendationValidator.load_package_list_local(
@@ -175,4 +182,4 @@ class TestRecommendationValidator(TestCase):
             input_list, companion_packages)
         self.assertTrue(len(result_companion_list) == 2)
         comp_name = [c.get('package_name') for c in result_companion_list]
-        self.assertEqual(set(comp_name), {'E', 'F'})
+        self.assertTrue(set(comp_name) == set(['E', 'F']))

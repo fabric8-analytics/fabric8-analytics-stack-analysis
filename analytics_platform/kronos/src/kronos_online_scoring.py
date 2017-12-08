@@ -156,7 +156,7 @@ def get_kronos_recommendation(kronos, observed_package_list, node_list, outlier_
     if num_outlier_packages > outlier_package_count_threshold:
         num_outlier_packages = outlier_package_count_threshold
     sorted_outlier_dict_list_pruned = sorted_outlier_dict_list[
-                                      :num_outlier_packages]
+        :num_outlier_packages]
 
     return companion_recommendation_dict, sorted_outlier_dict_list_pruned
 
@@ -226,11 +226,11 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
             non_companion_packages=non_companion_packages)
 
         companion_package_dict_list_pruned = companion_package_dict_list[
-                                             0:comp_package_count_threshold]
+            0:comp_package_count_threshold]
 
         companion_package_dict_same_name_pruned = \
             [companion_package for companion_package in companion_package_dict_list_pruned
-             if not companion_package['package_name'].endswith(('zip', 'docs', 'sources'))]
+                if not companion_package['package_name'].endswith(('zip', 'docs', 'sources'))]
 
         for companion_package in companion_package_dict_same_name_pruned:
             topic_list = get_clean_topics_for_package(
@@ -263,7 +263,7 @@ def get_alternate_packages_for_packages(similar_package_dict, package_names,
         if num_alternate_packages > alt_package_count_threshold:
             num_alternate_packages = alt_package_count_threshold
         alternate_package_dict_list_of_package_pruned = alternate_package_dict_list_of_package[
-                                                        :num_alternate_packages]
+            :num_alternate_packages]
         alternate_package_dict_same_name_pruned = [
             alternate_package for alternate_package in
             alternate_package_dict_list_of_package_pruned if not
