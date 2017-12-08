@@ -44,7 +44,7 @@ oc process -f openshift/template.yaml | oc apply -f -
 
 ```
 Request Type: POST 
-URL: http://0.0.0.0:6006/api/v1/schemas/kronos_scoring
+ENDPOINT: /api/v1/schemas/kronos_scoring
 BODY: JSON data
 [
         {
