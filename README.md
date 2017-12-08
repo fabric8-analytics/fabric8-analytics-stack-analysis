@@ -16,6 +16,10 @@
 
 ## To Run Evaluation Script Locally
 
+```bash
+PYTHONPATH=`pwd` python evaluation_platform/uranus/src/kronos_offline_evaluation.py
+```
+
 ## Deploy to openshift cluster
 
 - Create project

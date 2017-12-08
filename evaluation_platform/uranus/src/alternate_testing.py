@@ -1,11 +1,11 @@
-# NOTE: Currenlty works only with S3DataStore
 import time
+import os
 
 from analytics_platform.kronos.src.config import KRONOS_SCORING_REGION
-from analytics_platform.kronos.uranus.src.uranus_constants import (
+from evaluation_platform.uranus.src.uranus_constants import (
     ALTERNATE_COUNT_THRESHOLD,
     URANUS_OUTPUT_PATH)
-from analytics_platform.kronos.uranus.src.super_class import Accuracy
+from evaluation_platform.uranus.src.super_class import Accuracy
 
 import daiquiri
 import logging

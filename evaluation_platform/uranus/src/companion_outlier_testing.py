@@ -1,6 +1,7 @@
 # NOTE: Currenlty works only with S3DataStore
 from itertools import combinations
 import time
+import os
 
 from analytics_platform.kronos.src.config import (
     AWS_BUCKET_NAME,
@@ -9,13 +10,13 @@ from analytics_platform.kronos.src.config import (
 from analytics_platform.kronos.src.kronos_online_scoring import (
     load_user_eco_to_kronos_model_dict_s3,
     score_eco_user_package_dict)
-from analytics_platform.kronos.uranus.src.uranus_constants import (
+from evaluation_platform.uranus.src.uranus_constants import (
     COMPANION_COUNT_THRESHOLD,
     ALTERNATE_COUNT_THRESHOLD,
     OUTLIER_PROBABILITY_THRESHOLD,
     UNKNOWN_PROBABILITY_THRESHOLD,
     URANUS_OUTPUT_PATH)
-from analytics_platform.kronos.uranus.src.super_class import Accuracy
+from evaluation_platform.uranus.src.super_class import Accuracy
 
 import daiquiri
 import logging
@@ -117,7 +118,6 @@ class CompanionOutlierAccuracy(Accuracy):
                     true_positives += 1
                 else:
                     false_positives += 1
-
         time_taken = time.time() - t0
 
         companion_precision_result["Time taken(sec)"] = time_taken

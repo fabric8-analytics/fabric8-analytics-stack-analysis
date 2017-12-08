@@ -71,14 +71,15 @@ class S3DataStore(AbstractDataStore):
 
     def write_json_file(self, filename, contents):
         """Write JSON file into S3 bucket"""
-        self.s3_resource.Object(self.bucket_name, filename).put(Body=json.dumps(contents))
+        self.s3_resource.Object(self.bucket_name, filename).put(
+            Body=json.dumps(contents))
         return None
 
     def write_pickle_file(self, complete_filename, pickle_filename):
         """Write Pickle file into S3 bucket"""
 
         self.s3_resource.Object(self.bucket_name, complete_filename).put(
-            Body=open('/tmp/' + pickle_filename, 'rb'))
+            Body=open(os.path.join('/tmp', pickle_filename), 'rb'))
 
     def load_pickle_file(self, filename):
         """Load Pickle file from S3 bucket"""

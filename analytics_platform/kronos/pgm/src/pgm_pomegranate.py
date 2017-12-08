@@ -36,7 +36,10 @@ class PGMPomegranate(AbstractPGM):
         if type(data_store) is S3DataStore:
             local_filename = "/tmp/kronos.json"
             with open(local_filename, 'wb') as f:
-                pickle.dump(pgm_model.to_json(), f, pickle.HIGHEST_PROTOCOL)
+                # IMPORTANT: Set pickle.HIGHEST_PROTOCOL only  after complete porting to
+                # Python3
+                pickle.dump(pgm_model.to_json(), f, protocol=2)
+
             data_store.upload_file(local_filename, filename)
         return None
 

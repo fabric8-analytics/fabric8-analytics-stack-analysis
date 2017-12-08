@@ -9,7 +9,7 @@ from analytics_platform.kronos.src.config import (
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
 from util.data_store.s3_data_store import S3DataStore
 from util.analytics_platform_util import get_path_names
-from analytics_platform.kronos.uranus.src.uranus_constants import URANUS_OUTPUT_PATH
+from evaluation_platform.uranus.src.uranus_constants import URANUS_OUTPUT_PATH
 
 
 class Accuracy(object):

@@ -12,6 +12,7 @@ URANUS_ECOSYSTEM = "ecosystem"
 URANUS_INPUT_RAW_PATH = "data_input_manifest_file_list"
 URANUS_PACKAGE_LIST = "package_list"
 
-"""Constants for saving Test Data"""
+"""Constants for saving Test Data and Evaluation Result"""
 
-URANUS_OUTPUT_PATH = "data_uranus_test/"
+URANUS_OUTPUT_PATH = "data_uranus_test/test_data/"
+URANUS_EVALUATION_RESULT_PATH = "data_uranus_test/evaluation_results/"

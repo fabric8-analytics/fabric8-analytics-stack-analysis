@@ -1,4 +1,3 @@
-# NOTE: Works only with S3DataStore
 from analytics_platform.kronos.src.config import (
     SPARK_HOME_PATH,
     PY4J_VERSION,
@@ -14,7 +13,7 @@ sys.path.insert(0, os.path.join(SPARK_HOME_PATH, "python/lib/" + PY4J_VERSION))
 from pyspark import SparkContext
 from pyspark.mllib.fpm import FPGrowth
 
-from analytics_platform.kronos.uranus.src.uranus_constants import (
+from evaluation_platform.uranus.src.uranus_constants import (
     NUM_PARTITIONS,
     MIN_SUPPORT_COUNT,
     URANUS_INPUT_RAW_PATH,
@@ -138,8 +137,10 @@ class TestData(object):
         :param pickle_filename: The file name under which data is pickled."""
 
         with open(os.path.join('/tmp', pickle_filename), 'wb') as handle:
+            # IMPORTANT: Set pickle.HIGHEST_PROTOCOL only  after complete porting to
+            # Python3
             pickle.dump(contents, handle,
-                        protocol=pickle.HIGHEST_PROTOCOL)
+                        protocol=2)
 
     def generate_attributes(self, input_data_store, additional_path):
         """Generate all the required attributes of the class object.
