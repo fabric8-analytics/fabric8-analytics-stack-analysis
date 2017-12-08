@@ -39,9 +39,8 @@ class CompanionOutlierAccuracy(Accuracy):
         :param input_data_store: The place to fetch the data from.
         :param additional_path: The directory to pick the manifest files from."""
 
-        pickle_filename = "comp_test_set.pickle"
-        complete_output_filename = additional_path + \
-            URANUS_OUTPUT_PATH + pickle_filename
+        complete_output_filename = os.path.join(
+            additional_path, URANUS_OUTPUT_PATH, "comp_test_set.pickle")
         self.test_set = input_data_store.load_pickle_file(
             filename=complete_output_filename)
         self.unique_items_len = self.get_unique_item_len()

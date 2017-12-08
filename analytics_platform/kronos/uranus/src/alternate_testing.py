@@ -38,15 +38,15 @@ class AlternateAccuracy(Accuracy):
         :param input_data_store: The datastore where test data is present.
         :param additional_path: The directory where test data is loaded from."""
 
-        input_filename = additional_path + \
-            URANUS_OUTPUT_PATH + "reverse_dict.json"
+        input_filename = os.path.join(
+            additional_path, URANUS_OUTPUT_PATH, "reverse_dict.json")
         self.unique_package_dict = self.load(
             input_data_store,
             input_filename)
         self.test_set_len = len(self.unique_package_dict)
 
-        input_filename = additional_path + \
-            URANUS_OUTPUT_PATH + "freq_4.json"
+        input_filename = os.path.join(
+            additional_path, URANUS_OUTPUT_PATH, "freq_4.json")
         self.freq_items_4 = self.load(
             input_data_store,
             input_filename)

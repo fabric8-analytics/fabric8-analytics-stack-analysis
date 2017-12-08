@@ -40,7 +40,8 @@ class TestData(object):
         :param additional_path: The directory to pick the manifest files from."""
 
         manifest_filenames = input_data_store.list_files(
-            additional_path + URANUS_INPUT_RAW_PATH)
+            os.path.join(additional_path,
+                         URANUS_INPUT_RAW_PATH))
         for manifest_filename in manifest_filenames:
             user_category = manifest_filename.split("/")[-2]
             manifest_content_json_list = input_data_store.read_json_file(
@@ -63,7 +64,7 @@ class TestData(object):
 
         :return: Only those frequent items sets where len(item_set) is either 4 or 5"""
 
-        sc = SparkContext()
+        sc = SparkContext.getOrCreate()
         rdd = sc.parallelize(self.all_list_of_package_list,
                              NUM_PARTITIONS)
         model = FPGrowth.train(
@@ -75,6 +76,7 @@ class TestData(object):
                 self.freq_items_4.append(item_set.items)
             elif item_set_len == 5:
                 self.freq_items_5.append(item_set.items)
+        sc.stop()
 
     def generate_whole_set(self):
         """Generate the set used for searching companion subsets."""
@@ -110,8 +112,8 @@ class TestData(object):
         :param filename: The name under which json data will be saved.
         :param contents: The json data to be saved."""
 
-        output_filename = additional_path + \
-            URANUS_OUTPUT_PATH + filename
+        output_filename = os.path.join(
+            additional_path, URANUS_OUTPUT_PATH, filename)
         output_data_store.write_json_file(output_filename, contents)
 
     @staticmethod
@@ -122,8 +124,8 @@ class TestData(object):
         :param additional_path: The directory where the json will be saved.
         :param pickle_filename: The locally stored pickle file to be saved."""
 
-        complete_filename = additional_path + \
-            URANUS_OUTPUT_PATH + pickle_filename
+        complete_filename = os.path.join(
+            additional_path, URANUS_OUTPUT_PATH, pickle_filename)
         output_data_store.write_pickle_file(
             complete_filename=complete_filename,
             pickle_filename=pickle_filename)
@@ -135,7 +137,7 @@ class TestData(object):
         :param  contents: The data to pickle
         :param pickle_filename: The file name under which data is pickled."""
 
-        with open('/tmp/' + pickle_filename, 'wb') as handle:
+        with open(os.path.join('/tmp', pickle_filename), 'wb') as handle:
             pickle.dump(contents, handle,
                         protocol=pickle.HIGHEST_PROTOCOL)
 
