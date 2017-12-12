@@ -6,7 +6,6 @@ import flask
 import datetime
 from flask import Flask, request, g
 from flask_cors import CORS
-from uuid import uuid1
 
 from analytics_platform.kronos.deployment.submit_training_job import submit_job
 import analytics_platform.kronos.gnosis.src.gnosis_constants as gnosis_constants
@@ -21,8 +20,7 @@ from tagging_platform.helles.npm_tagger.get_descriptions_from_s3 import run as \
     run_description_collection
 from tagging_platform.helles.npm_tagger.get_version_info_for_missing_packages import run_job as \
     run_missing_package_version_collection_job
-from evaluation_platform.uranus.deployment.submit_evaluation_job import (
-    submit_evaluation_job)
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
@@ -127,26 +125,6 @@ def predict_and_score():
     app.logger.info("Sending back Kronos Response")
     app.logger.info(response)
 
-    return flask.jsonify(response)
-
-
-@app.route('/api/v1/schemas/kronos_evaluation', methods=['POST'])
-def submit_kronos_evaluation():
-    app.logger.info("Submitting the evaluation job")
-    response = {
-        "status_description": "Failed to load model, Kronos Region not available"}
-
-    if not app.scoring_status:
-        return flask.jsonify(response)
-
-    result_id = str(uuid1())
-    input_json = request.get_json()
-    training_data_url = input_json.get("training_data_url")
-    response = submit_evaluation_job(input_bootstrap_file='/uranus_bootstrap_action.sh',
-                                     input_src_code_file='/tmp/testing.zip',
-                                     training_url=training_data_url,
-                                     result_id=result_id)
-    response["evaluation_S3_result_id"] = result_id
     return flask.jsonify(response)
 
 
