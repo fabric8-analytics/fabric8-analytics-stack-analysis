@@ -42,8 +42,18 @@ oc process -f openshift/template.yaml | oc apply -f -
 ```
 
 
-## Sample Request Input
+## Sample Evaluation Request Input
+```
+Request Type: POST
+ENDPOINT: api/v1/schemas/kronos_evaluation
+BODY: JSON data
+{
+    "training_data_url":"s3://dev-stack-analysis-clean-data/maven/github/"
+}
+```
 
+
+## Sample Scoring Request Input
 ```
 Request Type: POST 
 ENDPOINT: /api/v1/schemas/kronos_scoring
