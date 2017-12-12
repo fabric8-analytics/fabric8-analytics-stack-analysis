@@ -76,7 +76,9 @@ class LocalFileSystem(AbstractDataStore):
 
     def write_pomegranate_model(self, model, filename):
         with open(os.path.join(self.src_dir, filename), 'wb') as f:
-            pickle.dump(model.to_json(), f, pickle.HIGHEST_PROTOCOL)
+            # IMPORTANT: Set pickle.HIGHEST_PROTOCOL only  after complete porting to
+            # Python3
+            pickle.dump(model.to_json(), f, protocol=2)
 
     def read_pomegranate_model(self, filename):
         with open(os.path.join(self.src_dir, filename), 'rb') as ik:

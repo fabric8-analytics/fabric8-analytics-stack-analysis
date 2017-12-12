@@ -16,13 +16,15 @@ RUN pip install -r /requirements.txt && rm /requirements.txt
 COPY ./analytics_platform/kronos/deployment/rest_api.py /rest_api.py
 COPY ./analytics_platform/kronos/scripts/bootstrap_action.sh /
 COPY ./tagging_platform/helles/scripts/bootstrap_action.sh /helles_bootstrap_action.sh
+COPY ./evaluation_platform/uranus/scripts/bootstrap_action.sh /uranus_bootstrap_action.sh
 COPY ./analytics_platform /analytics_platform
 COPY ./tagging_platform /tagging_platform
+COPY ./evaluation_platform /evaluation_platform
 COPY ./util /util
 COPY ./analytics_platform/kronos/src/config.py.template /analytics_platform/kronos/src/config.py
 
 # --------------------------------------------------------------------------------------------------
-# add entrypoint for the container
+# add entrypoint scripts for the container
 # --------------------------------------------------------------------------------------------------
 ADD ./analytics_platform/kronos/scripts/entrypoint.sh /bin/entrypoint.sh
 

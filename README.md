@@ -7,16 +7,18 @@
 * [Pgm](/analytics_platform/kronos/pgm)
 * [Softnet](/analytics_platform/kronos/softnet)
 * [Apollo](/analytics_platform/kronos/apollo)
+* [Uranus](/analytics_platform/kronos/uranus)
 
 ## To Test Locally
 
 `python -m unittest discover tests  -v`
 
 
+## To Run Evaluation Script Locally
 
-## To Test
-
-`python -m unittest discover tests  -v`
+```bash
+PYTHONPATH=`pwd` python evaluation_platform/uranus/src/kronos_offline_evaluation.py
+```
 
 ## Deploy to openshift cluster
 
