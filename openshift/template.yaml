@@ -37,6 +37,8 @@ objects:
             value: "900"
           - name: KRONOS_SCORING_REGION
             value: "${KRONOS_SCORING_REGION}"
+          - name: NUMBER_OF_PROCESSES
+            value: "2"
           - name: AWS_S3_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
