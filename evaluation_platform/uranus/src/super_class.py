@@ -1,5 +1,6 @@
 # NOTE: Currenlty works only with S3DataStore
 import time
+import os
 
 from analytics_platform.kronos.src.config import (
     AWS_BUCKET_NAME,
@@ -35,8 +36,7 @@ class Accuracy(object):
         :param input_data_store: The datastore where search set is present.
         :param additional_path: The directory where search set is loaded from."""
 
-        pickle_filename = "search_set.pickle"
-        input_filename = additional_path + \
-            URANUS_OUTPUT_PATH + pickle_filename
+        input_filename = os.path.join(
+            additional_path, URANUS_OUTPUT_PATH, "search_set.pickle")
         self.search_set = input_data_store.load_pickle_file(
             filename=input_filename)

@@ -133,17 +133,20 @@ def predict_and_score():
 @app.route('/api/v1/schemas/kronos_evaluation', methods=['POST'])
 def submit_kronos_evaluation():
     app.logger.info("Submitting the evaluation job")
-    response = {"message": "Failed to load model, Kronos Region not available"}
+    response = {
+        "status_description": "Failed to load model, Kronos Region not available"}
 
-    if app.scoring_status:
-        result_id = str(uuid1())
-        input_json = request.get_json()
-        training_data_url = input_json.get("training_data_url")
-        response = submit_evaluation_job(input_bootstrap_file='/uranus_bootstrap_action.sh',
-                                         input_src_code_file='/tmp/testing.zip',
-                                         training_url=training_data_url,
-                                         result_id=result_id)
-        response["evaluation_S3_result_id"] = result_id
+    if not app.scoring_status:
+        return flask.jsonify(response)
+
+    result_id = str(uuid1())
+    input_json = request.get_json()
+    training_data_url = input_json.get("training_data_url")
+    response = submit_evaluation_job(input_bootstrap_file='/uranus_bootstrap_action.sh',
+                                     input_src_code_file='/tmp/testing.zip',
+                                     training_url=training_data_url,
+                                     result_id=result_id)
+    response["evaluation_S3_result_id"] = result_id
     return flask.jsonify(response)
 
 
