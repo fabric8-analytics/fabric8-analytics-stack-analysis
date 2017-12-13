@@ -45,7 +45,6 @@ class TestPruneAndUpdate(TestCase):
         self.assertTrue(expected_output_result is not None)
 
         for tag_generated, tag_expected in zip(output_result, expected_output_result):
-            # print tag_generated, tag_expected
             self.assertDictEqual(tag_generated, tag_expected)
 
         output_data_store.remove_json_file(
@@ -55,11 +54,11 @@ class TestPruneAndUpdate(TestCase):
 
     # Test class TestGraphUpdater(TestCase):
     def test_gremlin_updater_generate_payload(self):
+        gremlin_query = "g.V().has('ecosystem', 'ruby')."
+        gremlin_query += "has('name', within(str_packages))."
+        gremlin_query += "property('manual_tagging_required', true).valueMap();"
         expected_pay_load = {
-            'gremlin':
-            "g.V().has('ecosystem', 'ruby')." +
-            "has('name', within(str_packages))." +
-            "property('manual_tagging_required', true).valueMap();",
+            'gremlin': gremlin_query,
 
             'bindings': {
                 'str_packages': ['service_identity']}}
