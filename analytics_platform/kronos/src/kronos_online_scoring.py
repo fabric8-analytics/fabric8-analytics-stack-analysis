@@ -333,8 +333,7 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
             prediction_result_dict["companion_packages"] = \
                 all_package_list_obj.check_companion_recommendation(
                     input_list, prediction_result_dict.get(
-                        'companion_packages'),
-                    comp_package_count_threshold)
+                        'companion_packages'))
 
         response_json_list.append(prediction_result_dict)
     return response_json_list

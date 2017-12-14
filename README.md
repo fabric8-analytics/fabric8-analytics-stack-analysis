@@ -92,7 +92,18 @@ BODY: JSON data
                 }
             ]
         },
-        "companion_packages": [],
+        "companion_packages": [
+            {
+                "cooccurrence_count": 20,
+                "cooccurrence_probability": 26.666666666666668,
+                "package_name": "io.vertx:vertx-rx-java",
+                "topic_list": [
+                    "java",
+                    "vertx",
+                    "rx"
+                ]
+            }
+        ]
         "ecosystem": "maven",
         "missing_packages": [
             "io.vertx:test-random-package"
