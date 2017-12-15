@@ -160,12 +160,15 @@ class RecommendationValidator(object):
 
         final_companion_recommendations = []
         count = Counter()
+        input_freq_count = float(self.check_companion_or_alternate_recommendation_validity(
+            set(input_list)))
         for each_recommendation in companion_packages:
             companion_package = each_recommendation.get('package_name')
             recommended_dependency_set = self.generate_companion_dependency_set(
                 input_list, companion_package)
             companion_count = self.check_companion_or_alternate_recommendation_validity(
                 recommended_dependency_set)
+
             count[companion_package] += companion_count
         # Pick only top three companion components
         top_comp_name = set([comp[0] for comp in count.most_common(top_count)])
@@ -173,9 +176,13 @@ class RecommendationValidator(object):
             companion_package_name = each_recommendation.get('package_name')
             comp_count = count[companion_package_name]
             if companion_package_name in top_comp_name and comp_count:
-                # change the value of cooccurrence_probability to reflect the actual manifest
-                # usage count.
-                each_recommendation["cooccurrence_probability"] = comp_count
+                """change the value of cooccurrence_probability to reflect
+                the actual manifest confidence count.
+                Confidence count = NumOfOccurence(input+companion)/NumOfOccurence(input)"""
+                each_recommendation[
+                    "cooccurrence_probability"] = comp_count / input_freq_count * 100
+                # Return occurence count as well.
+                each_recommendation["cooccurrence_count"] = comp_count
                 final_companion_recommendations.append(each_recommendation)
         return final_companion_recommendations
 

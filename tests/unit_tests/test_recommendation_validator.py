@@ -176,3 +176,6 @@ class TestRecommendationValidator(TestCase):
         self.assertTrue(len(result_companion_list) == 2)
         comp_name = [c.get('package_name') for c in result_companion_list]
         self.assertEqual(set(comp_name), {'E', 'F'})
+        comp_confidence = [c.get('cooccurrence_probability')
+                           for c in result_companion_list]
+        self.assertEqual(set(comp_confidence), {100, 50})
