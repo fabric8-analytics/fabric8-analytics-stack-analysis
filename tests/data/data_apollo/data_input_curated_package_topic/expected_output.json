@@ -9,10 +9,10 @@
   {
     "ecosystem": "maven",
     "package_topic_map": {
-      "backports.ssl-match-hostname": ["secure", "cryptography", "encryption", "server"],
-      "org.bouncycastle:bcpkix-jdk15on": ["encryption","cryptography"],
+      "backports.ssl-match-hostname": ["encryption", "secure", "cryptography", "server"],
       "org.pac4j:pac4j-mongo": ["authentication", "mongo", "secure"],
-      "org.apache.mina:mina-core": ["network","socket"] 
+      "org.apache.mina:mina-core": ["network","socket"],
+      "org.bouncycastle:bcpkix-jdk15on": ["encryption","cryptography"] 
     }
   },
   {
@@ -22,7 +22,7 @@
   {
     "ecosystem": "ruby",
     "package_topic_map": {
-      "service_identity": ["service_identity" ]
+      "service_identity": ["service_identity"]
     }
   }
 ]

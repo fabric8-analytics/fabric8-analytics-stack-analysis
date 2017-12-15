@@ -11,10 +11,12 @@ from util.data_store.abstract_data_store import AbstractDataStore
 
 
 class LocalFileSystem(AbstractDataStore):
+
     def __init__(self, src_dir):
         self.src_dir = src_dir
         # ensure path ends with a forward slash
-        self.src_dir = self.src_dir if self.src_dir.endswith("/") else self.src_dir + "/"
+        self.src_dir = self.src_dir if self.src_dir.endswith(
+            "/") else self.src_dir + "/"
 
     def get_name(self):
         return "Local filesytem dir: " + self.src_dir
@@ -42,6 +44,10 @@ class LocalFileSystem(AbstractDataStore):
     def read_json_file(self, filename):
         """Read JSON file from the data_input source"""
         return LocalFileSystem.byteify(json.load(open(os.path.join(self.src_dir, filename))))
+
+    def remove_json_file(self, filename):
+        """Remove JSON file from the data_input source file path"""
+        return os.remove(os.path.join(self.src_dir, filename))
 
     def read_all_json_files(self):
         """Read all the files from the data_input source"""

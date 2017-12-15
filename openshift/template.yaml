@@ -35,6 +35,10 @@ objects:
             value: "6006"
           - name: SERVICE_TIMEOUT
             value: "900"
+          - name: BAYESIAN_GREMLIN_HTTP_SERVICE_HOST
+            value: bayesian-gremlin-http
+          - name: BAYESIAN_GREMLIN_HTTP_SERVICE_PORT
+            value: "8182"    
           - name: KRONOS_SCORING_REGION
             value: "${KRONOS_SCORING_REGION}"
           - name: AWS_S3_ACCESS_KEY_ID

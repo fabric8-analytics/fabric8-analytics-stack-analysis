@@ -12,6 +12,8 @@ AWS_BUCKET_NAME = os.environ.get("AWS_BUCKET_NAME","dev-stack-analysis-clean-dat
 KRONOS_SCORING_REGION = os.environ.get("KRONOS_SCORING_REGION", "")
 KRONOS_MODEL_PATH = os.environ.get("KRONOS_MODEL_PATH", KRONOS_SCORING_REGION + "/github/")
 DEPLOYMENT_PREFIX = os.environ.get("DEPLOYMENT_PREFIX", "")
-
+GREMLIN_REST_URL = "http://{host}:{port}".format(
+    host=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_HOST", "localhost"),
+    port=os.environ.get("BAYESIAN_GREMLIN_HTTP_SERVICE_PORT", "8181"))
 SPARK_HOME_PATH = os.environ.get("SPARK_HOME", "")
 PY4J_VERSION = os.environ.get("PY4J_VERSION", "")

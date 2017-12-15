@@ -3,7 +3,10 @@ from analytics_platform.kronos.gnosis.src.offline_training import (
 from analytics_platform.kronos.softnet.src.offline_training import (
     generate_and_save_kronos_dependency_s3, generate_and_save_cooccurrence_matrices_s3)
 from analytics_platform.kronos.pgm.src.offline_training import train_and_save_kronos_list_s3
-from analytics_platform.kronos.apollo.src.offline_training import train_and_save_pruned_tag_list_s3
+from analytics_platform.kronos.apollo.src.offline_training import (
+    train_and_save_pruned_tag_list_s3,
+    generate_and_update_query)
+from analytics_platform.kronos.apollo.src.apollo_constants import APOLLO_TEMP_DATA
 
 import sys
 import time
@@ -32,7 +35,10 @@ if __name__ == '__main__':
 
     t0 = time.time()
     _logger.info("Tag List Preprocess started")
-    train_and_save_pruned_tag_list_s3(training_data_url=training_data_url)
+    train_and_save_pruned_tag_list_s3(
+        training_data_url=training_data_url,
+        apollo_temp_path=APOLLO_TEMP_DATA)
+    generate_and_update_query(apollo_temp_path=APOLLO_TEMP_DATA)
     _logger.info(
         "tag List Preprocessing Ended in {} seconds".format(time.time() - t0))
 
