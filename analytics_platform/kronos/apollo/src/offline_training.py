@@ -13,10 +13,10 @@ def train_and_save_pruned_tag_list_s3(
         apollo_temp_path=APOLLO_TEMP_TEST_DATA):
     """Return the clean package_topic present in the given s3 training URL.
 
-        :param training_data_url: The Location where data is read from and written to.
-        :param apollo_temp_path: The location where to be updated packages
-        will be temporarily stored."""
-
+    :param training_data_url: The Location where data is read from and written to.
+    :param apollo_temp_path: The location where to be updated packages
+    will be temporarily stored.
+    """
     input_bucket_name, output_bucket_name, additional_path = get_path_names(
         training_data_url)
     input_package_topic_data_store = S3DataStore(src_bucket_name=input_bucket_name,
@@ -33,8 +33,9 @@ def train_and_save_pruned_tag_list_s3(
 
 def generate_and_update_query(apollo_temp_path=APOLLO_TEMP_TEST_DATA):
     """Update the graph DB by inserting packages listed at the temp path.
+    Once updated the package list files are cleared.
 
-      :param apollo_temp_path: The location where to be updated packages will be temporarily stored.
-      Once updated the package list files are cleared."""
-
-    GraphUpdater.generate_and_update_packages(apollo_temp_path)
+    :param apollo_temp_path: The location where to be updated packages will be temporarily stored.
+    """
+    graph_obj = GraphUpdater()
+    graph_obj.generate_and_update_packages(apollo_temp_path)
