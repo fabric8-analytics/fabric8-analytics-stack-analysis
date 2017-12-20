@@ -10,11 +10,11 @@ class TestGnosisPackageTopicModel(TestCase):
 
     def test_generate_and_save_package_topic_model_local(self):
         input_data_store = LocalFileSystem(
-            "tests/data/data_gnosis/input-ptm-data")
+            "tests/data/data_gnosis/input-ptm-data/")
         self.assertTrue(input_data_store is not None)
 
         output_data_store = LocalFileSystem(
-            "tests/data/data_gnosis/output-ptm-data")
+            "tests/data/data_gnosis/output-ptm-data/")
         self.assertTrue(output_data_store is not None)
 
         package_topic_model = GnosisPackageTopicModel.curate(
@@ -39,7 +39,7 @@ class TestGnosisPackageTopicModel(TestCase):
 
     def test_manifest_missing_packages(self):
         input_data_store = LocalFileSystem(
-            "tests/data/data_gnosis")
+            "tests/data/data_gnosis/")
         self.assertTrue(input_data_store is not None)
         manifest_json = input_data_store.read_json_file(
             filename='data_input_manifest_file_list/manifest_unknown_packages.json'
@@ -56,7 +56,7 @@ class TestGnosisPackageTopicModel(TestCase):
 
     def test_package_tag_creation(self):
         input_data_store = LocalFileSystem(
-            "tests/data/data_gnosis/input-ptm-data")
+            "tests/data/data_gnosis/input-ptm-data/")
         self.assertTrue(input_data_store is not None)
         ptm_json = input_data_store.read_json_file(
             filename='data_input_curated_package_topic/package_topic.json')
