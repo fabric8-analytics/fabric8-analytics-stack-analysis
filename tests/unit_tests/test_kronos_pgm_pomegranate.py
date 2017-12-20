@@ -15,11 +15,11 @@ class TestKronosPomegranate(TestCase):
     def test_train_and_save_kronos_list_local(self):
 
         input_data_store = LocalFileSystem(
-            "tests/data/data_pgm/input-train-data")
+            "tests/data/data_pgm/input-train-data/")
         self.assertTrue(input_data_store is not None)
 
         output_data_store = LocalFileSystem(
-            "tests/data/data_pgm/output-train-data")
+            "tests/data/data_pgm/output-train-data/")
         self.assertTrue(output_data_store is not None)
 
         eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
@@ -48,11 +48,11 @@ class TestKronosPomegranate(TestCase):
 
     def test_score_eco_user_package_dict(self):
         input_data_store = LocalFileSystem(
-            "tests/data/data_pgm/input-score-data")
+            "tests/data/data_pgm/input-score-data/")
         self.assertTrue(input_data_store is not None)
 
         output_data_store = LocalFileSystem(
-            "tests/data/data_pgm/output-score-data")
+            "tests/data/data_pgm/output-score-data/")
         self.assertTrue(output_data_store is not None)
 
         user_eco_kronos_dict = load_user_eco_to_kronos_model_dict(

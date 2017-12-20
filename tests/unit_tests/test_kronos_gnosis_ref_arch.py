@@ -12,11 +12,11 @@ class TestGnosisReferenceArchitecture(TestCase):
 
     def test_train_and_save_gnosis_ref_arch_local(self):
         input_data_store = LocalFileSystem(
-            "tests/data/data_gnosis/input-ra-data")
+            "tests/data/data_gnosis/input-ra-data/")
         self.assertTrue(input_data_store is not None)
 
         output_data_store = LocalFileSystem(
-            "tests/data/data_gnosis/output-ra-data")
+            "tests/data/data_gnosis/output-ra-data/")
         self.assertTrue(output_data_store is not None)
 
         gnosis_ra_obj = GnosisReferenceArchitecture.train(data_store=input_data_store,

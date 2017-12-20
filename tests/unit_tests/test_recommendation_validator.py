@@ -7,7 +7,7 @@ class TestRecommendationValidator(TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestRecommendationValidator, self).__init__(*args, **kwargs)
-        self.input_folder_name = "tests/data/data_recom_valid"
+        self.input_folder_name = "tests/data/data_recom_valid/"
         self.input_ecosystem = "maven"
         self.additional_path = ""
 
