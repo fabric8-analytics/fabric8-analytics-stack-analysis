@@ -1,4 +1,4 @@
-directories="analytics_platform tagging_platform util tests"
+directories="analytics_platform tagging_platform evaluation_platform util tests"
 fail=0
 
 function prepare_venv() {
