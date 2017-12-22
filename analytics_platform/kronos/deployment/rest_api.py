@@ -1,6 +1,7 @@
 import logging
 import sys
 import os
+import time
 
 import flask
 import datetime
@@ -110,6 +111,47 @@ def train_and_save_kronos():
 
 @app.route('/api/v1/schemas/kronos_scoring', methods=['POST'])
 def predict_and_score():
+
+    # Added Hardcoded PGM response with sleep time to benchmark Load Tests
+    time.sleep(12)
+    response = [
+        {
+            'user_persona': '1',
+            'alternate_packages': {},
+            'ecosystem': 'maven',
+            'companion_packages':
+                [{
+                     'cooccurrence_probability': 75,
+                     'package_name': 'mysql:mysql-connector-java',
+                     'topic_list': ['java', 'connector', 'mysql']
+                 },
+                 {
+                     'cooccurrence_probability': 3,
+                     'package_name': 'org.springframework.boot:spring-boot-starter-web',
+                     'topic_list': ['spring-webapp-booster', 'spring-starter-web',
+                                    'spring-rest-api-starter', 'spring-web-service']
+                 },
+                 {
+                    'cooccurrence_probability': 1,
+                    'package_name': 'org.springframework.boot:spring-boot-starter-data-jpa',
+                    'topic_list': ['spring-persistence', 'spring-jpa',
+                                   'spring-data', 'spring-jpa-adaptor']
+                 },
+                 {
+                    'cooccurrence_probability': 2,
+                    'package_name': 'org.springframework.boot:spring-boot-starter-actuator',
+                    'topic_list': ['spring-rest-api', 'spring-starter',
+                                   'spring-actuator', 'spring-http']
+                 }],
+            'missing_packages': [],
+            'outlier_package_list': [],
+            'package_to_topic_dict': {
+                'io.vertx:vertx-web': ['vertx-web', 'webapp', 'auth', 'routing'],
+                'io.vertx:vertx-core': ['http', 'socket', 'tcp', 'reactive']
+             }
+        }
+    ]
+    return flask.jsonify(response)
     input_json = request.get_json()
 
     app.logger.info("Analyzing the given EPV")
