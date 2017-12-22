@@ -19,6 +19,7 @@ class Accuracy(object):
         self.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(
             bucket_name=AWS_BUCKET_NAME, additional_path=KRONOS_MODEL_PATH)
         self.search_set = set()
+        self.search_set_length = 0
 
     def check_present(self, check_set):
         """Check if a given set is a subset of our manifest search set or not.
@@ -40,3 +41,4 @@ class Accuracy(object):
             additional_path, URANUS_OUTPUT_PATH, "search_set.pickle")
         self.search_set = input_data_store.load_pickle_file(
             filename=input_filename)
+        self.search_set_length = len(self.search_set)

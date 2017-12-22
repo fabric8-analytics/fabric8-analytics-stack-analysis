@@ -52,6 +52,8 @@ def test_kronos(training_url,
     testing_result_dict["Alternate"] = alt_acc_obj.alternate_precision()
     co_acc_obj = CompanionOutlierAccuracy()
     co_acc_obj.load_attributes(input_data_store, additional_path)
+    testing_result_dict[
+        "Number of Input Manifests"] = co_acc_obj.search_set_length
     result = co_acc_obj.companion_outlier_precision()
     testing_result_dict["Companion"] = result[0]
     testing_result_dict["Outlier"] = result[1]
