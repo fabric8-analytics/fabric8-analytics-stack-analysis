@@ -3,7 +3,9 @@ from analytics_platform.kronos.gnosis.src.offline_training import (
 from analytics_platform.kronos.softnet.src.offline_training import (
     generate_and_save_kronos_dependency_s3, generate_and_save_cooccurrence_matrices_s3)
 from analytics_platform.kronos.pgm.src.offline_training import train_and_save_kronos_list_s3
-from analytics_platform.kronos.apollo.src.offline_training import train_and_save_pruned_tag_list_s3
+from analytics_platform.kronos.apollo.src.offline_training import (
+    train_and_save_pruned_tag_list_s3,
+    generate_and_save_package_frequency_dict_s3)
 
 import sys
 import time
@@ -35,6 +37,12 @@ if __name__ == '__main__':
     train_and_save_pruned_tag_list_s3(training_data_url=training_data_url)
     _logger.info(
         "tag List Preprocessing Ended in {} seconds".format(time.time() - t0))
+
+    t0 = time.time()
+    _logger.info("Frequency dict generation started")
+    generate_and_save_package_frequency_dict_s3(training_data_url=training_data_url)
+    _logger.info(
+        "Frequency dict Preprocessing Ended in {} seconds".format(time.time() - t0))
 
     t0 = time.time()
     _logger.info("Gnosis Training Started")

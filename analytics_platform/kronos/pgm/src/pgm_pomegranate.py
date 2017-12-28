@@ -83,7 +83,7 @@ class PGMPomegranate(AbstractPGM):
         n_jobs = len(evidence_dict_list)
         result_array = functools.reduce(
             list.__add__,
-            Parallel(n_jobs=n_jobs)(
+            Parallel(n_jobs=n_jobs, verbose=51)(
                 delayed(parallel_predict)([evidence_dict_list[i]]) for i in range(n_jobs))
         )
         return result_array

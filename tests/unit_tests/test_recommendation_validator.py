@@ -8,19 +8,18 @@ class TestRecommendationValidator(TestCase):
     def __init__(self, *args, **kwargs):
         super(TestRecommendationValidator, self).__init__(*args, **kwargs)
         self.input_folder_name = "tests/data/data_recom_valid/"
-        self.input_ecosystem = "maven"
         self.additional_path = ""
 
     def test_load_manifest_file(self):
         obj = RecommendationValidator.load_package_list_local(
-            self.input_folder_name, self.additional_path, self.input_ecosystem)
+            self.input_folder_name, self.additional_path)
         self.assertTrue(obj is not None)
         self.assertTrue(isinstance(obj, RecommendationValidator))
         self.assertTrue(obj.manifest_len == 4)
 
     def test_filter_input_list(self):
         obj = RecommendationValidator.load_package_list_local(
-            self.input_folder_name, self.additional_path, self.input_ecosystem)
+            self.input_folder_name, self.additional_path)
         input_set = {'A', 'B', 'C', 'Z'}
         missing_packages = ['Z']
         filtered_input_list = obj.get_filtered_input_list(
@@ -29,7 +28,7 @@ class TestRecommendationValidator(TestCase):
 
     def test_filter_alternate_list(self):
         obj = RecommendationValidator.load_package_list_local(
-            self.input_folder_name, self.additional_path, self.input_ecosystem)
+            self.input_folder_name, self.additional_path)
         outlier_packages = [{
             "outlier_prbability": 0.99434381708188857,
             "package_name": "A",
@@ -84,7 +83,7 @@ class TestRecommendationValidator(TestCase):
 
     def test_generate_companion_set(self):
         obj = RecommendationValidator.load_package_list_local(
-            self.input_folder_name, self.additional_path, self.input_ecosystem)
+            self.input_folder_name, self.additional_path)
         input_list = ['A', 'B', 'C']
         companion_package = 'D'
         comp_set = obj.generate_companion_dependency_set(
@@ -93,7 +92,7 @@ class TestRecommendationValidator(TestCase):
 
     def test_generate_alternate_set(self):
         obj = RecommendationValidator.load_package_list_local(
-            self.input_folder_name, self.additional_path, self.input_ecosystem)
+            self.input_folder_name, self.additional_path)
         input_list = ['A', 'B', 'C']
         alternate_package = 'B123'
         alternate_to = 'B'
@@ -103,7 +102,7 @@ class TestRecommendationValidator(TestCase):
 
     def test_alternate_recommendation(self):
         obj = RecommendationValidator.load_package_list_local(
-            self.input_folder_name, self.additional_path, self.input_ecosystem)
+            self.input_folder_name, self.additional_path)
         recommended_dependency_set = {'A', 'F', 'C', 'D'}
         count = obj.check_companion_or_alternate_recommendation_validity(
             recommended_dependency_set)
@@ -115,7 +114,7 @@ class TestRecommendationValidator(TestCase):
 
     def test_companion_recommendation(self):
         obj = RecommendationValidator.load_package_list_local(
-            self.input_folder_name, self.additional_path, self.input_ecosystem)
+            self.input_folder_name, self.additional_path)
         recommended_dependency_set = {'A', 'B', 'C', 'D', 'E'}
         count = obj.check_companion_or_alternate_recommendation_validity(recommended_dependency_set)
         self.assertEqual(count, 2)
@@ -125,7 +124,7 @@ class TestRecommendationValidator(TestCase):
 
     def test_check_alternate_recommendation(self):
         obj = RecommendationValidator.load_package_list_local(
-            self.input_folder_name, self.additional_path, self.input_ecosystem)
+            self.input_folder_name, self.additional_path)
         input_list = ['A', 'B', 'C', 'D']
         alternate_packages = {
             "B": [
@@ -151,7 +150,7 @@ class TestRecommendationValidator(TestCase):
 
     def test_check_companion_recommendation(self):
         obj = RecommendationValidator.load_package_list_local(
-            self.input_folder_name, self.additional_path, self.input_ecosystem)
+            self.input_folder_name, self.additional_path)
         input_list = ['A', 'B', 'C', 'D']
         companion_packages = [
             {

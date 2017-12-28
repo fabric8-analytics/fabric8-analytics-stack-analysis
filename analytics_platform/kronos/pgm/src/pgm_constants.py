@@ -11,6 +11,7 @@ KD_PACKAGE_NAME = "package_name"
 KD_SIMILARITY_SCORE = "similarity_score"
 KD_PACKAGE_TO_TOPIC_MAP = "package_to_topic_dict"
 KD_TOPIC_LIST = "topic_list"
+KD_PACKAGE_FREQUENCY = "data_outlier_manifest_file/element_frequency.json"
 
 KD_OUTPUT_FOLDER = "data_kronos_dependency"
 COM_OUTPUT_FOLDER = "data_co_occurrence_matrix"
@@ -26,7 +27,7 @@ KRONOS_ALTERNATE_PACKAGE_COUNT_THRESHOLD_VALUE = 2
 KRONOS_OUTLIER_COUNT_THRESHOLD_VALUE = 2
 KRONOS_OUTPUT_FOLDER = "data_kronos_user_eco"
 KRONOS_OUTLIER_PACKAGE_NAME = "package_name"
-KRONOS_OUTLIER_PROBABILITY = "outlier_prbability"
+KRONOS_FREQUENCY_COUNT = "frequency_count"
 KRONOS_COMPANION_PACKAGE_NAME = "package_name"
 KRONOS_COMPANION_PROBABILITY = "cooccurrence_probability"
 KRONOS_COMPANION_INTENT_NAME = "intent_name"

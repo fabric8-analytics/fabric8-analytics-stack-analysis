@@ -1,6 +1,9 @@
 from nltk.tokenize import wordpunct_tokenize
-from collections import Counter
 import string
+import os
+
+from analytics_platform.kronos.gnosis.src.gnosis_constants import (
+    MANIFEST_FILEPATH, MANIFEST_PACKAGE_LIST)
 from util.util_constants import MAX_TAG_COUNT
 
 
@@ -34,3 +37,24 @@ def get_path_names(training_data_url):
     output_bucket_name = trunc_string_at(training_data_url, "/", 2, 3)
     additional_path = trunc_string_at(training_data_url, "/", 3, -1)
     return input_bucket_name, output_bucket_name, additional_path
+
+
+def load_package_list(input_data_store, additional_path):
+    """Loads the manifest files from the input_data_store and
+    returns an aggregated list of set of packages.
+
+    :param input_data_store: Data store to read the manifest files from.
+    :param additional_path: Indicates path inside the data store for the manifests.
+    :return: list of package set."""
+    all_list_of_package_set = list()
+    manifest_filenames = input_data_store.list_files(
+        os.path.join(additional_path, MANIFEST_FILEPATH))
+    for manifest_filename in manifest_filenames:
+        manifest_content_json_list = input_data_store.read_json_file(
+            filename=manifest_filename)
+        for manifest_content_json in manifest_content_json_list:
+            manifest_content_dict = dict(manifest_content_json)
+            list_of_package_list = manifest_content_dict.get(MANIFEST_PACKAGE_LIST, [])
+            for package_list in list_of_package_list:
+                all_list_of_package_set.append(set(package_list))
+    return all_list_of_package_set

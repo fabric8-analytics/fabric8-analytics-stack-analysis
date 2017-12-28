@@ -1,8 +1,7 @@
 from collections import Counter
 
-from analytics_platform.kronos.softnet.src.softnet_constants import (
-    MANIFEST_FILEPATH, MANIFEST_ECOSYSTEM, MANIFEST_PACKAGE_LIST)
 from analytics_platform.kronos.src import config
+from util.analytics_platform_util import load_package_list
 from util.data_store.local_filesystem import LocalFileSystem
 from util.data_store.s3_data_store import S3DataStore
 
@@ -15,41 +14,12 @@ class RecommendationValidator(object):
         self.all_list_of_package_set = all_list_of_package_set
         self.manifest_len = len(self.all_list_of_package_set)
 
-    @staticmethod
-    def load_package_list(input_manifest_data_store, additional_path, input_ecosystem):
-        """Generate the aggregated manifest list for a given ecosystem.
-
-        NOTE: This method is called only once while bringing the kronos api up.
-
-        :param input_manifest_data_store: The Data store to pick the manifest files from.
-        :param additional_path: The directory to pick the manifest files from.
-        :param input_ecosystem: The ecosystem for which the aggregated manifest list will be saved.
-
-        :return: RecommendationValidator object."""
-
-        all_list_of_package_set = list()
-        manifest_filenames = input_manifest_data_store.list_files(
-            additional_path + MANIFEST_FILEPATH)
-        for manifest_filename in manifest_filenames:
-            manifest_content_json_list = input_manifest_data_store.read_json_file(
-                filename=manifest_filename)
-            for manifest_content_json in manifest_content_json_list:
-                manifest_content_dict = dict(manifest_content_json)
-                ecosystem = manifest_content_dict.get(MANIFEST_ECOSYSTEM, "")
-                if ecosystem != input_ecosystem:
-                    continue
-                list_of_package_list = manifest_content_dict.get(MANIFEST_PACKAGE_LIST, [])
-                for package_list in list_of_package_list:
-                    all_list_of_package_set.append(set(package_list))
-        return RecommendationValidator(all_list_of_package_set)
-
     @classmethod
-    def load_package_list_s3(cls, input_bucket_name, additional_path, input_ecosystem):
+    def load_package_list_s3(cls, input_bucket_name, additional_path):
         """Generate the aggregated manifest list for a given ecosystem for S3 datasource.
 
         :param input_bucket_name: The bucket where the manifest files are stored.
         :param additional_path: The directory to pick the manifest files from.
-        :param input_ecosystem: The ecosystem for which the aggregated manifest list will be saved.
 
         :return: RecommendationValidator object."""
 
@@ -57,22 +27,25 @@ class RecommendationValidator(object):
         input_manifest_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                                 access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                 secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
-        return cls.load_package_list(input_manifest_data_store, additional_path, input_ecosystem)
+        all_list_of_package_set = load_package_list(input_data_store=input_manifest_data_store,
+                                                    additional_path=additional_path)
+        return cls(all_list_of_package_set=all_list_of_package_set)
 
     @classmethod
-    def load_package_list_local(cls, input_folder_name, additional_path, input_ecosystem):
+    def load_package_list_local(cls, input_folder_name, additional_path):
         """Generate the aggregated manifest list for a given ecosystem from
         LocalFileSystem datasource.
 
         :param input_folder_name: The main directory where the manifest files are stored.
         :param additional_path: The directory to pick the manifest files from.
-        :param input_ecosystem: The ecosystem for which the aggregated manifest list will be saved.
 
         :return: RecommendationValidator object."""
 
         # Create a LocalFile object
         input_manifest_data_store = LocalFileSystem(src_dir=input_folder_name)
-        return cls.load_package_list(input_manifest_data_store, additional_path, input_ecosystem)
+        all_list_of_package_set = load_package_list(input_data_store=input_manifest_data_store,
+                                                    additional_path=additional_path)
+        return cls(all_list_of_package_set=all_list_of_package_set)
 
     def generate_companion_dependency_set(self, input_list, companion_package):
         """Append companion package to the current input list to generate a new test stack.
@@ -219,3 +192,6 @@ class RecommendationValidator(object):
 
     def get_all_list_package_length(self):
         return self.manifest_len
+
+    def get_all_list_of_package_set(self):
+        return self.all_list_of_package_set
