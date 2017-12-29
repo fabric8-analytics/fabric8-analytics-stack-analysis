@@ -21,11 +21,11 @@ class TestRecommendationValidator(TestCase):
     def test_filter_input_list(self):
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path, self.input_ecosystem)
-        input_list = ['A', 'B', 'C', 'Z']
+        input_set = {'A', 'B', 'C', 'Z'}
         missing_packages = ['Z']
         filtered_input_list = obj.get_filtered_input_list(
-            input_list, missing_packages)
-        self.assertTrue(filtered_input_list == ['A', 'B', 'C'])
+            input_set, missing_packages)
+        self.assertTrue(sorted(filtered_input_list) == ['A', 'B', 'C'])
 
     def test_filter_alternate_list(self):
         obj = RecommendationValidator.load_package_list_local(
