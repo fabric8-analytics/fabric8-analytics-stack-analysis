@@ -172,15 +172,14 @@ def get_non_companion_packages(alternate_package_dict, observed_package_list):
     return non_companion_packages
 
 
-def get_observed_and_missing_package_list(requested_package_list, unknown_package_ratio_threshold,
+def get_observed_and_missing_package_list(requested_package_set, unknown_package_ratio_threshold,
                                           package_list):
     observed_package_list = None
-    existing_package_set = set(
-        requested_package_list).intersection(package_list)
-    missing_package_set = set(requested_package_list) - existing_package_set
+    existing_package_set = requested_package_set.intersection(package_list)
+    missing_package_set = requested_package_set - existing_package_set
     missing_package_list = list(missing_package_set)
     acceptable_existing_package_count = \
-        (1 - unknown_package_ratio_threshold) * len(requested_package_list)
+        (1 - unknown_package_ratio_threshold) * len(requested_package_set)
 
     if acceptable_existing_package_count <= len(existing_package_set):
         observed_package_list = list(existing_package_set)
@@ -188,7 +187,7 @@ def get_observed_and_missing_package_list(requested_package_list, unknown_packag
     return observed_package_list, missing_package_list
 
 
-def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package_count_threshold,
+def score_kronos(kronos, requested_package_set, kronos_dependency, comp_package_count_threshold,
                  alt_package_count_threshold, outlier_probability_threshold,
                  unknown_package_ratio_threshold, outlier_package_count_threshold):
     package_list = kronos_dependency.get(pgm_constants.KD_PACKAGE_LIST)
@@ -196,7 +195,7 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
     node_list = package_list + intent_list
 
     observed_package_list, missing_package_list = get_observed_and_missing_package_list(
-        requested_package_list, unknown_package_ratio_threshold, package_list)
+        requested_package_set, unknown_package_ratio_threshold, package_list)
 
     alternate_package_dict = {}
     companion_package_dict_same_name_pruned = list()
@@ -303,12 +302,12 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
             pgm_constants.KRONOS_OUTLIER_COUNT_THRESHOLD_VALUE)
 
         requested_package_list = request_json.get(pgm_constants.KRONOS_SCORE_PACKAGE_LIST)
-        package_list_lower_case = [x.lower() for x in requested_package_list]
+        package_set_lower_case = {x.lower() for x in requested_package_list}
         kronos = user_eco_kronos_dict[user_category][ecosystem]
         kronos_dependency = eco_to_kronos_dependency_dict[ecosystem]
         prediction_result_dict = score_kronos(
             kronos=kronos,
-            requested_package_list=package_list_lower_case,
+            requested_package_set=package_set_lower_case,
             kronos_dependency=kronos_dependency,
             comp_package_count_threshold=comp_package_count_threshold,
             alt_package_count_threshold=alt_package_count_threshold,
@@ -320,7 +319,7 @@ def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_krono
 
         if all_package_list_obj is not None:
             input_list = all_package_list_obj.get_filtered_input_list(
-                package_list_lower_case, prediction_result_dict["missing_packages"])
+                package_set_lower_case, prediction_result_dict["missing_packages"])
 
             filtered_alternate_packages = all_package_list_obj.get_filtered_alternate_list(
                 prediction_result_dict.get('alternate_packages'),

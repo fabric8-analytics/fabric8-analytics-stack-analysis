@@ -203,20 +203,18 @@ class RecommendationValidator(object):
                     only_outlier_alternate[package] = alternate_package[package]
         return only_outlier_alternate
 
-    def get_filtered_input_list(self, input_list, missing_packages):
+    def get_filtered_input_list(self, input_set, missing_packages):
         """Prune the original package list to exclude the missing packages for
         testing recommendation validation.
 
-        :param input_list: The original package list of the user stack.
+        :param input_set: The original package set of the user stack.
         :param missing_packages: The list of Packages unknown to PGM.
 
         :return : Filtered input package list."""
 
         filtered_input_list = []
-        if input_list is not None and missing_packages is not None:
-            missing_packages_set = set(missing_packages)
-            filtered_input_list = [
-                package for package in input_list if package not in missing_packages_set]
+        if input_set is not None and missing_packages is not None:
+            filtered_input_list = list(input_set.difference(missing_packages))
         return filtered_input_list
 
     def get_all_list_package_length(self):
