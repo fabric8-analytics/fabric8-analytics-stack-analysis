@@ -89,6 +89,13 @@ def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store,
         input_kronos_dependency_data_store=input_kronos_dependency_data_store,
         additional_path=additional_path)
 
+    package_topic_json = \
+        input_kronos_dependency_data_store.read_json_file(os.path.join(
+                                                      additional_path,
+                                                      softnet_constants.GNOSIS_PTM_OUTPUT_PATH))
+    package_topic_dict = dict(package_topic_json)
+    eco_to_package_topic_dict = package_topic_dict[softnet_constants.GNOSIS_PTM_PACKAGE_TOPIC_MAP]
+
     manifest_filenames = input_manifest_data_store.list_files(os.path.join(
         additional_path, softnet_constants.MANIFEST_FILEPATH))
 
@@ -104,7 +111,8 @@ def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store,
                 softnet_constants.MANIFEST_PACKAGE_LIST)
             cooccurrence_matrix_obj = CooccurrenceMatrixGenerator.generate_cooccurrence_matrix(
                 kronos_dependency_dict=kronos_dependency_dict,
-                list_of_package_list=list_of_package_list)
+                list_of_package_list=list_of_package_list,
+                package_topic_map=eco_to_package_topic_dict[ecosystem])
             output_filename = os.path.join(softnet_constants.COM_OUTPUT_FOLDER,
                                            str(user_category),
                                            "cooccurrence_matrix_{}.json".format(str(ecosystem)))

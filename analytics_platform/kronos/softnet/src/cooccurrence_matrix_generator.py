@@ -21,7 +21,10 @@ class CooccurrenceMatrixGenerator(object):
         self._matrix_dict = matrix_dict
 
     @classmethod
-    def generate_cooccurrence_matrix(cls, kronos_dependency_dict, list_of_package_list):
+    def generate_cooccurrence_matrix(cls,
+                                     kronos_dependency_dict,
+                                     list_of_package_list,
+                                     package_topic_map):
 
         kronos_intent_dependency_dict = kronos_dependency_dict.get(
             softnet_constants.KD_INTENT_DEPENDENCY_MAP)
@@ -33,7 +36,8 @@ class CooccurrenceMatrixGenerator(object):
         cooccurrence_matrix = cls._generate_cooccurrence_matrix_for_ecosystem(
             list_of_package_list=list_of_package_list, node_list=node_list,
             kronos_intent_dependency_dict=kronos_intent_dependency_dict,
-            kronos_component_dependency_dict=kronos_component_dependency_dict)
+            kronos_component_dependency_dict=kronos_component_dependency_dict,
+            package_topic_map=package_topic_map)
 
         return CooccurrenceMatrixGenerator(cooccurrence_matrix)
 
@@ -71,7 +75,8 @@ class CooccurrenceMatrixGenerator(object):
     @classmethod
     def _generate_cooccurrence_matrix_for_ecosystem(cls, list_of_package_list, node_list,
                                                     kronos_component_dependency_dict,
-                                                    kronos_intent_dependency_dict):
+                                                    kronos_intent_dependency_dict,
+                                                    package_topic_map):
         _logger.info("Co-occurence matrix generation for ecosystem started")
         row_count = len(list_of_package_list)
         cooccurrence_matrix = utils.create_empty_pandas_df(
@@ -79,23 +84,12 @@ class CooccurrenceMatrixGenerator(object):
         component_class_list = list(kronos_component_dependency_dict.keys())
 
         for row_id in range(0, row_count):
-            package_list = list_of_package_list[row_id]
-            package_list = [x.lower() for x in package_list]
+            _logger.info("Processing row {} of {}".format(row_id, row_count))
+            package_list = [x.lower() for x in list_of_package_list[row_id]]
 
             for package in package_list:
                 cooccurrence_matrix.loc[[row_id], package] = 1
-
-            for component_class in component_class_list:
-                component_package_list = kronos_component_dependency_dict[
-                    component_class]
-                row_component_package_df = cooccurrence_matrix.loc[[row_id],
-                                                                   component_package_list]
-                row_component_package_dict = row_component_package_df.to_dict(
-                    orient="index")[row_id]
-                component_class_occurrence = cls.get_component_class_occurrence(
-                    row_component_package_dict)
-                cooccurrence_matrix.loc[
-                    [row_id], component_class] = component_class_occurrence
+                cooccurrence_matrix.loc[[row_id], package_topic_map.get(package)] = 1
 
             temp_node_list = list(component_class_list)
             intent_list = list(kronos_intent_dependency_dict.keys())
@@ -114,8 +108,5 @@ class CooccurrenceMatrixGenerator(object):
                     temp_node_list.append(intent)
                 else:
                     intent_list.append(intent)
-        _logger.info("Complete Co-occurence matrix generated")
-        t0 = time.time()
-        sampled = cooccurrence_matrix.sample(frac=softnet_constants.COM_SAMPLE_RATIO)
-        _logger.info("Sampling took: {}".format(time.time() - t0))
-        return sampled
+
+        return cooccurrence_matrix
