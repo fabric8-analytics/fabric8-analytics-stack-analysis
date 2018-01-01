@@ -25,6 +25,9 @@ class TestCooccurrenceMatrixGenerator(TestCase):
             input_kronos_dependency_data_store=input_data_store, additional_path="")
         self.assertTrue(eco_to_kronos_dependency_dict is not None)
 
+        package_topic = input_data_store.read_json_file("data_package_topic/package_topic.json")
+        eco_to_package_topic_dict = package_topic["package_topic_map"]
+
         manifest_filenames = input_data_store.list_files("data_input_manifest_file_list")
         self.assertTrue(manifest_filenames is not None)
 
@@ -41,7 +44,8 @@ class TestCooccurrenceMatrixGenerator(TestCase):
                 list_of_package_list = manifest_content_dict.get("package_list")
                 cooccurrence_matrix_obj = CooccurrenceMatrixGenerator.generate_cooccurrence_matrix(
                     kronos_dependency_dict=kronos_dependency_dict,
-                    list_of_package_list=list_of_package_list)
+                    list_of_package_list=list_of_package_list,
+                    package_topic_map=eco_to_package_topic_dict[ecosystem])
                 self.assertTrue(cooccurrence_matrix_obj is not None)
                 output_filename = "data_co_occurrence_matrix" + "/" + str(
                     user_category) + "/" + "cooccurrence_matrix" + "_" + str(

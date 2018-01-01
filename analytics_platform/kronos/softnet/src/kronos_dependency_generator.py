@@ -103,19 +103,12 @@ class KronosDependencyGenerator(object):
         for package in package_list:
             package_component_class_list = package_topic_map.get(package)
             for component_class in package_component_class_list:
-                edge_dict = dict()
-                edge_dict[softnet_constants.EDGE_DICT_FROM] = component_class
-                edge_dict[softnet_constants.EDGE_DICT_TO] = package
-                component_class_to_package_edge_list.append(edge_dict)
-                if component_class in component_class_to_package_dict:
-                    temp_package_list = component_class_to_package_dict[
-                        component_class]
-                    temp_package_list.append(package)
-                    component_class_to_package_dict[
-                        component_class] = temp_package_list
-                else:
-                    component_class_to_package_dict[component_class] = [package]
-
+                component_class_to_package_edge_list.append({
+                    softnet_constants.EDGE_DICT_FROM: component_class,
+                    softnet_constants.EDGE_DICT_TO: package
+                })
+                component_class_to_package_dict[component_class] = \
+                    component_class_to_package_dict.get(component_class, []) + [package]
         for component_class in component_class_list:
             if component_class not in component_class_to_package_dict:
                 component_class_to_package_dict[component_class] = []
