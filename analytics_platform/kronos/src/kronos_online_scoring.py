@@ -225,8 +225,7 @@ def score_kronos(kronos, requested_package_list, kronos_dependency, comp_package
             package_list=package_list,
             non_companion_packages=non_companion_packages)
 
-        companion_package_dict_list_pruned = companion_package_dict_list[
-                                             0:comp_package_count_threshold]
+        companion_package_dict_list_pruned = companion_package_dict_list[:]
 
         companion_package_dict_same_name_pruned = \
             [companion_package for companion_package in companion_package_dict_list_pruned
