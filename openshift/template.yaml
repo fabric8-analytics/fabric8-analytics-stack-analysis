@@ -14,7 +14,7 @@ objects:
       service: bayesian-kronos-${KRONOS_SCORING_REGION}
     name: bayesian-kronos-${KRONOS_SCORING_REGION}
   spec:
-    replicas: 1
+    replicas: "${{REPLICAS}}"
     selector:
       service: bayesian-kronos-${KRONOS_SCORING_REGION}
     template:
@@ -141,3 +141,10 @@ parameters:
   required: false
   name: FLASK_LOGGING_LEVEL
   value: "WARNING"
+
+- description: Number of deployment replicas
+  displayName: Number of deployment replicas
+  required: true
+  name: REPLICAS
+  value: "1"
+    
