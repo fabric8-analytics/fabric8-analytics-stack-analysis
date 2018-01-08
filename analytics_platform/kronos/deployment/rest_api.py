@@ -13,8 +13,9 @@ import analytics_platform.kronos.gnosis.src.gnosis_constants as gnosis_constants
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
 from analytics_platform.kronos.src.config import (
     AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION)
-from analytics_platform.kronos.src.kronos_online_scoring import \
-    load_user_eco_to_kronos_model_dict_s3, score_eco_user_package_dict
+from analytics_platform.kronos.src.kronos_online_scoring import (
+    load_user_eco_to_kronos_model_dict_s3, score_eco_user_package_dict,
+    load_package_frequency_dict_s3)
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
 from tagging_platform.helles.deployment.submit_npm_tagging_job import submit_tagging_job
 from tagging_platform.helles.npm_tagger.get_descriptions_from_s3 import run as \
@@ -58,7 +59,10 @@ if KRONOS_SCORING_REGION != "":
         additional_path=KRONOS_MODEL_PATH)
 
     app.all_package_list_obj = RecommendationValidator.load_package_list_s3(
-        AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION)
+        AWS_BUCKET_NAME, KRONOS_MODEL_PATH)
+
+    app.package_frequency_dict = load_package_frequency_dict_s3(bucket_name=AWS_BUCKET_NAME,
+                                                                additional_path=KRONOS_MODEL_PATH)
 
     app.scoring_status = True
 
@@ -122,7 +126,8 @@ def predict_and_score():
             user_request=input_json,
             user_eco_kronos_dict=app.user_eco_kronos_dict,
             eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict,
-            all_package_list_obj=app.all_package_list_obj)
+            all_package_list_obj=app.all_package_list_obj,
+            package_frequency_dict=app.package_frequency_dict)
 
     app.logger.info("Sending back Kronos Response")
     app.logger.info(response)
