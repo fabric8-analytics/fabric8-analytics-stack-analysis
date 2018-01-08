@@ -1,6 +1,8 @@
 import logging
 import sys
 import os
+import hashlib
+import json
 
 import flask
 import datetime
@@ -48,6 +50,8 @@ global user_eco_kronos_dict
 global eco_to_kronos_dependency_dict
 global scoring_status
 global all_package_list_obj
+
+hash_dict = dict()
 
 if KRONOS_SCORING_REGION != "":
     app.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(
@@ -116,22 +120,32 @@ def train_and_save_kronos():
 def predict_and_score():
     input_json = request.get_json()
 
-    app.logger.info("Analyzing the given EPV")
-    app.logger.info(input_json)
+    # Get the response if already cached earlier
+    # Sort package_list elements first
+    for i in range(0, len(input_json)):
+        input_json[i]['package_list'] = sorted(input_json[i]['package_list'])
 
-    response = {"message": "Failed to load model, Kronos Region not available"}
+    hash_key = hashlib.sha224(json.dumps(input_json, sort_keys=True).encode('utf-8')).hexdigest()
+    if hash_key not in hash_dict:
 
-    if app.scoring_status:
-        response = score_eco_user_package_dict(
-            user_request=input_json,
-            user_eco_kronos_dict=app.user_eco_kronos_dict,
-            eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict,
-            all_package_list_obj=app.all_package_list_obj,
-            package_frequency_dict=app.package_frequency_dict)
+        app.logger.info("Analyzing the given EPV")
+        app.logger.info(input_json)
 
-    app.logger.info("Sending back Kronos Response")
-    app.logger.info(response)
+        response = {"message": "Failed to load model, Kronos Region not available"}
 
+        if app.scoring_status:
+            response = score_eco_user_package_dict(
+                user_request=input_json,
+                user_eco_kronos_dict=app.user_eco_kronos_dict,
+                eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict,
+                all_package_list_obj=app.all_package_list_obj,
+                package_frequency_dict=app.package_frequency_dict)
+
+        app.logger.info("Sending back Kronos Response")
+        app.logger.info(response)
+        hash_dict[hash_key] = response
+    else:
+        response = hash_dict[hash_key]
     return flask.jsonify(response)
 
 
