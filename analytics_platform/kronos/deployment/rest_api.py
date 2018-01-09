@@ -122,8 +122,8 @@ def predict_and_score():
 
     # Get the response if already cached earlier
     # Sort package_list elements first
-    for i in range(0, len(input_json)):
-        input_json[i]['package_list'] = sorted(input_json[i]['package_list'])
+    for i in input_json:
+        i['package_list'] = sorted(i['package_list'])
 
     hash_key = hashlib.sha224(json.dumps(input_json, sort_keys=True).encode('utf-8')).hexdigest()
     if hash_key not in hash_dict:
