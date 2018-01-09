@@ -3,6 +3,7 @@ import sys
 import os
 import hashlib
 import json
+import random
 
 import flask
 import datetime
@@ -126,8 +127,10 @@ def predict_and_score():
         i['package_list'] = sorted(i['package_list'])
 
     hash_key = hashlib.sha224(json.dumps(input_json, sort_keys=True).encode('utf-8')).hexdigest()
-    if hash_key not in hash_dict:
 
+    if hash_key in hash_dict and random.random() < 0.3:
+        response = hash_dict[hash_key]
+    else:
         app.logger.info("Analyzing the given EPV")
         app.logger.info(input_json)
 
@@ -144,8 +147,7 @@ def predict_and_score():
         app.logger.info("Sending back Kronos Response")
         app.logger.info(response)
         hash_dict[hash_key] = response
-    else:
-        response = hash_dict[hash_key]
+
     return flask.jsonify(response)
 
 
