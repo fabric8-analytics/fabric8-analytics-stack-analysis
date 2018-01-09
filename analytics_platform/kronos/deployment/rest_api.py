@@ -128,7 +128,7 @@ def predict_and_score():
 
     hash_key = hashlib.sha224(json.dumps(input_json, sort_keys=True).encode('utf-8')).hexdigest()
 
-    if hash_key in hash_dict and random.random() < 0.3:
+    if hash_key in hash_dict and random.random() < float(os.getenv('random_factor')):
         response = hash_dict[hash_key]
     else:
         app.logger.info("Analyzing the given EPV")
