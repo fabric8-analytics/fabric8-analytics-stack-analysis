@@ -3,7 +3,7 @@ env/
 venv/
 cache/
 config.py
-docker-compose*
+docker-compose*.yml
 error.log
 *.ipynb
 derby.log

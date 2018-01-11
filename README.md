@@ -9,6 +9,15 @@
 * [Apollo](/analytics_platform/kronos/apollo)
 * [Uranus](/analytics_platform/kronos/uranus)
 
+## To Deploy Locally:
+
+```bash
+cp docker-compose-katappa.template docker-compose-katappa.yml
+#Add the necessary key-values in docker-compose.yml.
+docker build -t kronos -f Dockerfile
+docker-compose -f docker-compose-katappa.yml up kronos
+```
+
 ## To Test Locally
 
 `python -m unittest discover tests  -v`
