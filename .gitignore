@@ -1,9 +1,9 @@
 *.pyc
+.env
 env/
 venv/
 cache/
 config.py
-docker-compose*
 error.log
 *.ipynb
 derby.log

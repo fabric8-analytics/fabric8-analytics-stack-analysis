@@ -9,6 +9,27 @@
 * [Apollo](/analytics_platform/kronos/apollo)
 * [Uranus](/analytics_platform/kronos/uranus)
 
+## To Deploy Locally
+Set up .env file with environment variables, i.e
+```bash
+cat > .env <<-EOF
+# Amazon AWS s3 credentials
+AWS_S3_ACCESS_KEY_ID=$CUSTOM_KEY
+AWS_S3_SECRET_ACCESS_KEY=$CUSTOM_SECRET_KEY
+
+# Kronos environment
+KRONOS_SCORING_REGION=$CUSTOM_ECOSYSTEM  # <maven/pypi/npm>
+DEPLOYMENT_PREFIX=$DEPL_PREFIX  # <dev/stage/prod>
+GREMLIN_REST_URL=$GREMLIN_URL  # <url>:<port>
+EOF
+```
+
+Deploy with docker-compose
+```bash
+docker-compose build
+docker-compose up
+```
+
 ## To Test Locally
 
 `python -m unittest discover tests  -v`
