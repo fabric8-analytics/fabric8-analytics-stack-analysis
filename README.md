@@ -10,24 +10,40 @@
 * [Uranus](/analytics_platform/kronos/uranus)
 
 ## To Deploy Locally
-Set up .env file with environment variables, i.e
+Set up .env file with environment variables, i.e (view docker-compose.yml for possible values)
 ```bash
 cat > .env <<-EOF
 # Amazon AWS s3 credentials
-AWS_S3_ACCESS_KEY_ID=$CUSTOM_KEY
-AWS_S3_SECRET_ACCESS_KEY=$CUSTOM_SECRET_KEY
+AWS_S3_ACCESS_KEY_ID=
+AWS_S3_SECRET_ACCESS_KEY=
 
 # Kronos environment
-KRONOS_SCORING_REGION=$CUSTOM_ECOSYSTEM  # <maven/pypi/npm>
-DEPLOYMENT_PREFIX=$DEPL_PREFIX  # <dev/stage/prod>
-GREMLIN_REST_URL=$GREMLIN_URL  # <url>:<port>
+KRONOS_SCORING_REGION=
+DEPLOYMENT_PREFIX=
+GREMLIN_REST_URL=
 EOF
 ```
 
-Deploy with docker-compose
+[data-model]: https://github.com/fabric8-analytics/fabric8-analytics-data-model/tree/master/local-setup
+**NOTES:**\
+Do *not* use any `[#]` comments or `['"]` in the .env file.\
+For the `GREMLIN_REST_URL`, you can take a look at out [data-model]
+and use the local-setup services
+```bash
+git clone https://github.com/fabric8-analytics/fabric8-analytics-data-model.git
+cp -r fabric8-analytics-data-model/local-setup/scripts .
+cp fabric8-analytics-data-model/local-setup/docker-compose.yml docker-compose-data-model.yml
+
+# and in .env file
+GREMLIN_REST_URL="http://localhost:8182"  # Note that the port is a port accessed from within the container
+```
+Otherwise you can use custom gremlin service
+
+Deploy with docker-compose:\
+
 ```bash
 docker-compose build
-docker-compose up
+docker-compose -f docker-compose.yml -f docker-compose-data-model.yml up
 ```
 
 ## To Test Locally

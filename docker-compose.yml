@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
   kronos:
     build:
@@ -17,7 +17,7 @@ services:
       SERVICE_TIMEOUT: "900"
       SPARK_HOME: "/usr/local/spark"
       PY4J_VERSION: "py4j-0.10.4-src.zip"
-      GREMLIN_REST_URL: "http://bayesian-gremlin-http-preview-b6ff-bayesian-preview.b6ff.rh-idev.openshiftapps.com"  # <url>:<port>
-      FLASK_LOGGING_LEVEL: "DEBUG"
+      GREMLIN_REST_URL: "${GREMLIN_REST_URL}"  # <url>:<port>
+      # FLASK_LOGGING_LEVEL: "DEBUG"
     ports:
         - "6006:6006"
