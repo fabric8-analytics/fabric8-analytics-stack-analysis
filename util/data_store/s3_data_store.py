@@ -1,3 +1,5 @@
+"""Class that represents S3 data storage."""
+
 import json
 import pickle
 import os
@@ -10,7 +12,10 @@ import numpy as np
 
 
 class S3DataStore(AbstractDataStore):
+    """Class that represents S3 data storage."""
+
     def __init__(self, src_bucket_name, access_key, secret_key):
+        """Initialize the session to the S3 database and set the bucket name."""
         self.session = boto3.session.Session(aws_access_key_id=access_key,
                                              aws_secret_access_key=secret_key)
         self.s3_resource = self.session.resource('s3', config=botocore.client.Config(
@@ -19,6 +24,7 @@ class S3DataStore(AbstractDataStore):
         self.bucket_name = src_bucket_name
 
     def get_name(self):
+        """Get the name that identifies the storage."""
         return "S3:" + self.bucket_name
 
     def read_json_file(self, filename):
@@ -96,16 +102,17 @@ class S3DataStore(AbstractDataStore):
         return None
 
     def write_pandas_df_into_json_file(self, data, filename):
+        """Write the structured data into the JSON file."""
         self.write_json_file(filename=filename, contents=data.to_json())
         return None
 
     def read_json_file_into_pandas_df(self, filename):
+        """Read and parse JSON file."""
         json_string = self.read_json_file(filename=filename)
         return pd.read_json(json_string, dtype=np.int8)
 
     def iterate_bucket_items(self, ecosystem='npm'):
-        """
-        Generator that iterates over all objects in a given s3 bucket
+        """Provide generator that iterates over all objects in a given s3 bucket.
 
         See:
         https://boto3.readthedocs.io/en/latest/reference/services/s3.html#S3.Client.list_objects_v2
@@ -122,6 +129,7 @@ class S3DataStore(AbstractDataStore):
             yield [obj['Key'] for obj in page['Contents']]
 
     def list_folders(self, prefix=None):
+        """Read list of folders from the S3 database."""
         client = self.session.client('s3')
         result = client.list_objects(Bucket=self.bucket_name, Prefix=prefix + '/', Delimiter='/')
         folders = result.get('CommonPrefixes')
