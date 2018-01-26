@@ -1,3 +1,5 @@
+"""Constants used by Uranus."""
+
 """Used for Companion testing"""
 COMPANION_COUNT_THRESHOLD = 3
 ALTERNATE_COUNT_THRESHOLD = 2
