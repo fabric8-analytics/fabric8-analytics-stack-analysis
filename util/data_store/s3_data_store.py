@@ -22,7 +22,7 @@ class S3DataStore(AbstractDataStore):
         return "S3:" + self.bucket_name
 
     def read_json_file(self, filename):
-        """Read JSON file from the S3 bucket"""
+        """Read JSON file from the S3 bucket."""
         return json.loads(self.read_generic_file(filename))
 
     def read_generic_file(self, filename):
@@ -32,8 +32,7 @@ class S3DataStore(AbstractDataStore):
         return utf_data
 
     def list_files(self, prefix=None, max_count=None):
-        """List all the files in the S3 bucket"""
-
+        """List all the files in the S3 bucket."""
         list_filenames = []
         if prefix is None:
             objects = self.bucket.objects.all()
@@ -61,7 +60,7 @@ class S3DataStore(AbstractDataStore):
         return list_filenames
 
     def read_all_json_files(self):
-        """Read all the files from the S3 bucket"""
+        """Read all the files from the S3 bucket."""
         list_filenames = self.list_files(prefix=None)
         list_contents = []
         for file_name in list_filenames:
@@ -70,31 +69,29 @@ class S3DataStore(AbstractDataStore):
         return list_contents
 
     def write_json_file(self, filename, contents):
-        """Write JSON file into S3 bucket"""
+        """Write JSON file into S3 bucket."""
         self.s3_resource.Object(self.bucket_name, filename).put(
             Body=json.dumps(contents))
         return None
 
     def write_pickle_file(self, complete_filename, pickle_filename):
-        """Write Pickle file into S3 bucket"""
-
+        """Write Pickle file into S3 bucket."""
         self.s3_resource.Object(self.bucket_name, complete_filename).put(
             Body=open(os.path.join('/tmp', pickle_filename), 'rb'))
 
     def load_pickle_file(self, filename):
-        """Load Pickle file from S3 bucket"""
-
+        """Load Pickle file from S3 bucket."""
         pickle_obj = self.s3_resource.Object(self.bucket_name, filename).get()[
             'Body'].read()
         return pickle.loads(pickle_obj)
 
     def upload_file(self, src, target):
-        """Upload file into data store"""
+        """Upload file into data store."""
         self.bucket.upload_file(src, target)
         return None
 
     def download_file(self, src, target):
-        """Download file from data store"""
+        """Download file from data store."""
         self.bucket.download_file(src, target)
         return None
 
