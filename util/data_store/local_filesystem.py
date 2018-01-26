@@ -19,7 +19,7 @@ class LocalFileSystem(AbstractDataStore):
         return "Local filesytem dir: " + self.src_dir
 
     def list_files(self, prefix=None):
-        """List all the files in the source directory"""
+        """List all the files in the source directory."""
         list_filenames = []
         for root, dirs, files in os.walk(self.src_dir):
             for basename in files:
@@ -35,15 +35,15 @@ class LocalFileSystem(AbstractDataStore):
         return list_filenames
 
     def remove_json_file(self, filename):
-        """Remove JSON file from the data_input source file path"""
+        """Remove JSON file from the data_input source file path."""
         return os.remove(os.path.join(self.src_dir, filename))
 
     def read_json_file(self, filename):
-        """Read JSON file from the data_input source"""
+        """Read JSON file from the data_input source."""
         return LocalFileSystem.byteify(json.load(open(os.path.join(self.src_dir, filename))))
 
     def read_all_json_files(self):
-        """Read all the files from the data_input source"""
+        """Read all the files from the data_input source."""
         list_filenames = self.list_files(prefix=None)
         list_contents = []
         for file_name in list_filenames:
@@ -52,18 +52,18 @@ class LocalFileSystem(AbstractDataStore):
         return list_contents
 
     def write_json_file(self, filename, contents):
-        """Write JSON file into data_input source"""
+        """Write JSON file into data_input source."""
         with open(os.path.join(self.src_dir, filename), 'w') as outfile:
             json.dump(contents, outfile)
         return None
 
     def upload_file(self, src, target):
-        """Upload file into data store"""
+        """Upload file into data store."""
         # self.bucket.upload_file(src, target)
         return None
 
     def download_file(self, src, target):
-        """Download file from data store"""
+        """Download file from data store."""
         # self.bucket.download_file(src, target)
         return None
 
