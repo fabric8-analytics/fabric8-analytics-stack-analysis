@@ -1,10 +1,14 @@
+"""Class that represents abstract data storage."""
+
 import abc
 
 
 class AbstractDataStore(object):
+    """Class that represents abstract data storage."""
 
     @abc.abstractmethod
     def get_name(self):
+        """Get the name that identifies the storage."""
         return
 
     @abc.abstractmethod
