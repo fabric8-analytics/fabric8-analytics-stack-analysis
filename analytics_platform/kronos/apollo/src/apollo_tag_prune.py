@@ -15,7 +15,6 @@ class TagListPruner(object):
 
     def __init__(self, pruned_package_list):
         """Instantiate Tag List Pruner."""
-
         self.package_list = pruned_package_list
 
     @staticmethod
@@ -26,8 +25,8 @@ class TagListPruner(object):
 
         :param input_package_topic_data_store: The Data store to pick the package_topic files from.
         :param output_package_topic_data_store: The Data store to save the clean package_topic to.
-        :param additional_path: The directory to pick the package_topic files from."""
-
+        :param additional_path: The directory to pick the package_topic files from.
+        """
         package_list_files = input_package_topic_data_store.list_files(
             additional_path + APOLLO_INPUT_RAW_PATH)
         for package_file_name in package_list_files:
@@ -37,11 +36,11 @@ class TagListPruner(object):
                                      additional_path)
 
     def save(self, data_store, filename):
-        """Saves the package_topic object in json format.
+        """Save the package_topic object in json format.
 
         :param data_store: Data store to save package_topic in.
-        :param filename: the file into which the package_topic is to be saved."""
-
+        :param filename: the file into which the package_topic is to be saved.
+        """
         data_store.write_json_file(
             filename=filename, contents=self.package_list)
 
@@ -50,8 +49,8 @@ class TagListPruner(object):
         """Load the Package Topic Model.
 
         :param data_store: Data store to keep the model.
-        :param filename: Name of the file that contains model."""
-
+        :param filename: Name of the file that contains model.
+        """
         package_topic_list = data_store.read_json_file(filename)
         return cls(pruned_package_list=package_topic_list)
 
@@ -62,12 +61,12 @@ class TagListPruner(object):
                           additional_path):
         """Create and save the object of TagListPruner class.
 
-           :param result_package_topic_json: The clean package_topic json to be saved.
-           :param package_file: The output filename for clean package_topic.
-           :param output_package_topic_data_store:
-                The output data store where clean package_topics are saved.
-           :param additional_path: The directory to pick the package_topic files from."""
-
+        :param result_package_topic_json: The clean package_topic json to be saved.
+        :param package_file: The output filename for clean package_topic.
+        :param output_package_topic_data_store:
+             The output data store where clean package_topics are saved.
+        :param additional_path: The directory to pick the package_topic files from.
+        """
         package_topic_formatter_obj = cls(result_package_topic_json)
         output_filename = additional_path + \
             PACKAGE_LIST_INPUT_CURATED_FILEPATH + \
@@ -77,12 +76,12 @@ class TagListPruner(object):
 
     @staticmethod
     def prune_tag_list_max_count(package_list):
-        """Prune the  package list based on maximum count.
+        """Prune the package list based on maximum count.
 
-           :param package_list: The complete package_list.
+        :param package_list: The complete package_list.
 
-           :return pruned_package_list: The prune and clean package_list."""
-
+        :return pruned_package_list: The prune and clean package_list.
+        """
         pruned_package_list = {}
         stop_word = set(['vertx', 'spring', 'java', 'apache',
                          'vert.x', 'io', 'com', 'commons', 'algorithms', 'language'])
@@ -117,11 +116,11 @@ class TagListPruner(object):
                    additional_path):
         """Prepare the clean package_topic data and save it.
 
-           :param package_file_name: The raw package_topic file name.
-           :param content_json_list: The raw package_topic json content.
-           :param output_package_topic_data_store: Save clean package_topic json here.
-           :param additional_path: The directory to pick the package_topic files from."""
-
+        :param package_file_name: The raw package_topic file name.
+        :param content_json_list: The raw package_topic json content.
+        :param output_package_topic_data_store: Save clean package_topic json here.
+        :param additional_path: The directory to pick the package_topic files from.
+        """
         content_json_list = input_package_topic_data_store.read_json_file(
             filename=package_file_name)
         result_package_topic_json = []

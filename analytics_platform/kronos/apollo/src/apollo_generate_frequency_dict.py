@@ -5,29 +5,29 @@ from collections import Counter
 
 
 class FrequencyDictGenerator(object):
-    """Generates package to frequency dictionary"""
+    """Generates package to frequency dictionary."""
 
     def __init__(self, manifest_file):
         """Initialize FrequencyDictGenerator with manifest_file of ecosystem.
 
-           :param manifest_file: The manifest.json file for intended ecosystem. """
+        :param manifest_file: The manifest.json file for intended ecosystem.
+        """
         self.manifest_file = manifest_file
 
     @classmethod
     def create_frequency_generator(cls, input_data_store, additional_path):
-        """Reads the manifest file from the data store and creates a FrequencyDictGenerator
-        object.
+        """Read the manifest file from the data store and creates a FrequencyDictGenerator object.
 
         :param input_data_store: Data store to read the manifest file from.
         :param additional_path: Path to the manifest.json file inside the input_data_store.
-        :return: FrequencyDictGenerator object """
-
+        :return: FrequencyDictGenerator object
+        """
         manifest_file = load_package_list(input_data_store=input_data_store,
                                           additional_path=additional_path)
         return cls(manifest_file=manifest_file)
 
     def generate_and_save_frequency_dict(self, output_data_store, additional_path):
-        """Generates and saves frequency dictionary from the manifest_file.
+        """Generate and save frequency dictionary from the manifest_file.
 
         :param output_data_store: Data store to write the frequency dict to.
         :param additional_path: Path to store the frequency dict inside the output_data_store.

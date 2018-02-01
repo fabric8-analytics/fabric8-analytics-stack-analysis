@@ -21,8 +21,8 @@ class RecommendationValidator(object):
         :param input_bucket_name: The bucket where the manifest files are stored.
         :param additional_path: The directory to pick the manifest files from.
 
-        :return: RecommendationValidator object."""
-
+        :return: RecommendationValidator object.
+        """
         # Create a S3 object
         input_manifest_data_store = S3DataStore(src_bucket_name=input_bucket_name,
                                                 access_key=config.AWS_S3_ACCESS_KEY_ID,
@@ -39,8 +39,8 @@ class RecommendationValidator(object):
         :param input_folder_name: The main directory where the manifest files are stored.
         :param additional_path: The directory to pick the manifest files from.
 
-        :return: RecommendationValidator object."""
-
+        :return: RecommendationValidator object.
+        """
         # Create a LocalFile object
         input_manifest_data_store = LocalFileSystem(src_dir=input_folder_name)
         all_list_of_package_set = load_package_list(input_data_store=input_manifest_data_store,
@@ -53,8 +53,8 @@ class RecommendationValidator(object):
         :param input_list: The original package list of the user stack.
         :param companion_package: The PGM recommended companion package.
 
-        :return: A set() of user_stack + companion_package."""
-
+        :return: A set() of user_stack + companion_package.
+        """
         if input_list is not None and companion_package is not None:
             return set(input_list).union([companion_package])
         return set()
@@ -66,8 +66,8 @@ class RecommendationValidator(object):
         :param alternate_package: The PGM recommended alternate package.
         :param alternate_to: The user package for which alternate is recommended.
 
-        :return: A set() of user_stack + alternate_package - alternate_to."""
-
+        :return: A set() of user_stack + alternate_package - alternate_to.
+        """
         if input_list is not None and alternate_package is not None and alternate_to is not None:
             if alternate_to in input_list:
                 return set(
@@ -77,13 +77,15 @@ class RecommendationValidator(object):
 
     def check_companion_or_alternate_recommendation_validity(self, recommended_dependency_set):
         """Check if the given test stack has a valid companion or alternate recommendation.
+
         A companion or alternate recommendation is valid if the test stack is subset of any
         dependency set in the aggregated manifest list.
 
         :param recommended_dependency_set: The test stack obtained from fnc.
         generate_companion_dependency_set() or generate_alternate_dependency_set().
 
-        :return: Frequency of subset where test stack is a part of any known dependency set."""
+        :return: Frequency of subset where test stack is a part of any known dependency set.
+        """
         count = 0
         for dependency_set in self.all_list_of_package_set:
             if recommended_dependency_set.issubset(dependency_set):
@@ -96,8 +98,8 @@ class RecommendationValidator(object):
         :param input_list: The original package list of the user stack.
         :param alternate_packages: The alternate package list recommended by PGM.
 
-        :return: The list of valid alternate package recommendations."""
-
+        :return: The list of valid alternate package recommendations.
+        """
         # TODO: Validate alternate packages for all combinations of replacement.
 
         final_alternate_recommendations = {}
@@ -129,8 +131,8 @@ class RecommendationValidator(object):
         :param companion_packages: The companion package list recommended by PGM.
         :param top_count: Denotes the number of top companion packages to be returned.
 
-        :return: The list of valid companion package recommendations."""
-
+        :return: The list of valid companion package recommendations.
+        """
         final_companion_recommendations = []
         count = Counter()
         input_freq_count = float(self.check_companion_or_alternate_recommendation_validity(
@@ -166,8 +168,8 @@ class RecommendationValidator(object):
         :param alternate_package: The alternate package list recommended by PGM.
         :param outlier_packages: The list outliers in user stack recognised by PGM.
 
-        :return : Filtered alternate package list"""
-
+        :return : Filtered alternate package list
+        """
         only_outlier_alternate = {}
         if alternate_package is not None and outlier_packages is not None:
             outliers = set([outlier['package_name'] for outlier in outlier_packages])
@@ -183,8 +185,8 @@ class RecommendationValidator(object):
         :param input_set: The original package set of the user stack.
         :param missing_packages: The list of Packages unknown to PGM.
 
-        :return : Filtered input package list."""
-
+        :return : Filtered input package list.
+        """
         filtered_input_list = []
         if input_set is not None and missing_packages is not None:
             filtered_input_list = list(input_set.difference(missing_packages))
