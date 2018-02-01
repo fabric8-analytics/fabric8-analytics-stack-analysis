@@ -1,3 +1,5 @@
+"""Definition of all REST API endpoints."""
+
 import logging
 import sys
 import os
@@ -31,6 +33,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 
 def setup_logging(flask_app):
+    """Perform the setup of logging (file, log level) for this module."""
     if not flask_app.debug:
         handler = logging.StreamHandler()
         handler.setFormatter(logging.Formatter(
@@ -78,22 +81,26 @@ else:
 
 @app.before_request
 def before_request():
+    """Remember timestamp where the request handling starts."""
     g.request_start = datetime.datetime.utcnow()
 
 
 @app.teardown_request
 def teardown_request(_):
+    """Remember timestamp where the request handling finishes and compute duration."""
     app.logger.debug('Response time: {t} seconds'.format(
         t=(datetime.datetime.utcnow() - g.request_start).total_seconds()))
 
 
 @app.route('/')
 def heart_beat():
+    """Handle the / REST API call."""
     return flask.jsonify({"status": "ok"})
 
 
 @app.route('/api/v1/schemas/kronos_training', methods=['POST'])
 def train_and_save_kronos():
+    """Handle the /api/v1/schemas/kronos_training REST API call."""
     app.logger.info("Submitting the training job")
 
     input_json = request.get_json()
@@ -118,6 +125,7 @@ def train_and_save_kronos():
 
 @app.route('/api/v1/schemas/kronos_scoring', methods=['POST'])
 def predict_and_score():
+    """Handle the /api/v1/schemas/kronos_scoring REST API call."""
     input_json = request.get_json()
 
     # Get the response if already cached earlier
@@ -151,6 +159,7 @@ def predict_and_score():
 
 @app.route('/api/v1/schemas/kronos_evaluation', methods=['POST'])
 def submit_kronos_evaluation():
+    """Handle the /api/v1/schemas/kronos_evaluation REST API call."""
     app.logger.info("Submitting the evaluation job")
     response = {
         "status_description": "Failed to load model, Kronos Region not available"}
@@ -171,6 +180,7 @@ def submit_kronos_evaluation():
 
 @app.route('/api/v2/npm_tagging', methods=['POST'])
 def tag_npm_packages_textrank():
+    """Handle the /api/v2/npm_tagging REST API call."""
     input_json = request.get_json()
     response = submit_tagging_job(input_bootstrap_file='/helles_bootstrap_action.sh',
                                   input_src_code_file='/tmp/tagging.zip',
@@ -181,6 +191,7 @@ def tag_npm_packages_textrank():
 
 @app.route('/api/v2/npm_descriptions', methods=['POST'])
 def collect_npm_descriptions():
+    """Handle the /api/v2/npm_descriptions REST API call."""
     input_json = request.get_json()
     run_description_collection(input_data_path=input_json.get('input_data_path'))
     return flask.jsonify({"status": "Job completed"})
@@ -188,6 +199,7 @@ def collect_npm_descriptions():
 
 @app.route('/api/v2/npm_missing_versions', methods=['POST'])
 def collect_missing_package_versions():
+    """Handle the /api/v2/npm_missing_versions REST API call."""
     input_json = request.get_json()
     run_missing_package_version_collection_job(input_json.get('input_data_path'))
     return flask.jsonify({"status": "Job run successfully"})

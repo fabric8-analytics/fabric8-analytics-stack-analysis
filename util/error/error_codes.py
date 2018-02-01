@@ -1,3 +1,5 @@
+"""Error codes used during the analysis."""
+
 ERR_INPUT_INVALID = {
     "name": "ERR_INPUT_INVALID ",
     "msg": "Input is invalid."

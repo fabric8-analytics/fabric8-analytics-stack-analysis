@@ -1,3 +1,5 @@
+"""Class to generate package to frequency dictionary."""
+
 from analytics_platform.kronos.pgm.src.pgm_constants import KD_PACKAGE_FREQUENCY
 import os
 from util.analytics_platform_util import load_package_list

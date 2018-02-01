@@ -28,7 +28,7 @@ tags_dict = {}
 
 
 def getNPMdescription(package_name):
-    """Get the NPM description for cases where a readme is missing"""
+    """Get the NPM description for cases where a readme is missing."""
     npmjs_bucket = s3_data_store.S3DataStore(src_bucket_name='prod-repository-description',
                                              access_key=config.AWS_S3_ACCESS_KEY_ID,
                                              secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
