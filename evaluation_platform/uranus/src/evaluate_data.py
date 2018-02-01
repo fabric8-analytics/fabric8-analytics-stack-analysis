@@ -39,12 +39,12 @@ def test_kronos(training_url,
                 input_data_store,
                 output_data_store,
                 additional_path):
-    """ Call the Alternate, Companion and Outlier Accuracy checker.
+    """Call the Alternate, Companion and Outlier Accuracy checker.
 
-        :param training_url: Location where test data is loaded from.
+    :param training_url: Location where test data is loaded from.
 
-        :return testing_result_dict: Accuracy/Evaluation metrices."""
-
+    :return testing_result_dict: Accuracy/Evaluation metrices.
+    """
     testing_result_dict = {"input_url": training_url}
     testing_result_dict["evaluation_id"] = result_id
     alt_acc_obj = AlternateAccuracy()

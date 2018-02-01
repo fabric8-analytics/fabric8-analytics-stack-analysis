@@ -3,6 +3,7 @@ This script collects the description(s) for a tagged package from S3 core-data b
 and dumps the aggregated output into the input bucket from where the package tag map
 was read.
 """
+
 from util.data_store.s3_data_store import S3DataStore
 from analytics_platform.kronos.src import config
 import json

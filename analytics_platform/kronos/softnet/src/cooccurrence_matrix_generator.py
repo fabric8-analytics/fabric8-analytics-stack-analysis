@@ -11,8 +11,10 @@ _logger = daiquiri.getLogger(__name__)
 
 
 class CooccurrenceMatrixGenerator(object):
-    """Cooccurrence Matrix Generator: Responsible for generating cooccurence
-    matrix required for Kronos Training."""
+    """Cooccurrence Matrix Generator.
+
+    This class is responsible for generating cooccurence matrix required for Kronos Training.
+    """
 
     def __init__(self, matrix_dict):
         """Instantiate Cooccurrence Matrix Generator."""

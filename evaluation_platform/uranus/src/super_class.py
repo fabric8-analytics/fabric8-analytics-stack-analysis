@@ -1,4 +1,4 @@
-# NOTE: Currenlty works only with S3DataStore
+# NOTE: Currently works only with S3DataStore
 import time
 import os
 
@@ -24,8 +24,8 @@ class Accuracy(object):
     def check_present(self, check_set):
         """Check if a given set is a subset of our manifest search set or not.
 
-        :param check_set: The set to checked for within the manifest set."""
-
+        :param check_set: The set to checked for within the manifest set.
+        """
         for each_set in self.search_set:
             if check_set.issubset(each_set):
                 return True
@@ -35,8 +35,8 @@ class Accuracy(object):
         """Load the manifets search set from the given source.
 
         :param input_data_store: The datastore where search set is present.
-        :param additional_path: The directory where search set is loaded from."""
-
+        :param additional_path: The directory where search set is loaded from.
+        """
         input_filename = os.path.join(
             additional_path, URANUS_OUTPUT_PATH, "search_set.pickle")
         self.search_set = input_data_store.load_pickle_file(

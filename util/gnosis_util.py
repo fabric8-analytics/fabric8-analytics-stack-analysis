@@ -5,7 +5,6 @@ def generate_value_list_from_dict(dictionary):
 
     :return: list of all values de-duped.
     """
-
     value_set = set()
     for key in dictionary:
         value_set |= set(dictionary[key])

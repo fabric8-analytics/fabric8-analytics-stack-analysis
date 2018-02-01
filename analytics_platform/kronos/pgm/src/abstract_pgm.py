@@ -11,12 +11,12 @@ class AbstractPGM(object):
 
     @abstractmethod
     def load(cls, data_store, filename):
-        """Loads already saved Kronos."""
+        """Load already saved Kronos."""
         return
 
     @abstractmethod
     def save(self, data_store, filename):
-        """Saves the Kronos in data_store."""
+        """Save the Kronos in data_store."""
         return
 
     @abstractmethod
