@@ -7,7 +7,7 @@ class AbstractGnosis(object):
     @abstractmethod
     def train(cls, data_store):
         """Train/De-dupe Gnosis from gnosis files.
-        
+
         The files should be in the following json format:
 
         :param data_store: data store where various input gnosis files are stored.
