@@ -1,3 +1,5 @@
+"""Recommendation Validator that validates the recommendations sent by the PGM model."""
+
 from collections import Counter
 
 from analytics_platform.kronos.src import config
@@ -33,7 +35,9 @@ class RecommendationValidator(object):
 
     @classmethod
     def load_package_list_local(cls, input_folder_name, additional_path):
-        """Generate the aggregated manifest list for a given ecosystem from
+        """Load manifest files from the local file system and generate list of packages from it.
+
+        Generate the aggregated manifest list for a given ecosystem from
         LocalFileSystem datasource.
 
         :param input_folder_name: The main directory where the manifest files are stored.
@@ -162,7 +166,9 @@ class RecommendationValidator(object):
         return final_companion_recommendations
 
     def get_filtered_alternate_list(self, alternate_package, outlier_packages):
-        """Prune the PGM recommended alternate package list to include only the
+        """Filter the PGM recommended alternate package list.
+
+        Prune the PGM recommended alternate package list to include only the
         outlier packages for testing recommendation validation.
 
         :param alternate_package: The alternate package list recommended by PGM.
@@ -179,7 +185,9 @@ class RecommendationValidator(object):
         return only_outlier_alternate
 
     def get_filtered_input_list(self, input_set, missing_packages):
-        """Prune the original package list to exclude the missing packages for
+        """Filter the original package list.
+
+        Prune the original package list to exclude the missing packages for
         testing recommendation validation.
 
         :param input_set: The original package set of the user stack.

@@ -1,3 +1,5 @@
+"""Class to format the raw package_list to prune it for Gnosis consumption."""
+
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.apollo.src.apollo_constants import (
     APOLLO_ECOSYSTEM,

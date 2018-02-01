@@ -15,6 +15,7 @@ COMPONENT_PREFIX = "helles"
 
 def submit_tagging_job(input_bootstrap_file, input_src_code_file, package_name='',
                        manifest_path=''):
+    """Submit a job to run the given src code."""
     str_cur_time = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
 
     # S3 bucket/key, where the input spark job ( src code ) will be uploaded
