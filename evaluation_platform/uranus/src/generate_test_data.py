@@ -36,8 +36,8 @@ class TestData(object):
         """Generate the aggregated manifest list for a given ecosystem.
 
         :param input_data_store: The Data store to pick the manifest files from.
-        :param additional_path: The directory to pick the manifest files from."""
-
+        :param additional_path: The directory to pick the manifest files from.
+        """
         manifest_filenames = input_data_store.list_files(
             os.path.join(additional_path,
                          URANUS_INPUT_RAW_PATH))
@@ -61,8 +61,8 @@ class TestData(object):
     def generate_freq_items(self):
         """Run Spark FP Growth to get the frequent item sets.
 
-        :return: Only those frequent items sets where len(item_set) is either 4 or 5"""
-
+        :return: Only those frequent items sets where len(item_set) is either 4 or 5
+        """
         sc = SparkContext.getOrCreate()
         rdd = sc.parallelize(self.all_list_of_package_list,
                              NUM_PARTITIONS)
@@ -79,13 +79,11 @@ class TestData(object):
 
     def generate_whole_set(self):
         """Generate the set used for searching companion subsets."""
-
         for each_stack_list in self.all_list_of_package_list:
             self.search_set.add(frozenset(each_stack_list))
 
     def generate_package_index(self):
         """For each unique package in the manifest generate its reverse index."""
-
         for counter, each_stack in enumerate(self.freq_items_4):
             for each_package in each_stack:
                 current_list = []
@@ -96,7 +94,6 @@ class TestData(object):
 
     def generate_comp_test_set(self):
         """Generate the test data set using freq item sets."""
-
         for each_item_list in self.freq_items_5:
             combinations_4 = list(combinations(each_item_list, 4))
             for each_combination in combinations_4:
@@ -109,8 +106,8 @@ class TestData(object):
         :param output_data_store: The datastore where json will be saved.
         :param additional_path: The directory where the json will be saved.
         :param filename: The name under which json data will be saved.
-        :param contents: The json data to be saved."""
-
+        :param contents: The json data to be saved.
+        """
         output_filename = os.path.join(
             additional_path, URANUS_OUTPUT_PATH, filename)
         output_data_store.write_json_file(output_filename, contents)
@@ -121,8 +118,8 @@ class TestData(object):
 
         :param output_data_store: The datastore where json will be saved.
         :param additional_path: The directory where the json will be saved.
-        :param pickle_filename: The locally stored pickle file to be saved."""
-
+        :param pickle_filename: The locally stored pickle file to be saved.
+        """
         complete_filename = os.path.join(
             additional_path, URANUS_OUTPUT_PATH, pickle_filename)
         output_data_store.write_pickle_file(
@@ -134,8 +131,8 @@ class TestData(object):
         """Save the contents as a pickle file.
 
         :param  contents: The data to pickle
-        :param pickle_filename: The file name under which data is pickled."""
-
+        :param pickle_filename: The file name under which data is pickled.
+        """
         with open(os.path.join('/tmp', pickle_filename), 'wb') as handle:
             # IMPORTANT: Set pickle.HIGHEST_PROTOCOL only  after complete porting to
             # Python3
@@ -146,8 +143,8 @@ class TestData(object):
         """Generate all the required attributes of the class object.
 
         :param input_data_store: The datastore where the raw data is present.
-        :param additional_path: The directory where raw data is picked from."""
-
+        :param additional_path: The directory where raw data is picked from.
+        """
         self.load_package_list(input_data_store, additional_path)
         self.generate_freq_items()
         self.generate_whole_set()
@@ -158,8 +155,8 @@ class TestData(object):
         """Save all the required attributes of the class object.
 
         :param output_data_store: The datastore where the test data is to be put.
-        :param additional_path: The directory where test data is stored."""
-
+        :param additional_path: The directory where test data is stored.
+        """
         self.save_json_file(
             output_data_store,
             additional_path,
