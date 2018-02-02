@@ -1,3 +1,5 @@
+"""Package Topic Model that learns topics associated with a package."""
+
 import os
 
 from analytics_platform.kronos.gnosis.src.abstract_gnosis import AbstractGnosis
@@ -120,7 +122,9 @@ class GnosisPackageTopicModel(AbstractGnosis):
     @classmethod
     def _get_unknown_packages_from_manifests(cls, data_store, additional_path,
                                              package_topic_dict):
-        """Check the manifest files for packages that are missing in
+        """Retrieve packages missing in the packate topic dictionary from manifest files.
+
+        Check the manifest files for packages that are missing in
         the package topic map and collects them.
         """
         manifest_file_list = data_store.list_files(prefix=os.path.join(additional_path,

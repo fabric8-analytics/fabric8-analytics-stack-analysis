@@ -1,4 +1,5 @@
-"""
+"""Collects the package descriptions from S3 and dumps output into the JSON file.
+
 This script collects the description(s) for a tagged package from S3 core-data bucket,
 and dumps the aggregated output into the input bucket from where the package tag map
 was read.
@@ -17,6 +18,7 @@ logger = daiquiri.getLogger(__name__)
 
 def run(ecosystem='npm', bucket_name='prod-bayesian-core-data',
         input_data_path=''):
+    """Collect the package descriptions from S3 and dump output into the JSON file."""
     if not input_data_path:
         logger.warning("No data path given, not proceeding further.")
         return
