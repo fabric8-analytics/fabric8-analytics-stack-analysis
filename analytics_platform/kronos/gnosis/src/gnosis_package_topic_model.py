@@ -10,14 +10,14 @@ class GnosisPackageTopicModel(AbstractGnosis):
 
     def __init__(self, dictionary):
         """Instantiate Package Topic Model."""
-
         self._dictionary = dictionary
 
     @classmethod
     def train(cls, data_store):
         """:param data_store: The source for input data files.
-        :return: package_topic model."""
 
+        :return: package_topic model.
+        """
         # TODO: Train a package topic model from the data available in the given
         # data source. The input data is a collection of GitHub details like
         # package description, etc.
@@ -27,7 +27,7 @@ class GnosisPackageTopicModel(AbstractGnosis):
 
     @classmethod
     def curate(cls, data_store, filename, additional_path=""):
-        """Generate an instance of this class, contains the package topic map and topic package map
+        """Generate an instance of this class, contains the package topic map and topic package map.
 
         Reads curated package topic dict from the given store and makes every
         element to lower case, regenerates the package topic map and generated
@@ -37,8 +37,8 @@ class GnosisPackageTopicModel(AbstractGnosis):
         :param filename: name of the file containing curated data
         :param additional_path: Path on s3 where the manifest file folder is located
 
-        :return: Object of class GnosisPackageTopicModel."""
-
+        :return: Object of class GnosisPackageTopicModel.
+        """
         eco_to_package_topic_json_array = data_store.read_json_file(filename)
         eco_to_package_topic_dict = dict()
         eco_to_package_to_topic_dict = dict()
@@ -95,8 +95,8 @@ class GnosisPackageTopicModel(AbstractGnosis):
         """Save the Package Topic Model.
 
         :param data_store: destination Data store to store the model.
-        :param file_name: Name of the file that will contain model."""
-
+        :param file_name: Name of the file that will contain model.
+        """
         data_store.write_json_file(
             filename=filename, contents=self.get_dictionary())
 
@@ -105,22 +105,24 @@ class GnosisPackageTopicModel(AbstractGnosis):
         """Load the Package Topic Model.
 
         :param data_store: Data store to keep the model.
-        :param file_name: Name of the file that contains model."""
-
+        :param file_name: Name of the file that contains model.
+        """
         dictionary = data_store.read_json_file(filename)
         return GnosisPackageTopicModel(dictionary=dictionary)
 
     def get_dictionary(self):
-        """gets the dictionary
-        :return: a dict object"""
+        """Get the dictionary.
 
+        :return: a dict object
+        """
         return self._dictionary
 
     @classmethod
     def _get_unknown_packages_from_manifests(cls, data_store, additional_path,
                                              package_topic_dict):
-        """Checks the manifest files for packages that are missing in
-        the package topic map and collects them."""
+        """Check the manifest files for packages that are missing in
+        the package topic map and collects them.
+        """
         manifest_file_list = data_store.list_files(prefix=os.path.join(additional_path,
                                                    gnosis_constants.MANIFEST_FILEPATH))
         unknown_packages = {}

@@ -9,24 +9,28 @@ _logger = daiquiri.getLogger(__name__)
 
 
 class KronosDependencyGenerator(object):
-    """Kronos Dependency Generator: Responsible for generating the unweighted
-    Kronos Dependency Graph."""
+    """Kronos Dependency Generator.
+
+    This class is responsible for generating the unweighted Kronos Dependency Graph.
+    """
 
     def __init__(self, dictionary):
         """Instantiate Kronos Dependency Generator."""
-
         self._dictionary = dictionary
 
     @classmethod
     def generate_kronos_dependency(cls, gnosis_ref_arch_dict, package_to_topic_dict,
                                    topic_to_package_dict):
-        """Generate a soft net: component class topic model from the data
+        """Generate a soft net.
+
+        Soft net is a component class topic model created from the data
         available in the given data stores.
 
         :param data_store: Gnosis graph store.
         :param pkg_topic_store: Package Topic graph store.
 
-        :return: Object of class KronosDependencyGenerator."""
+        :return: Object of class KronosDependencyGenerator.
+        """
         _logger.info("Started kronos dependency graph generation")
         package_list = list(package_to_topic_dict.keys())
         component_class_list = gnosis_ref_arch_dict.get(
@@ -77,8 +81,8 @@ class KronosDependencyGenerator(object):
         """Save the Soft Net: Component Class Topic Model.
 
         :param data_store: Data store to keep the model.
-        :param file_name: Name of the file that will contain model."""
-
+        :param file_name: Name of the file that will contain model.
+        """
         kronos_dependency_dict = self._dictionary
         data_store.write_json_file(
             filename=filename, contents=kronos_dependency_dict)
@@ -88,8 +92,8 @@ class KronosDependencyGenerator(object):
         """Load the Soft Net: Component Class Topic Model.
 
         :param data_store: Data store to keep the model.
-        :param file_name: Name of the file that contains model."""
-
+        :param file_name: Name of the file that contains model.
+        """
         kronos_dependency_dict = data_store.read_json_file(filename)
         return KronosDependencyGenerator(kronos_dependency_dict)
 

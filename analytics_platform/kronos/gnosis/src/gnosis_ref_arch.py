@@ -16,24 +16,24 @@ class GnosisReferenceArchitecture(AbstractGnosis):
     """GnosisReferenceArchitecture i.e. Reference Architecture Generator."""
 
     def __init__(self, dictionary):
-        """Instantiates Gnosis Reference Architecture dictionary.
+        """Instantiate Gnosis Reference Architecture dictionary.
 
-        :param gnosis_model: the gnosis model."""
-
+        :param gnosis_model: the gnosis model.
+        """
         self._dictionary = dictionary
 
     @classmethod
     def train(cls, data_store, additional_path="", min_support_count=None,
               min_intent_topic_count=None, fp_num_partition=None, fp_tag_intent_limit=None):
-        """Generates the Gnosis Reference Architecture.
+        """Generate the Gnosis Reference Architecture.
 
         :param data_store: input data store containing the processed package
         topic map and list of manifest files.
         :param min_support_count: minimum support count to be used by FP Growth Algo.
         :param min_intent_topic_count: minimum number of allowed topics per intent.
 
-        :return: the Gnosis Reference Architecture dictionary."""
-
+        :return: the Gnosis Reference Architecture dictionary.
+        """
         gnosis_ptm_obj = GnosisPackageTopicModel.load(
             data_store=data_store,
             filename=os.path.join(additional_path, gnosis_constants.GNOSIS_PTM_OUTPUT_PATH))
@@ -80,24 +80,24 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
     @classmethod
     def load(cls, data_store, filename):
-        """Loads already saved Gnosis.
+        """Load already saved Gnosis.
 
         :param data_store: Data store to load Gnosis from.
         :param filename: the file from which Gnosis is to be loaded from.
 
-        :return: a Gnosis object."""
-
+        :return: a Gnosis object.
+        """
         gnosis_ra_json = data_store.read_json_file(filename=filename)
         gnosis_ra_dict = dict(gnosis_ra_json)
         gnosis_ra_obj = GnosisReferenceArchitecture(dictionary=gnosis_ra_dict)
         return gnosis_ra_obj
 
     def save(self, data_store, filename):
-        """Saves the Gnosis object in json format.
+        """Save the Gnosis object in json format.
 
         :param data_store: Data store to save Gnosis in
-        :param filename: the file into which Gnosis is to be saved."""
-
+        :param filename: the file into which Gnosis is to be saved.
+        """
         data_store.write_json_file(
             filename=filename, contents=self.get_dictionary())
         return None
@@ -107,12 +107,12 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
     @classmethod
     def _generate_component_class_list(clas, gnosis_intent_component_class_dict):
-        """Generates the component class list.
+        """Generate the component class list.
 
         :param gnosis_intent_component_class_dict: intent-component_class dict.
 
-        :return: the list of component classes."""
-
+        :return: the list of component classes.
+        """
         component_class_list = utils.generate_value_list_from_dict(
             dictionary=gnosis_intent_component_class_dict)
         return component_class_list
@@ -120,16 +120,17 @@ class GnosisReferenceArchitecture(AbstractGnosis):
     @classmethod
     def _generate_edge_list(cls, gnosis_intent_to_component_class_dict,
                             gnosis_intent_to_intent_dict):
-        """Generates the list of edges as the list of tuples
-        [(source,destination),(source,destination),...].
+        """Generate the list of edges as the list of tuples.
+
+        If a form: [(source,destination),(source,destination),...].
 
         :param gnosis_intent_to_component_class_dict: lowest level of Gnosis
         hierarchy in dict format.
         :param gnosis_intent_to_intent_dict: all the levels except the lowest
         level of Gnosis hierarchy in dict format.
 
-        :return: list of edges where edges are represented as tuples."""
-
+        :return: list of edges where edges are represented as tuples.
+        """
         intent_to_component_class_edge_list = utils.generate_key_to_value_edges(
             dictionary=gnosis_intent_to_component_class_dict)
         intent_to_intent_edge_list = utils.generate_key_to_value_edges(
@@ -140,13 +141,13 @@ class GnosisReferenceArchitecture(AbstractGnosis):
     @classmethod
     def _generate_intent_list(cls, gnosis_intent_to_intent_dict,
                               gnosis_intent_to_component_class_dict):
-        """Generates the list of intents.
+        """Generate the list of intents.
 
         :param gnosis_intent_to_intent_dict: all the levels except the lowest
         level of Gnosis hierarchy in dict format.
 
-        :return: list of intents."""
-
+        :return: list of intents.
+        """
         super_intent_list = gnosis_intent_to_intent_dict.keys()
         sub_intent_list = utils.generate_value_list_from_dict(
             gnosis_intent_to_intent_dict)
@@ -160,7 +161,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
     def _generate_gnosis_model(cls, gnosis_intent_to_intent_dict,
                                gnosis_intent_to_component_class_dict, gnosis_component_class_list,
                                gnosis_intent_list, gnosis_edge_list):
-        """Generates the Gnosis model.
+        """Generate the Gnosis model.
 
         :param gnosis_edge_list_string: list of edges in the string format
         '[(source,destination),(source,destination),...]'.
@@ -169,8 +170,8 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         :param gnosis_component_class_list: Component class list.
         :param gnosis_intent_list: Intent list.
 
-        :return: Gnosis model."""
-
+        :return: Gnosis model.
+        """
         gnosis_ra_dict = dict()
         gnosis_ra_dict[gnosis_constants.GNOSIS_RA_DICT] = \
             dict(gnosis_intent_to_intent_dict,
