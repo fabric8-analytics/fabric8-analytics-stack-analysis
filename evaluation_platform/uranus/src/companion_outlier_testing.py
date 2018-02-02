@@ -38,8 +38,8 @@ class CompanionOutlierAccuracy(Accuracy):
         """Load the attributes of the class object.
 
         :param input_data_store: The place to fetch the data from.
-        :param additional_path: The directory to pick the manifest files from."""
-
+        :param additional_path: The directory to pick the manifest files from.
+        """
         complete_output_filename = os.path.join(
             additional_path, URANUS_OUTPUT_PATH, "comp_test_set.pickle")
         self.test_set = input_data_store.load_pickle_file(
@@ -50,8 +50,8 @@ class CompanionOutlierAccuracy(Accuracy):
     def predict_and_score(self, input_json):
         """Call the scoring fcuntion of Kronos Online Scoring.
 
-        :return: The recommendation JSON result."""
-
+        :return: The recommendation JSON result.
+        """
         return score_eco_user_package_dict(
             user_request=input_json,
             user_eco_kronos_dict=self.user_eco_kronos_dict,
@@ -64,8 +64,8 @@ class CompanionOutlierAccuracy(Accuracy):
 
         :param package_list: The list containing user stack.
 
-        :return: Required input JSON."""
-
+        :return: Required input JSON.
+        """
         return [
             {
                 "ecosystem": KRONOS_SCORING_REGION,
@@ -79,7 +79,6 @@ class CompanionOutlierAccuracy(Accuracy):
 
     def get_unique_item_len(self):
         """Return the number of unique packages present in the test set."""
-
         unique_count = 0
         for each_set in self.test_set:
             unique_count += len(each_set)
@@ -87,14 +86,15 @@ class CompanionOutlierAccuracy(Accuracy):
 
     def companion_outlier_precision(self):
         """Score each test set and generate the recommendations.
+
         For each companion recommendation check its presence in the search set.
         If companion subset matches increase the true positive counter
             else the false positive counter.
         For each outlier recommendation, increase the count for number of outliers found.
 
         :return companion_precision_result: The evaluation result for companion packages.
-        :return outliers_precision_result: The evaluation result for outliers packages."""
-
+        :return outliers_precision_result: The evaluation result for outliers packages.
+        """
         companion_precision_result = {
             "Number of Test Cases": self.unique_items_len}
         outlier_precision_result = {

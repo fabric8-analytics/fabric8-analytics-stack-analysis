@@ -1,4 +1,5 @@
-"""
+"""Job to collect and process version info for missing packages.
+
 This job collects the latest version available in the core-data bucket for
 a package and dumps an aggregated map of the package_name:version_name mapping
 into the bucket from where the input missing package list was read.

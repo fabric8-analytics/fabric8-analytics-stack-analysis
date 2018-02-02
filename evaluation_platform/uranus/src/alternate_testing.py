@@ -27,8 +27,8 @@ class AlternateAccuracy(Accuracy):
         """Load a file from within a datastore.
 
         :param input_data_store: The datastore from where file is picked.
-        :param filename: The file to be loaded."""
-
+        :param filename: The file to be loaded.
+        """
         return input_data_store.read_json_file(
             filename)
 
@@ -36,8 +36,8 @@ class AlternateAccuracy(Accuracy):
         """Load the required attributes of the class object.
 
         :param input_data_store: The datastore where test data is present.
-        :param additional_path: The directory where test data is loaded from."""
-
+        :param additional_path: The directory where test data is loaded from.
+        """
         input_filename = os.path.join(
             additional_path, URANUS_OUTPUT_PATH, "reverse_dict.json")
         self.unique_package_dict = self.load(
@@ -62,8 +62,8 @@ class AlternateAccuracy(Accuracy):
         :param alternate_package: The PGM recommended alternate package.
         :param alternate_to: The user package for which alternate is recommended.
 
-        :return: A set() of user_stack + alternate_package - alternate_to."""
-
+        :return: A set() of user_stack + alternate_package - alternate_to.
+        """
         if alternate_package is None or alternate_to is None or len(input_list) == 0:
             return frozenset()
         return frozenset([alternate_package if package == alternate_to else package
@@ -71,12 +71,13 @@ class AlternateAccuracy(Accuracy):
 
     def alternate_precision(self):
         """Test all similarity packages.
+
         For each alternate recommendation check its presence in the original manifest list.
         If alternate subset matches increase the true positive counter
             else the false positive counter.
 
-        :return alternate_precision_result: The evaluation result for alternate packages."""
-
+        :return alternate_precision_result: The evaluation result for alternate packages.
+        """
         alternate_precision_result = {
             "Number of Test Cases": self.test_set_len}
         t0 = time.time()
