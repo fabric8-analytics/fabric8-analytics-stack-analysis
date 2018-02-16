@@ -15,3 +15,4 @@ DEPLOYMENT_PREFIX = os.environ.get("DEPLOYMENT_PREFIX", "")
 
 SPARK_HOME_PATH = os.environ.get("SPARK_HOME", "")
 PY4J_VERSION = os.environ.get("PY4J_VERSION", "")
+USE_FILTERS = os.environ.get("USE_FILTERS", True)

@@ -16,7 +16,7 @@ from analytics_platform.kronos.deployment.submit_training_job import submit_job
 import analytics_platform.kronos.gnosis.src.gnosis_constants as gnosis_constants
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
 from analytics_platform.kronos.src.config import (
-    AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION)
+    AWS_BUCKET_NAME, KRONOS_MODEL_PATH, KRONOS_SCORING_REGION, USE_FILTERS)
 from analytics_platform.kronos.src.kronos_online_scoring import (
     load_user_eco_to_kronos_model_dict_s3, score_eco_user_package_dict,
     load_package_frequency_dict_s3)
@@ -53,6 +53,7 @@ global user_eco_kronos_dict
 global eco_to_kronos_dependency_dict
 global scoring_status
 global all_package_list_obj
+global use_filters
 
 hash_dict = dict()
 
@@ -72,7 +73,7 @@ if KRONOS_SCORING_REGION != "":
                                                                 additional_path=KRONOS_MODEL_PATH)
 
     app.scoring_status = True
-
+    app.use_filters = USE_FILTERS
     app.logger.info("The total manifest file for this ecosystem are: %d" %
                     app.all_package_list_obj.get_all_list_package_length())
 else:
@@ -147,12 +148,14 @@ def predict_and_score():
                 user_eco_kronos_dict=app.user_eco_kronos_dict,
                 eco_to_kronos_dependency_dict=app.eco_to_kronos_dependency_dict,
                 all_package_list_obj=app.all_package_list_obj,
-                package_frequency_dict=app.package_frequency_dict)
+                package_frequency_dict=app.package_frequency_dict,
+                use_filters=app.use_filters)
 
         app.logger.info("Sending back Kronos Response")
         app.logger.info(response)
         hash_dict[hash_key] = response
     else:
+        app.logger.info("Sending back Cached Response")
         response = hash_dict[hash_key]
     return flask.jsonify(response)
 

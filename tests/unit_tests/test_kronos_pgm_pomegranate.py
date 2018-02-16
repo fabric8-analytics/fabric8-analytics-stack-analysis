@@ -6,7 +6,7 @@ from analytics_platform.kronos.src.kronos_online_scoring import score_eco_user_p
 from analytics_platform.kronos.pgm.src.pgm_constants import KD_PACKAGE_FREQUENCY
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
 from util.data_store.local_filesystem import LocalFileSystem
-
+from analytics_platform.kronos.src.config import USE_FILTERS
 from unittest import TestCase
 import os
 
@@ -95,7 +95,8 @@ class TestKronosPomegranate(TestCase):
             user_eco_kronos_dict=user_eco_kronos_dict,
             eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict,
             all_package_list_obj=all_package_list_obj,
-            package_frequency_dict=frequency_dict)
+            package_frequency_dict=frequency_dict,
+            use_filters=USE_FILTERS)
 
         self.assertIsNotNone(response)
 
@@ -158,7 +159,8 @@ class TestKronosPomegranate(TestCase):
             user_request, user_eco_kronos_dict=user_eco_kronos_dict,
             eco_to_kronos_dependency_dict=eco_to_kronos_dependency_dict,
             all_package_list_obj=all_package_list_obj,
-            package_frequency_dict=frequency_dict)
+            package_frequency_dict=frequency_dict,
+            use_filters=USE_FILTERS)
 
         self.assertIsNotNone(response)
 
