@@ -8,10 +8,6 @@ ADD ./tests/ /tests
 ADD ./tests/scripts/entrypoint-test.sh /entrypoint-test.sh
 RUN chmod +x /entrypoint-test.sh
 
-ADD ./analytics_platform /analytics_platform
-ADD ./tagging_platform /tagging_platform
-ADD ./evaluation_platform /evaluation_platform
-
 # Begin spark installation
 RUN yum install -y java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64 wget && \
     wget https://downloads.lightbend.com/scala/2.12.2/scala-2.12.2.tgz && \
@@ -25,7 +21,7 @@ RUN export java_version="`ls /usr/lib/jvm` | grep java-1.8.0-openjdk-"
 RUN export JAVA_HOME="/usr/lib/jvm/${java_version}/jre"
 ENV SPARK_HOME=/usr/local/spark
 ENV PATH=/usr/local/maven/bin:$JAVA_HOME/bin:$SPARK_HOME/bin:/usr/local/scala/bin:$PATH
-ENV PYTHONPATH=/
+ENV PYTHONPATH=.
 
 RUN python -m pip install pytest py4j pytest-cov coverage
 
