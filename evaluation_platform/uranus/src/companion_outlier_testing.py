@@ -9,7 +9,8 @@ from analytics_platform.kronos.src.config import (
     KRONOS_SCORING_REGION)
 from analytics_platform.kronos.src.kronos_online_scoring import (
     load_user_eco_to_kronos_model_dict_s3,
-    score_eco_user_package_dict)
+    score_eco_user_package_dict,
+    load_package_frequency_dict_s3)
 from evaluation_platform.uranus.src.uranus_constants import (
     COMPANION_COUNT_THRESHOLD,
     ALTERNATE_COUNT_THRESHOLD,
@@ -17,7 +18,7 @@ from evaluation_platform.uranus.src.uranus_constants import (
     UNKNOWN_PROBABILITY_THRESHOLD,
     URANUS_OUTPUT_PATH)
 from evaluation_platform.uranus.src.super_class import Accuracy
-
+from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
 import daiquiri
 import logging
 
@@ -31,6 +32,10 @@ class CompanionOutlierAccuracy(Accuracy):
         super(CompanionOutlierAccuracy, self).__init__()
         self.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(
             bucket_name=AWS_BUCKET_NAME, additional_path=KRONOS_MODEL_PATH)
+        self.package_frequency_dict = load_package_frequency_dict_s3(
+            bucket_name=AWS_BUCKET_NAME, additional_path=KRONOS_MODEL_PATH)
+        self.all_package_list_obj = RecommendationValidator.load_package_list_s3(
+            input_bucket_name=AWS_BUCKET_NAME, additional_path=KRONOS_MODEL_PATH)
         self.test_set = set()
         self.unique_items_len = 0
 
@@ -56,7 +61,9 @@ class CompanionOutlierAccuracy(Accuracy):
             user_request=input_json,
             user_eco_kronos_dict=self.user_eco_kronos_dict,
             eco_to_kronos_dependency_dict=self.eco_to_kronos_dependency_dict,
-            all_package_list_obj=None)
+            all_package_list_obj=self.all_package_list_obj,
+            package_frequency_dict=self.package_frequency_dict,
+            use_filters=False)
 
     @staticmethod
     def create_input_dict(package_list):

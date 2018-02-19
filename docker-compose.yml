@@ -18,6 +18,7 @@ services:
       SPARK_HOME: "/usr/local/spark"
       PY4J_VERSION: "py4j-0.10.4-src.zip"
       GREMLIN_REST_URL: "${GREMLIN_REST_URL}"  # <url>:<port>
+      USE_FILTERS: "${USE_FILTERS}"
       # FLASK_LOGGING_LEVEL: "DEBUG"
     ports:
         - "6006:6006"
