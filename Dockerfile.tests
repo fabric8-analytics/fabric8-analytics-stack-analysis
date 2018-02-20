@@ -21,9 +21,9 @@ RUN export java_version="`ls /usr/lib/jvm` | grep java-1.8.0-openjdk-"
 RUN export JAVA_HOME="/usr/lib/jvm/${java_version}/jre"
 ENV SPARK_HOME=/usr/local/spark
 ENV PATH=/usr/local/maven/bin:$JAVA_HOME/bin:$SPARK_HOME/bin:/usr/local/scala/bin:$PATH
-ENV PYTHONPATH=/
+ENV PYTHONPATH=.
 
-RUN python -m pip install pytest py4j
+RUN python -m pip install pytest py4j pytest-cov coverage
 
 # --------------------------------------------------------------------------------------------------
 # RUN THE UNIT TESTS
