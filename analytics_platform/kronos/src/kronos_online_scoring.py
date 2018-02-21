@@ -307,12 +307,10 @@ def score_kronos(kronos, requested_package_set, kronos_dependency, comp_package_
             kronos, observed_package_list, package_to_topic_dict,
             outlier_package_count_threshold, all_package_list_obj, package_frequency_dict)
 
-        companion_package_dict_list = get_companion_package_dict(
+        companion_package_dict_list_pruned = get_companion_package_dict(
             result=companion_recommendation_dict,
             package_list=package_list,
             non_companion_packages=non_companion_packages)
-
-        companion_package_dict_list_pruned = companion_package_dict_list[:]
 
         companion_package_dict_same_name_pruned = \
             [companion_package for companion_package in companion_package_dict_list_pruned

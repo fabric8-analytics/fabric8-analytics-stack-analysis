@@ -60,6 +60,12 @@ docker-compose -f docker-compose.yml -f docker-compose-data-model.yml up
 PYTHONPATH=`pwd` python evaluation_platform/uranus/src/kronos_offline_evaluation.py
 ```
 
+## To Run Training Locally
+
+```bash
+PYTHONPATH=`pwd` python analytics_platform/kronos/src/kronos_offline_training.py
+```
+
 ## Deploy to openshift cluster
 
 - Create project
