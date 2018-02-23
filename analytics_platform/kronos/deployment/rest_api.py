@@ -28,7 +28,7 @@ from tagging_platform.helles.npm_tagger.get_version_info_for_missing_packages im
     run_missing_package_version_collection_job
 from evaluation_platform.uranus.deployment.submit_evaluation_job import (
     submit_evaluation_job)
-
+from util.analytics_platform_util import convert_string2bool_env
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 
@@ -73,7 +73,7 @@ if KRONOS_SCORING_REGION != "":
                                                                 additional_path=KRONOS_MODEL_PATH)
 
     app.scoring_status = True
-    app.use_filters = USE_FILTERS
+    app.use_filters = convert_string2bool_env(USE_FILTERS)
     app.logger.info("The total manifest file for this ecosystem are: %d" %
                     app.all_package_list_obj.get_all_list_package_length())
 else:
