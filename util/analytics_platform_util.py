@@ -67,4 +67,8 @@ def load_package_list(input_data_store, additional_path):
 
 
 def convert_string2bool_env(parameter):
+    """Convert the String True/False to its boolean form.
+
+    :param parameter: The string that needs to be converted.
+    """
     return parameter.lower() == "true"
