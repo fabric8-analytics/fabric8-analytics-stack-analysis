@@ -112,7 +112,7 @@ parameters:
   displayName: Memory limit
   required: true
   name: MEMORY_LIMIT
-  value: "1280Mi"
+  value: "2048Mi"
 
 - description: Docker registry where the image is
   displayName: Docker registry
