@@ -1,7 +1,11 @@
+"""Base abstract Gnosis class to be implemented by other classes."""
+
 from abc import ABCMeta, abstractmethod
 
 
 class AbstractGnosis(object):
+    """Base abstract Gnosis class to be implemented by other classes."""
+
     __metaclass__ = ABCMeta
 
     @abstractmethod

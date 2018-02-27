@@ -1,3 +1,5 @@
+"""Kronos Dependency Generator."""
+
 import analytics_platform.kronos.softnet.src.softnet_constants as softnet_constants
 import util.softnet_util as softnet_utils
 from util.data_store.local_filesystem import LocalFileSystem
@@ -120,6 +122,7 @@ class KronosDependencyGenerator(object):
         return component_class_to_package_edge_list, component_class_to_package_dict
 
     def get_dictionary(self):
+        """Return the dictionary."""
         return self._dictionary
 
     @classmethod

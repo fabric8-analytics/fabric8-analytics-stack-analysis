@@ -1,3 +1,5 @@
+"""Gnosis module offline training."""
+
 import sys
 import time
 import os
@@ -13,6 +15,7 @@ def train_and_save_gnosis_ref_arch(input_data_store, output_data_store, addition
                                    fp_min_support_count,
                                    fp_intent_topic_count_threshold,
                                    fp_num_partition):
+    """Train the Gnosis reference architecture and store it."""
     gnosis_ref_arch_obj = GnosisReferenceArchitecture.train(
         data_store=input_data_store,
         additional_path=additional_path,
@@ -70,6 +73,7 @@ def generate_and_save_gnosis_package_topic_model(input_data_store, output_data_s
 
 
 def generate_and_save_gnosis_package_topic_model_s3(training_data_url):
+    """Generate and save Gnosis package topic model into S3."""
     input_bucket_name, output_bucket_name, additional_path = get_path_names(
         training_data_url)
     input_data_store = S3DataStore(src_bucket_name=input_bucket_name,
