@@ -1,3 +1,5 @@
+"""Base class for other models."""
+
 # NOTE: Currently works only with S3DataStore
 import time
 import os
@@ -14,8 +16,10 @@ from evaluation_platform.uranus.src.uranus_constants import URANUS_OUTPUT_PATH
 
 
 class Accuracy(object):
+    """Base class for other models."""
 
     def __init__(self):
+        """Initialize this class, load Kronos dependency list from the S3."""
         self.eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict_s3(
             bucket_name=AWS_BUCKET_NAME, additional_path=KRONOS_MODEL_PATH)
         self.search_set = set()

@@ -1,3 +1,5 @@
+"""Script to generate test data."""
+
 from analytics_platform.kronos.src.config import (
     SPARK_HOME_PATH,
     PY4J_VERSION,
@@ -23,8 +25,10 @@ from evaluation_platform.uranus.src.uranus_constants import (
 
 
 class TestData(object):
+    """Script to generate test data."""
 
     def __init__(self):
+        """Initialize this class."""
         self.all_list_of_package_list = []
         self.search_set = set()
         self.freq_items_4 = []
