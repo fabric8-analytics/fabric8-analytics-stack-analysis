@@ -1,3 +1,5 @@
+"""Tests for the coocurrence matrix generator."""
+
 from pandas.util.testing import assert_frame_equal
 
 from analytics_platform.kronos.src import config
@@ -11,8 +13,10 @@ from unittest import TestCase
 
 
 class TestCooccurrenceMatrixGenerator(TestCase):
+    """Tests for the coocurrence matrix generator."""
 
     def test_generate_and_save_cooccurrence_matrices_local(self):
+        """Test the method generate_cooccurrence_matrix() and the ability to serialization."""
         input_data_store = LocalFileSystem(
             "tests/data/data_softnet/input-com-data/")
         self.assertTrue(input_data_store is not None)

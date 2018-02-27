@@ -1,3 +1,5 @@
+"""Tests for the Kronos dependency generator."""
+
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.softnet.src.kronos_dependency_generator \
     import KronosDependencyGenerator
@@ -7,8 +9,10 @@ from unittest import TestCase
 
 
 class TestKronosDependencyGenerator(TestCase):
+    """Tests for the Kronos dependency generator."""
 
     def test_generate_and_save_kronos_dependency_local(self):
+        """Test the method generate_kronos_dependency() and the ability to serialize results."""
         input_data_store = LocalFileSystem(
             "tests/data/data_softnet/input-kd-data/")
         self.assertTrue(input_data_store is not None)

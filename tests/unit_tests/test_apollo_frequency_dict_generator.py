@@ -1,3 +1,5 @@
+"""Tests for the class FrequencyDictGenerator."""
+
 from unittest import TestCase
 
 from analytics_platform.kronos.apollo.src.apollo_generate_frequency_dict import \
@@ -7,8 +9,10 @@ from util.data_store.local_filesystem import LocalFileSystem
 
 
 class TestFrequencyDictGenerator(TestCase):
+    """Tests for the class FrequencyDictGenerator."""
 
     def test_generate_and_save_package_frequency_dict_local(self):
+        """Test the frequency dict generator and its serialization."""
         input_data_store = LocalFileSystem(
             src_dir="tests/data/data_gnosis/input-ra-data/"
         )

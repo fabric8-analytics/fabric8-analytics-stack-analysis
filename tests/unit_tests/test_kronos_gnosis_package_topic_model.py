@@ -1,3 +1,5 @@
+"""Tests for the class GnosisPackageTopicModel."""
+
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
 from util.data_store.local_filesystem import LocalFileSystem
@@ -7,8 +9,10 @@ from unittest import TestCase
 
 
 class TestGnosisPackageTopicModel(TestCase):
+    """Tests for the class GnosisPackageTopicModel."""
 
     def test_generate_and_save_package_topic_model_local(self):
+        """Tests the topic model generation, serialization, and deserialization."""
         input_data_store = LocalFileSystem(
             "tests/data/data_gnosis/input-ptm-data/")
         self.assertTrue(input_data_store is not None)
@@ -38,6 +42,7 @@ class TestGnosisPackageTopicModel(TestCase):
         self.assertDictEqual(output_result, expected_output_result)
 
     def test_manifest_missing_packages(self):
+        """Test the method _get_unknown_packages_from_manifests."""
         input_data_store = LocalFileSystem(
             "tests/data/data_gnosis/")
         self.assertTrue(input_data_store is not None)
@@ -55,6 +60,7 @@ class TestGnosisPackageTopicModel(TestCase):
         self.assertListEqual(sorted(package_list[0]), sorted(packages.keys()))
 
     def test_package_tag_creation(self):
+        """Test the creation of package tags."""
         input_data_store = LocalFileSystem(
             "tests/data/data_gnosis/input-ptm-data/")
         self.assertTrue(input_data_store is not None)
