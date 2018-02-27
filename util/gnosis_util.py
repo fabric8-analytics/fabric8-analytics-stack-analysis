@@ -1,3 +1,6 @@
+"""Various utility functions prepared for the Gnosis module."""
+
+
 def generate_value_list_from_dict(dictionary):
     """Create a list of all the values of a dict after de-dup.
 
@@ -34,6 +37,7 @@ def generate_key_to_value_edges(dictionary):
 
 
 def modify_list(key, k_itemset_list, index):
+    """Remove selected items from the given list."""
     counter = 0
     items_to_remove = list()
     for items in k_itemset_list:

@@ -1,3 +1,5 @@
+"""Various utility functions prepared for the analytics platform module."""
+
 from nltk.tokenize import wordpunct_tokenize
 import string
 import os
