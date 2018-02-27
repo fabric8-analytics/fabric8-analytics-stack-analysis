@@ -1,3 +1,5 @@
+"""GnosisReferenceArchitecture i.e. Reference Architecture Generator."""
+
 from analytics_platform.kronos.src.config import SPARK_HOME_PATH, PY4J_VERSION
 import os
 import sys
@@ -103,6 +105,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         return None
 
     def get_dictionary(self):
+        """Get the dictionary."""
         return self._dictionary
 
     @classmethod
@@ -280,6 +283,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
 
     @classmethod
     def get_topic_list_for_package_list(cls, package_list, ecosystem, eco_to_package_topic_dict):
+        """Get list of topics for given ecosystem and package list."""
         # TODO raise exception when package or ecosystem is not there in
         # eco_to_package_topic_dict
         topic_set = set()

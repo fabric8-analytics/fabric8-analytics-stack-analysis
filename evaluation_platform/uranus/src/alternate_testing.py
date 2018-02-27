@@ -1,3 +1,5 @@
+"""Test all similarity packages."""
+
 import time
 import os
 
@@ -15,8 +17,10 @@ _logger = daiquiri.getLogger(__name__)
 
 
 class AlternateAccuracy(Accuracy):
+    """Test all similarity packages."""
 
     def __init__(self):
+        """Initialize this class."""
         super(AlternateAccuracy, self).__init__()
         self.freq_items_4 = []
         self.unique_package_dict = {}
@@ -56,7 +60,7 @@ class AlternateAccuracy(Accuracy):
             additional_path)
 
     def generate_alternate_dependency_set(self, input_list, alternate_package, alternate_to):
-        """Replace the  alternate package in the current input list to generate a new test stack.
+        """Replace the alternate package in the current input list to generate a new test stack.
 
         :param input_list: The original package list of the user stack.
         :param alternate_package: The PGM recommended alternate package.

@@ -1,3 +1,5 @@
+"""Simple HTTP client to post JSON data to service."""
+
 import requests
 import daiquiri
 import logging
@@ -7,6 +9,7 @@ _logger = daiquiri.getLogger(__name__)
 
 
 def post(url, json_data):
+    """Post JSON data to service."""
     response = requests.post(url, json=json_data)
 
     # TODO: check for error and raise exception

@@ -201,7 +201,9 @@ class RecommendationValidator(object):
         return filtered_input_list
 
     def get_all_list_package_length(self):
+        """Return the attribute manifest_len."""
         return self.manifest_len
 
     def get_all_list_of_package_set(self):
+        """Return the attribute all_list_of_package_set."""
         return self.all_list_of_package_set

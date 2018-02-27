@@ -1,3 +1,5 @@
+"""Tests for the GnosisReferenceArchitecture."""
+
 from analytics_platform.kronos.src import config
 from analytics_platform.kronos.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
 from util.data_store.local_filesystem import LocalFileSystem
@@ -9,8 +11,10 @@ from unittest import TestCase
 
 
 class TestGnosisReferenceArchitecture(TestCase):
+    """Tests for the GnosisReferenceArchitecture."""
 
     def test_train_and_save_gnosis_ref_arch_local(self):
+        """Test the train() method, the deserialization method and compare results."""
         input_data_store = LocalFileSystem(
             "tests/data/data_gnosis/input-ra-data/")
         self.assertTrue(input_data_store is not None)
