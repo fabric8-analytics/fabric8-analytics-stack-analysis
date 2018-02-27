@@ -17,6 +17,7 @@ logger = daiquiri.getLogger(__name__)
 
 
 def run_job(input_data_path=''):
+    """Run job to collect and process version info for missing packages."""
     if not input_data_path:
         logger.warning("No input data path given, gracefully exiting.")
         return

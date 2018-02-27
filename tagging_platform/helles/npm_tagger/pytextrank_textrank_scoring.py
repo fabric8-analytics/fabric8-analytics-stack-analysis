@@ -1,3 +1,5 @@
+"""Process the selected manifest, generate tags from it and store them in AWS S3."""
+
 # -*- coding: UTF-8 -*-
 import json
 import pytextrank
@@ -40,6 +42,7 @@ def getNPMdescription(package_name):
 
 
 def returnContentIfAscii(text):
+    """Return the content in case it consist mostly of ASCII characters."""
     encoded = ''.join([i if ord(i) < 128 else ' ' for i in text]).strip()
     # If at least 80% of the content is ascii we can run tagging
     if len(encoded) >= 0.80 * len(text):
@@ -59,6 +62,7 @@ def returnContentIfAscii(text):
               help='Path to the manifest file collection',
               default='')
 def main(bucket_name, package_name, manifest_path):
+    """Process the selected manifest."""
     s3_bucket = s3_data_store.S3DataStore(src_bucket_name=bucket_name,
                                           access_key=config.AWS_S3_ACCESS_KEY_ID,
                                           secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
@@ -102,6 +106,7 @@ def main(bucket_name, package_name, manifest_path):
 
 
 def process_readme(idx, readme_filename, s3_bucket):
+    """Process the REAMDE file if exists."""
     if readme_filename.startswith('npm/'):
         package_name = readme_filename[len('npm/'):]
     if package_name.endswith('/README.json'):
@@ -159,6 +164,7 @@ def process_readme(idx, readme_filename, s3_bucket):
 
 
 def markdown_preprocess(markdown_content):
+    """Preprocess content written in Markdown language."""
     readme_rendered = mistune.markdown(markdown_content, escape=False)
     soup = BeautifulSoup(readme_rendered, "html.parser")
     # Replace anchors with content where relevant and extract otherwise
@@ -177,12 +183,14 @@ def markdown_preprocess(markdown_content):
 
 
 def load_stopwords():
+    """Load set of stop words."""
     global stopwords
     with open("custom_stopwords.txt") as stopwords_file:
         stopwords = set(stopwords_file.read().strip().split('\n'))
 
 
 def execute_stage_one(path_stage0):
+    """Execute the first stage of processing."""
     path_stage1 = path_stage0.split('::')[0] + ".stage1.output.dat"
     with open(os.path.join(PATH_PREFIX, path_stage1), 'w') as f:
         for graf in pytextrank.parse_doc(pytextrank.json_iter(
@@ -192,6 +200,7 @@ def execute_stage_one(path_stage0):
 
 
 def execute_stage_two(path_stage1):
+    """Execute the second stage of processing."""
     graph, ranks = pytextrank.text_rank(os.path.join(PATH_PREFIX, path_stage1))
     pytextrank.render_ranks(graph, ranks)
     path_name_components = path_stage1.split('.')
@@ -205,12 +214,14 @@ def execute_stage_two(path_stage1):
 
 
 def get_key_phrases(path_stage2):
+    """Get all found key phrases."""
     phrases = set([p for p in pytextrank.limit_keyphrases(
         os.path.join(PATH_PREFIX, path_stage2), phrase_limit=3)])
     return phrases
 
 
 def run_pipeline(stage0_filename):
+    """Run the processing pipeline."""
     _logger.info("Running pipeline for: " + stage0_filename)
     stage1_filename = execute_stage_one(stage0_filename)
     stage2_filename = execute_stage_two(stage1_filename)
@@ -222,6 +233,7 @@ def run_pipeline(stage0_filename):
 
 
 def write_tag_batch_to_s3(tag_dict, single=False, manifest=False):
+    """Write the dictionary with tags into AWS S3."""
     tags_output_bucket = s3_data_store.S3DataStore(src_bucket_name='avgupta-stack-analysis-dev',
                                                    access_key=config.AWS_S3_ACCESS_KEY_ID,
                                                    secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
