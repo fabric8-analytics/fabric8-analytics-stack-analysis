@@ -217,7 +217,21 @@ BODY: JSON data
 ```
 
 
-## Latest Depolyment
+## Latest Deployment
 
 * Maven
 	* Retrained on: 2018-01-02 22:30 (UTC+5:30)
+
+
+## Coding standards
+
+You can use scripts to check if the code follows PEP8 coding standards. How to use these script:
+
+```
+./run-linter.sh
+./check-docstyle.sh
+```
+
+The first script checks the indentation, line lengths, variable names, whitespace around operators etc. The second
+script checks all documentation strings - its presense and format. Please fix any warnings and errors reported by these
+scripts.
