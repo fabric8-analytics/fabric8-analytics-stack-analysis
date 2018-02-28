@@ -1,3 +1,5 @@
+"""Functions to perform offline training for Kronos softnet."""
+
 import os
 from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator import \
     CooccurrenceMatrixGenerator
@@ -10,6 +12,7 @@ from util.analytics_platform_util import get_path_names
 
 
 def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, additional_path):
+    """Load the Kronos dependency dictionary from the selected storage."""
     eco_to_kronos_dependency_dict = dict()
     kd_filenames = input_kronos_dependency_data_store.list_files(
         os.path.join(additional_path, softnet_constants.KD_OUTPUT_FOLDER))
@@ -25,6 +28,7 @@ def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, addit
 
 def generate_and_save_kronos_dependency(input_gnosis_data_store, input_package_topic_data_store,
                                         output_data_store, additional_path):
+    """Generate Kronos dependency and save it to the selected storage."""
     gnosis_ref_arch_json = \
         input_gnosis_data_store.read_json_file(filename=os.path.join(
                                                additional_path,
@@ -62,6 +66,7 @@ def generate_and_save_kronos_dependency(input_gnosis_data_store, input_package_t
 
 
 def generate_and_save_kronos_dependency_s3(training_data_url):
+    """Generate Kronos dependency and save it to the AWS S3 storage."""
     input_bucket_name, output_bucket_name, additional_path = get_path_names(
         training_data_url)
     input_gnosis_data_store = S3DataStore(src_bucket_name=input_bucket_name,
@@ -85,6 +90,7 @@ def generate_and_save_kronos_dependency_s3(training_data_url):
 def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store,
                                             input_manifest_data_store, output_data_store,
                                             additional_path):
+    """Generate and save cooccurrence matrices into the selected storage."""
     eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
         input_kronos_dependency_data_store=input_kronos_dependency_data_store,
         additional_path=additional_path)
@@ -121,6 +127,7 @@ def generate_and_save_cooccurrence_matrices(input_kronos_dependency_data_store,
 
 
 def generate_and_save_cooccurrence_matrices_s3(training_data_url):
+    """Generate and save cooccurrence matrices into the AWS S3 storage."""
     input_bucket_name, output_bucket_name, additional_path = get_path_names(
         training_data_url)
     input_kronos_dependency_data_store = S3DataStore(src_bucket_name=input_bucket_name,
