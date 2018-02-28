@@ -1,3 +1,5 @@
+"""Functions to perform offline training for Kronos PGM."""
+
 import sys
 import time
 import os
@@ -9,6 +11,7 @@ from util.data_store.s3_data_store import S3DataStore
 
 
 def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, additional_path):
+    """Load the Kronos dependency dictionary from the selected storage."""
     eco_to_kronos_dependency_dict = dict()
 
     filenames = input_kronos_dependency_data_store.list_files(os.path.join(
@@ -25,6 +28,7 @@ def load_eco_to_kronos_dependency_dict(input_kronos_dependency_data_store, addit
 
 
 def load_eco_to_kronos_dependency_dict_s3(bucket_name, additional_path):
+    """Load the Kronos dependency dictionary from the AWS S3 storage."""
     input_data_store = S3DataStore(src_bucket_name=bucket_name,
                                    access_key=config.AWS_S3_ACCESS_KEY_ID,
                                    secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
@@ -35,6 +39,7 @@ def load_eco_to_kronos_dependency_dict_s3(bucket_name, additional_path):
 
 
 def load_user_eco_to_co_occerrence_matrix_dict(input_co_occurrence_data_store, additional_path):
+    """Create the cooccurrence matrix from user categories."""
     com_filenames = input_co_occurrence_data_store.list_files(os.path.join(
         additional_path, pgm_constants.COM_OUTPUT_FOLDER))
 
@@ -67,6 +72,7 @@ def load_user_eco_to_co_occerrence_matrix_dict(input_co_occurrence_data_store, a
 
 def train_and_save_kronos_list(input_kronos_dependency_data_store, input_co_occurrence_data_store,
                                output_data_store, additional_path):
+    """Train the Kronos and save the results into the selected storage."""
     eco_to_kronos_dependency_dict = load_eco_to_kronos_dependency_dict(
         input_kronos_dependency_data_store=input_kronos_dependency_data_store,
         additional_path=additional_path)
@@ -89,7 +95,7 @@ def train_and_save_kronos_list(input_kronos_dependency_data_store, input_co_occu
 
 
 def train_and_save_kronos_list_s3(training_data_url):
-
+    """Train the Kronos and save the results into the AWS S3 storage."""
     input_bucket_name, output_bucket_name, additional_path = get_path_names(
         training_data_url)
     input_kronos_dependency_data_store = S3DataStore(src_bucket_name=input_bucket_name,
