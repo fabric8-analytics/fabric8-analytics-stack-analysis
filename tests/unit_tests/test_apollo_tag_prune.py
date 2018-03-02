@@ -1,3 +1,5 @@
+"""Tests for the TagListPruner module."""
+
 from analytics_platform.kronos.src import config
 from util.data_store.local_filesystem import LocalFileSystem
 from analytics_platform.kronos.apollo.src.apollo_tag_prune import TagListPruner
@@ -7,8 +9,10 @@ from unittest import TestCase
 
 
 class TestTagListPruner(TestCase):
+    """Tests for the TagListPruner module."""
 
     def test_generate_and_save_pruned_list_local(self):
+        """Test the method prune_tag_list() and the deserialization of the tag list."""
         input_data_store = LocalFileSystem(
             "tests/data/data_apollo/")
         self.assertTrue(input_data_store is not None)

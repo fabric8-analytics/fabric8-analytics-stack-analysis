@@ -1,4 +1,6 @@
-# NOTE: Currenlty works only with S3DataStore
+"""Script to start offline evaluation."""
+
+# NOTE: Currently works only with S3DataStore
 from uuid import uuid1
 import sys
 import time

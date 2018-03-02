@@ -1,6 +1,6 @@
+"""This script spawns a spark emr cluster on AWS and submits a job to run the given src code."""
+
 # ----------------------------------------------------------------------------------------------------------------------
-# This script spawns a spark emr cluster on AWS and submits a job to run the given src code.
-#
 # Dependency: It requires boto3 library.
 #
 # Reference:
@@ -24,6 +24,7 @@ COMPONENT_PREFIX = "kronos"
 
 def submit_job(input_bootstrap_file, input_src_code_file, training_data_url, fp_min_support_count,
                fp_intent_topic_count_threshold, fp_num_partition):
+    """Submit a job to run the given src code."""
     str_cur_time = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
 
     # S3 bucket/key, where the input spark job ( src code ) will be uploaded

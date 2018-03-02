@@ -1,3 +1,5 @@
+"""Generate the test, save it, and then call all relevant checkers."""
+
 # NOTE: Currenlty works only with S3DataStore
 import os
 
@@ -15,6 +17,7 @@ from evaluation_platform.uranus.src.uranus_constants import (
 
 
 def generate_evaluate_test_s3(training_url, result_id):
+    """Generate the test, save it, and then call all relevant checkers."""
     input_bucket_name, output_bucket_name, additional_path = get_path_names(
         training_url)
     input_data_store = S3DataStore(src_bucket_name=input_bucket_name,
@@ -29,6 +32,7 @@ def generate_evaluate_test_s3(training_url, result_id):
 
 
 def generate_test(input_data_store, output_data_store, additional_path):
+    """Generate test from given input data store."""
     td = TestData()
     td.generate_attributes(input_data_store, additional_path)
     td.save_attributes(output_data_store, additional_path)

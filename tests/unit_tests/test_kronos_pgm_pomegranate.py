@@ -1,3 +1,5 @@
+"""Tests for the Kronos Pomegranate."""
+
 from analytics_platform.kronos.pgm.src.pgm_pomegranate import PGMPomegranate
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict, \
     load_user_eco_to_co_occerrence_matrix_dict
@@ -12,9 +14,10 @@ import os
 
 
 class TestKronosPomegranate(TestCase):
+    """Tests for the Kronos Pomegranate."""
 
     def test_train_and_save_kronos_list_local(self):
-
+        """Test the train() method and the ability to serialize the model."""
         input_data_store = LocalFileSystem(
             "tests/data/data_pgm/input-train-data/")
         self.assertIsNotNone(input_data_store)
@@ -48,6 +51,7 @@ class TestKronosPomegranate(TestCase):
                     data_store=output_data_store, filename=filename)
 
     def test_score_eco_user_package_dict(self):
+        """Test the dependency dict deserialization, frequency list deserialization etc."""
         input_data_store = LocalFileSystem(
             "tests/data/data_pgm/input-score-data/")
         self.assertIsNotNone(input_data_store)
@@ -110,6 +114,7 @@ class TestKronosPomegranate(TestCase):
         self.assertDictEqual(response[0], expected_response[0])
 
     def test_score_user_eco_package_dict_with_duplicates(self):
+        """Test how duplicates are handled after deserialization."""
         input_data_store = LocalFileSystem(
             "tests/data/data_pgm/input-score-data/")
         self.assertIsNotNone(input_data_store)

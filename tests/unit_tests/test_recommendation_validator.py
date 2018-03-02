@@ -1,16 +1,21 @@
+"""Test for the module RecommendationValidator."""
+
 from analytics_platform.kronos.src.recommendation_validator import RecommendationValidator
 
 from unittest import TestCase
 
 
 class TestRecommendationValidator(TestCase):
+    """Test for the module RecommendationValidator."""
 
     def __init__(self, *args, **kwargs):
+        """Initialize the test class."""
         super(TestRecommendationValidator, self).__init__(*args, **kwargs)
         self.input_folder_name = "tests/data/data_recom_valid/"
         self.additional_path = ""
 
     def test_load_manifest_file(self):
+        """Test if package list can be deserialized properly."""
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path)
         self.assertTrue(obj is not None)
@@ -18,6 +23,7 @@ class TestRecommendationValidator(TestCase):
         self.assertTrue(obj.manifest_len == 4)
 
     def test_filter_input_list(self):
+        """Test the method to get filtered input list."""
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path)
         input_set = {'A', 'B', 'C', 'Z'}
@@ -27,6 +33,7 @@ class TestRecommendationValidator(TestCase):
         self.assertTrue(sorted(filtered_input_list) == ['A', 'B', 'C'])
 
     def test_filter_alternate_list(self):
+        """Test the method to get filtered alternate list."""
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path)
         outlier_packages = [{
@@ -82,6 +89,7 @@ class TestRecommendationValidator(TestCase):
                         'package_name'] == list(filtered_alternate_list.keys())[0])
 
     def test_generate_companion_set(self):
+        """Test the method generate_companion_dependency_set()."""
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path)
         input_list = ['A', 'B', 'C']
@@ -91,6 +99,7 @@ class TestRecommendationValidator(TestCase):
         self.assertEqual(comp_set, {'A', 'B', 'C', 'D'})
 
     def test_generate_alternate_set(self):
+        """Test the method generate_alternate_dependency_set()."""
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path)
         input_list = ['A', 'B', 'C']
@@ -101,6 +110,7 @@ class TestRecommendationValidator(TestCase):
         self.assertEqual(alt_set, {'A', 'B123', 'C'})
 
     def test_alternate_recommendation(self):
+        """Test the method check_companion_or_alternate_recommendation_validity()."""
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path)
         recommended_dependency_set = {'A', 'F', 'C', 'D'}
@@ -113,6 +123,7 @@ class TestRecommendationValidator(TestCase):
         self.assertEqual(count, 0)
 
     def test_companion_recommendation(self):
+        """Test the method check_companion_or_alternate_recommendation_validity()."""
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path)
         recommended_dependency_set = {'A', 'B', 'C', 'D', 'E'}
@@ -123,6 +134,7 @@ class TestRecommendationValidator(TestCase):
         self.assertEqual(count, 0)
 
     def test_check_alternate_recommendation(self):
+        """Test the method check_alternate_recommendation()."""
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path)
         input_list = ['A', 'B', 'C', 'D']
@@ -149,6 +161,7 @@ class TestRecommendationValidator(TestCase):
             'B', [{'test': 'failed'}])[0].get('similarity_score') == 2)
 
     def test_check_companion_recommendation(self):
+        """Test the method check_companion_recommendation()."""
         obj = RecommendationValidator.load_package_list_local(
             self.input_folder_name, self.additional_path)
         input_list = ['A', 'B', 'C', 'D']

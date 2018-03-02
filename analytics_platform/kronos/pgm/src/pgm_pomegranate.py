@@ -1,3 +1,5 @@
+"""Kronos - The Knowledge Graph."""
+
 from pomegranate import BayesianNetwork
 
 from analytics_platform.kronos.pgm.src.abstract_pgm import AbstractPGM
@@ -13,14 +15,17 @@ class PGMPomegranate(AbstractPGM):
     """Kronos - The Knowledge Graph."""
 
     def __init__(self, model):
+        """Initialize this class using the provided model."""
         self._model = model
 
     @property
     def model(self):
+        """Get the current model."""
         return self._model
 
     @classmethod
     def train(cls, kronos_dependency_dict, package_occurrence_df):
+        """Train the model."""
         kronos_model = cls._train_kronos_for_ecosystem(
             kronos_dependency_dict=kronos_dependency_dict,
             package_occurrence_df=package_occurrence_df)
@@ -28,6 +33,7 @@ class PGMPomegranate(AbstractPGM):
         return PGMPomegranate(kronos_model)
 
     def save(self, data_store, filename):
+        """Serialize the model into given file."""
         pgm_model = self.model
         if type(data_store) is LocalFileSystem:
             data_store.write_pomegranate_model(
@@ -44,6 +50,7 @@ class PGMPomegranate(AbstractPGM):
 
     @classmethod
     def load(cls, data_store, filename):
+        """Deserialize the model from given file."""
         pgm_model = None
         if type(data_store) is LocalFileSystem:
             pgm_model = data_store.read_pomegranate_model(filename=filename)
@@ -78,6 +85,7 @@ class PGMPomegranate(AbstractPGM):
         return pgm_model
 
     def score(self, evidence_dict_list):
+        """Run the scoring."""
         global pgm_model_kronos
         pgm_model_kronos = self.model
         n_jobs = len(evidence_dict_list)
@@ -90,4 +98,5 @@ class PGMPomegranate(AbstractPGM):
 
 
 def parallel_predict(X):
+    """Run the predict in parallel."""
     return list(map(pgm_model_kronos.predict_proba, X, [3] * len(X)))

@@ -59,14 +59,14 @@ objects:
             httpGet:
               path: /
               port: 6006
-            initialDelaySeconds: 15
+            initialDelaySeconds: 30
             periodSeconds: 60
             timeoutSeconds: 30
           readinessProbe:
             httpGet:
               path: /
               port: 6006
-            initialDelaySeconds: 15
+            initialDelaySeconds: 30
             periodSeconds: 60
             timeoutSeconds: 30
           resources:
@@ -94,25 +94,25 @@ parameters:
   displayName: CPU request
   required: true
   name: CPU_REQUEST
-  value: "3.5"
+  value: "500m"
 
 - description: CPU limit
   displayName: CPU limit
   required: true
   name: CPU_LIMIT
-  value: "3.5"
+  value: "1000m"
 
 - description: Memory request
   displayName: Memory request
   required: true
   name: MEMORY_REQUEST
-  value: "512Mi"
+  value: "1024Mi"
 
 - description: Memory limit
   displayName: Memory limit
   required: true
   name: MEMORY_LIMIT
-  value: "512Mi"
+  value: "2048Mi"
 
 - description: Docker registry where the image is
   displayName: Docker registry

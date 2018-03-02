@@ -1,4 +1,6 @@
-# NOTE: Currenlty works only with S3DataStore
+"""Score each test set and generate the recommendations."""
+
+# NOTE: Currently works only with S3DataStore
 from itertools import combinations
 import time
 import os
@@ -27,8 +29,10 @@ _logger = daiquiri.getLogger(__name__)
 
 
 class CompanionOutlierAccuracy(Accuracy):
+    """Score each test set and generate the recommendations."""
 
     def __init__(self):
+        """Initialize this class."""
         super(CompanionOutlierAccuracy, self).__init__()
         self.user_eco_kronos_dict = load_user_eco_to_kronos_model_dict_s3(
             bucket_name=AWS_BUCKET_NAME, additional_path=KRONOS_MODEL_PATH)

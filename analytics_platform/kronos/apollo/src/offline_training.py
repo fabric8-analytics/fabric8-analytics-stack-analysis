@@ -1,3 +1,5 @@
+"""Functions used during offline training."""
+
 from analytics_platform.kronos.apollo.src.apollo_tag_prune import TagListPruner
 from analytics_platform.kronos.src import config
 from .apollo_generate_frequency_dict import FrequencyDictGenerator
@@ -24,6 +26,7 @@ def train_and_save_pruned_tag_list_s3(training_data_url):
 
 
 def generate_and_save_package_frequency_dict_s3(training_data_url):
+    """Generate the frequency dictionary and store it into AWS S3."""
     input_bucket_name, output_bucket_name, additional_path = get_path_names(
         training_data_url)
     input_data_store = S3DataStore(src_bucket_name=input_bucket_name,

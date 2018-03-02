@@ -1,3 +1,5 @@
+"""Script to start offline training of Kronos."""
+
 from analytics_platform.kronos.gnosis.src.offline_training import (
     generate_and_save_gnosis_package_topic_model_s3, train_and_save_gnosis_ref_arch_s3)
 from analytics_platform.kronos.softnet.src.offline_training import (

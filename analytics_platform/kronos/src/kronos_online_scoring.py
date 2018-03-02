@@ -1,3 +1,5 @@
+"""Kronos online scoring functions."""
+
 import os
 from collections import defaultdict
 
@@ -10,6 +12,7 @@ from util.data_store.s3_data_store import S3DataStore
 
 
 def load_user_eco_to_kronos_model_dict(input_kronos_data_store, additional_path):
+    """Load the Kronos model dictionary from the selected storage."""
     kronos_model_filenames = input_kronos_data_store.list_files(
         os.path.join(additional_path, pgm_constants.KRONOS_OUTPUT_FOLDER))
     temp_user_eco_to_kronos_model_dict = dict()
@@ -42,6 +45,7 @@ def load_user_eco_to_kronos_model_dict(input_kronos_data_store, additional_path)
 
 
 def load_user_eco_to_kronos_model_dict_s3(bucket_name, additional_path):
+    """Load the Kronos model dictionary from the AWS S3 storage."""
     input_data_store = S3DataStore(src_bucket_name=bucket_name,
                                    access_key=config.AWS_S3_ACCESS_KEY_ID,
                                    secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
@@ -52,11 +56,13 @@ def load_user_eco_to_kronos_model_dict_s3(bucket_name, additional_path):
 
 
 def load_package_frequency_dict(input_data_store, additional_path):
+    """Load package frequency dictionary from the selected storage."""
     return input_data_store.read_json_file(
         os.path.join(additional_path, pgm_constants.KD_PACKAGE_FREQUENCY))
 
 
 def load_package_frequency_dict_s3(bucket_name, additional_path):
+    """Load package frequency dictionary from the AWS S3 storage."""
     input_data_store = S3DataStore(src_bucket_name=bucket_name,
                                    access_key=config.AWS_S3_ACCESS_KEY_ID,
                                    secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
@@ -65,23 +71,27 @@ def load_package_frequency_dict_s3(bucket_name, additional_path):
 
 
 def get_sorted_companion_package_probabilities(res, node_list, non_companion_packages):
+    """Get sorted companion package probabilities."""
     result = get_sorted_companion_node_probabilities(
         res, node_list, non_companion_packages)
     return result
 
 
 def get_sorted_companion_intent_probabilities(res, node_list):
+    """Get sorted companion intent probabilities."""
     result = get_sorted_companion_node_probabilities(res, node_list)
     return result
 
 
 def get_topics_for_manifest(manifest, package_topic_dict):
+    """Get topics for given manifest."""
     manifest_topics = {package_topics for package in manifest for package_topics in
                        package_topic_dict.get(package, [])}
     return manifest_topics
 
 
 def get_sorted_companion_node_probabilities(res, node_list, non_companion_packages=None):
+    """Get sorted companion node probabilities."""
     result_dict_list = list()
     for i in range(0, len(node_list)):
         node = node_list[i]
@@ -103,6 +113,7 @@ def get_sorted_companion_node_probabilities(res, node_list, non_companion_packag
 
 
 def get_eco_to_kronos_dependency_dict(data_store, folderpath):
+    """Get ecosystem to Kronos dependency dictionary."""
     eco_to_kronos_dependency_dict = dict()
     filenames = data_store.list_files(prefix=folderpath)
     for filename in filenames:
@@ -113,6 +124,7 @@ def get_eco_to_kronos_dependency_dict(data_store, folderpath):
 
 
 def get_eco_to_cooccurrence_matrix_dict(data_store, folderpath):
+    """Get the ecosystem to cooccurence matrix dictionary."""
     eco_to_cooccurrence_matrix_dict = dict()
     filenames = data_store.list_files(prefix=folderpath)
     for filename in filenames:
@@ -123,6 +135,7 @@ def get_eco_to_cooccurrence_matrix_dict(data_store, folderpath):
 
 
 def get_companion_package_dict(result, package_list, non_companion_packages):
+    """Get companion package dictionary."""
     package_result_dict = get_sorted_companion_package_probabilities(result, package_list,
                                                                      non_companion_packages)
     return package_result_dict
@@ -131,6 +144,7 @@ def get_companion_package_dict(result, package_list, non_companion_packages):
 def generated_evidence_dict_list_and_potential_outlier_list(observed_package_list,
                                                             all_package_list_obj,
                                                             package_to_topic_dict):
+    """Generate the potential outlier list and generated evidence dictionary."""
     evidence_dict_list = list()
     potential_outlier_index_list = list()
     observed_package_list_length = len(observed_package_list)
@@ -184,6 +198,7 @@ def generated_evidence_dict_list_and_potential_outlier_list(observed_package_lis
 
 
 def get_clean_topics_for_package(package_to_topic_dict, package):
+    """Get clean topics for given package."""
     topic_list = package_to_topic_dict[package]
     clean_topic_list = [x[len(pgm_constants.GNOSIS_PTM_TOPIC_PREFIX):] for x in topic_list]
     return clean_topic_list
@@ -192,6 +207,7 @@ def get_clean_topics_for_package(package_to_topic_dict, package):
 def get_kronos_recommendation(kronos, observed_package_list,
                               package_to_topic_dict, outlier_package_count_threshold,
                               all_package_list_obj, package_frequency_dict):
+    """Get Kronos recommendation."""
     evidence_dict_list, potential_outlier_index_list = \
         generated_evidence_dict_list_and_potential_outlier_list(observed_package_list,
                                                                 all_package_list_obj,
@@ -220,6 +236,7 @@ def get_kronos_recommendation(kronos, observed_package_list,
 
 
 def get_non_companion_packages(alternate_package_dict, observed_package_list):
+    """Get non-companion packages."""
     alternate_package_list = list()
     for package in alternate_package_dict:
         alternate_package_list_of_package = [item.get(pgm_constants.KD_PACKAGE_NAME)
@@ -232,6 +249,7 @@ def get_non_companion_packages(alternate_package_dict, observed_package_list):
 
 def get_observed_and_missing_package_list(requested_package_set, unknown_package_ratio_threshold,
                                           package_list):
+    """Get observed and missing package list."""
     observed_package_list = None
     existing_package_set = requested_package_set.intersection(package_list)
     missing_package_set = requested_package_set - existing_package_set
@@ -249,6 +267,7 @@ def score_kronos(kronos, requested_package_set, kronos_dependency, comp_package_
                  alt_package_count_threshold,
                  unknown_package_ratio_threshold, outlier_package_count_threshold,
                  all_package_list_obj, package_frequency_dict):
+    """Score the Kronos model."""
     package_list = kronos_dependency.get(pgm_constants.KD_PACKAGE_LIST)
 
     observed_package_list, missing_package_list = get_observed_and_missing_package_list(
@@ -310,6 +329,7 @@ def score_kronos(kronos, requested_package_set, kronos_dependency, comp_package_
 
 def get_alternate_packages_for_packages(similar_package_dict, package_names,
                                         alt_package_count_threshold):
+    """Get alternate packages for given package names."""
     alternate_package_dict = dict()
     for package_name in package_names:
         alternate_package_dict_list_of_package = similar_package_dict[
@@ -330,6 +350,7 @@ def get_alternate_packages_for_packages(similar_package_dict, package_names,
 
 def score_eco_user_package_dict(user_request, user_eco_kronos_dict, eco_to_kronos_dependency_dict,
                                 all_package_list_obj, package_frequency_dict, use_filters):
+    """Score the user package dictionary."""
     request_json_list = list(user_request)
 
     response_json_list = list()

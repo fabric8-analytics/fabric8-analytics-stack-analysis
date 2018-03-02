@@ -1,3 +1,5 @@
+"""Utility functions for handling package lists, compute similarity score etc."""
+
 import numpy as np
 import pandas as pd
 
@@ -5,6 +7,7 @@ import analytics_platform.kronos.softnet.src.softnet_constants as softnet_consta
 
 
 def generate_parent_tuple_list(node_list, edge_dict_list):
+    """Generate parent tuple list."""
     child_to_parent_dict = dict()
     for edge_dict in edge_dict_list:
         child = edge_dict[softnet_constants.EDGE_DICT_TO]
@@ -25,6 +28,7 @@ def generate_parent_tuple_list(node_list, edge_dict_list):
 
 
 def get_similar_package_dict_list(package, package_list, package_to_topic_dict):
+    """Compute the dictionary with similar packages sorted by similarity score."""
     topic_list_1 = package_to_topic_dict[package]
     package_score_dict_list = list()
     for package_2 in package_list:
@@ -44,6 +48,7 @@ def get_similar_package_dict_list(package, package_list, package_to_topic_dict):
 
 
 def calculate_similarity_score(topic_list_1, topic_list_2):
+    """Calculate the similarity score between two topic lists."""
     average_length = float(len(topic_list_1) + len(topic_list_2)) / 2
     intersection_set = set.intersection(set(topic_list_1), set(topic_list_2))
     similarity_score = float(len(intersection_set)) / average_length
@@ -51,6 +56,7 @@ def calculate_similarity_score(topic_list_1, topic_list_2):
 
 
 def create_empty_pandas_df(rowsize, columns_list):
+    """Create empty Panda data frame (filled by zeros)."""
     zero_data = np.zeros(shape=(rowsize, len(columns_list)), dtype=np.int8)
     df = pd.DataFrame(zero_data, columns=columns_list)
     return df

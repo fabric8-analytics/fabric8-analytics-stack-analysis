@@ -1,3 +1,5 @@
+"""Cooccurrence Matrix Generator."""
+
 import daiquiri
 import logging
 import time
@@ -27,7 +29,7 @@ class CooccurrenceMatrixGenerator(object):
                                      kronos_dependency_dict,
                                      list_of_package_list,
                                      package_topic_map):
-
+        """Genererate cooccurrence matrix."""
         kronos_intent_dependency_dict = kronos_dependency_dict.get(
             softnet_constants.KD_INTENT_DEPENDENCY_MAP)
         kronos_component_dependency_dict = kronos_dependency_dict.get(
@@ -44,19 +46,23 @@ class CooccurrenceMatrixGenerator(object):
         return CooccurrenceMatrixGenerator(cooccurrence_matrix)
 
     def save(self, data_store, filename):
+        """Save the cooccurence matrix into JSON file."""
         data_store.write_pandas_df_into_json_file(
             data=self._matrix_dict, filename=filename)
 
     @classmethod
     def load(cls, data_store, filename):
+        """Load the cooccurence matrix from JSON file."""
         cooccurrence_matrix = data_store.read_json_file_into_pandas_df(filename)
         return CooccurrenceMatrixGenerator(cooccurrence_matrix)
 
     def get_matrix_dictionary(self):
+        """Get the matrix dictionary."""
         return self._matrix_dict
 
     @classmethod
     def get_component_class_occurrence(cls, row_component_package_dict):
+        """Get component class occurrence."""
         component_class_occurrence = 0
         for value in row_component_package_dict.values():
             if value == 1:
@@ -66,6 +72,7 @@ class CooccurrenceMatrixGenerator(object):
 
     @classmethod
     def get_intent_occurrence(cls, row_intent_component_dict):
+        """Get intent occurrence."""
         intent_occurrence = 0
         den = len(row_intent_component_dict.values())
         num = sum(row_intent_component_dict.values())

@@ -1,12 +1,16 @@
+"""Base abstract PGM class to be implemented by other classes."""
+
 from abc import ABCMeta, abstractmethod
 
 
 class AbstractPGM(object):
+    """Base abstract PGM class to be implemented by other classes."""
+
     __metaclass__ = ABCMeta
 
     @abstractmethod
     def train(cls, kronos_dependency_dict, package_occurrence_df):
-        """Trains the Kronos model."""
+        """Train the Kronos model."""
         return
 
     @abstractmethod
