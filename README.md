@@ -220,7 +220,7 @@ BODY: JSON data
 ## Latest Deployment
 
 * Maven
-	* Retrained on: 2018-01-02 22:30 (UTC+5:30)
+	* Retrained on: 2018-03-05 03:30 (UTC+5:30)
 
 
 ## Coding standards
