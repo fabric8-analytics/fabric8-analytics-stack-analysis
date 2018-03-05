@@ -86,7 +86,8 @@ class TagListPruner(object):
         """
         pruned_package_list = {}
         stop_word = set(['vertx', 'spring', 'java', 'apache',
-                         'vert.x', 'io', 'com', 'commons', 'algorithms', 'language', 'apache camel'])
+                         'vert.x', 'io', 'com', 'commons', 'algorithms', 'language',
+                         'apache camel'])
         word_count = Counter()
         for package_name, tag_list in package_list.items():
             temp_list = set()
