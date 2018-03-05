@@ -23,6 +23,12 @@
         "socket layer",
         "server",
         "client"
+      ],
+      "Backports.ssl-Match-Hostname": [
+        "secure",
+        "socket layer",
+        "server",
+        "client"
       ]
     }
   },

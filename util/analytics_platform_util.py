@@ -64,3 +64,11 @@ def load_package_list(input_data_store, additional_path):
             for package_list in list_of_package_list:
                 all_list_of_package_set.append(set(package_list))
     return all_list_of_package_set
+
+
+def convert_string2bool_env(parameter):
+    """Convert the String True/False to its boolean form.
+
+    :param parameter: The string that needs to be converted.
+    """
+    return parameter.lower() == "true"

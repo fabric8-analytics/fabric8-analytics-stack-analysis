@@ -60,6 +60,12 @@ docker-compose -f docker-compose.yml -f docker-compose-data-model.yml up
 PYTHONPATH=`pwd` python evaluation_platform/uranus/src/kronos_offline_evaluation.py
 ```
 
+## To Run Training Locally
+
+```bash
+PYTHONPATH=`pwd` python analytics_platform/kronos/src/kronos_offline_training.py
+```
+
 ## Deploy to openshift cluster
 
 - Create project
@@ -220,7 +226,7 @@ BODY: JSON data
 ## Latest Deployment
 
 * Maven
-	* Retrained on: 2018-01-02 22:30 (UTC+5:30)
+	* Retrained on: 2018-03-05 03:30 (UTC+5:30)
 
 
 ## Coding standards

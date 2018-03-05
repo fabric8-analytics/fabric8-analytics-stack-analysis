@@ -75,13 +75,13 @@ class GnosisPackageTopicModel(AbstractGnosis):
                 for formatted_topic in distinct_formatted_topic_list:
                     if formatted_topic not in topic_to_package_dict:
                         topic_to_package_dict[
-                            formatted_topic] = [formatted_package]
+                            formatted_topic] = list(set([formatted_package]))
                     else:
                         temp_package_list = topic_to_package_dict[
                             formatted_topic]
                         topic_to_package_dict[
-                            formatted_topic] = temp_package_list + \
-                            [formatted_package]
+                            formatted_topic] = list(set(temp_package_list +
+                                                        [formatted_package]))
 
             eco_to_package_to_topic_dict[ecosystem] = package_to_topic_dict
             eco_to_topic_to_package_dict[ecosystem] = topic_to_package_dict

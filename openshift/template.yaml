@@ -38,7 +38,7 @@ objects:
           - name: KRONOS_SCORING_REGION
             value: "${KRONOS_SCORING_REGION}"
           - name: USE_FILTERS
-            value: "${USE_FILTERS}"
+            value: "${{USE_FILTERS}}"
           - name: AWS_S3_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
@@ -149,4 +149,9 @@ parameters:
   required: true
   name: REPLICAS
   value: "1"
-    
+
+- description: User Post filters or not
+  displayName: User Post filters or not
+  required: true
+  name: USE_FILTERS
+  value: "True"
