@@ -7,6 +7,7 @@ import analytics_platform.kronos.pgm.src.pgm_constants as pgm_constants
 import util.pgm_util as utils
 from util.data_store.local_filesystem import LocalFileSystem
 from util.data_store.s3_data_store import S3DataStore
+import pickle
 from joblib import Parallel, delayed
 import functools
 
@@ -43,7 +44,7 @@ class PGMPomegranate(AbstractPGM):
             with open(local_filename, 'wb') as f:
                 # IMPORTANT: Set pickle.HIGHEST_PROTOCOL only  after complete porting to
                 # Python3
-                f.write(pgm_model.to_json())
+                pickle.dump(pgm_model.to_json(), f, protocol=2)
 
             data_store.upload_file(local_filename, filename)
         return None
@@ -58,7 +59,7 @@ class PGMPomegranate(AbstractPGM):
             local_filename = "/tmp/kronos.json"
             data_store.download_file(filename, local_filename)
             with open(local_filename, 'rb') as f:
-                pgm_model = BayesianNetwork.from_json(f.read())
+                pgm_model = BayesianNetwork.from_json(pickle.load(f))
         return PGMPomegranate(pgm_model)
 
     @classmethod
