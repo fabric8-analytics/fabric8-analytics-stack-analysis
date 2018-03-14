@@ -71,11 +71,10 @@ if KRONOS_SCORING_REGION != "":
 
     app.package_frequency_dict = load_package_frequency_dict_s3(bucket_name=AWS_BUCKET_NAME,
                                                                 additional_path=KRONOS_MODEL_PATH)
-
-    app.scoring_status = True
     app.use_filters = convert_string2bool_env(USE_FILTERS)
     app.logger.info("The total manifest file for this ecosystem are: %d" %
                     app.all_package_list_obj.get_all_list_package_length())
+    app.scoring_status = True
 else:
     app.scoring_status = False
 
@@ -157,6 +156,7 @@ def predict_and_score():
     else:
         app.logger.info("Sending back Cached Response")
         response = hash_dict[hash_key]
+        app.logger.info(response)
     return flask.jsonify(response)
 
 
