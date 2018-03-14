@@ -1,4 +1,7 @@
-# Stack Analysis
+# Stack Analysis 
+
+[![Build Status](https://ci.centos.org/buildStatus/icon?job=devtools-fabric8-analytics-stack-analysis-f8a-build-master)](https://ci.centos.org/job/devtools-fabric8-analytics-stack-analysis-f8a-build-master/)
+
 
 ## List of models currently present in the analytics platform
 
