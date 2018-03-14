@@ -142,7 +142,7 @@ parameters:
   displayName: Flask logging level
   required: false
   name: FLASK_LOGGING_LEVEL
-  value: "WARNING"
+  value: "INFO"
 
 - description: Number of deployment replicas
   displayName: Number of deployment replicas
