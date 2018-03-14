@@ -156,6 +156,7 @@ def predict_and_score():
     else:
         app.logger.info("Sending back Cached Response")
         response = hash_dict[hash_key]
+        app.logger.info(response)
     return flask.jsonify(response)
 
 
