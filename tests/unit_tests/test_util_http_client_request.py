@@ -3,7 +3,7 @@
 import pytest
 import requests
 
-from utils.http_client.request import *
+from util.http_client.request import *
 
 
 def test_post_function():
