@@ -27,8 +27,8 @@ def generate_evaluate_test_s3(training_url, result_id):
                                     access_key=AWS_S3_ACCESS_KEY_ID,
                                     secret_key=AWS_S3_SECRET_ACCESS_KEY)
     generate_test(input_data_store, output_data_store, additional_path)
-    test_kronos(training_url, result_id,
-                input_data_store, output_data_store, additional_path)
+    perform_kronos_test(training_url, result_id,
+                        input_data_store, output_data_store, additional_path)
 
 
 def generate_test(input_data_store, output_data_store, additional_path):
@@ -38,11 +38,11 @@ def generate_test(input_data_store, output_data_store, additional_path):
     td.save_attributes(output_data_store, additional_path)
 
 
-def test_kronos(training_url,
-                result_id,
-                input_data_store,
-                output_data_store,
-                additional_path):
+def perform_kronos_test(training_url,
+                        result_id,
+                        input_data_store,
+                        output_data_store,
+                        additional_path):
     """Call the Alternate, Companion and Outlier Accuracy checker.
 
     :param training_url: Location where test data is loaded from.
