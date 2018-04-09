@@ -2,7 +2,7 @@
 
 import pytest
 
-from evaluation_platform.uranus.generate_test_data import *
+from evaluation_platform.uranus.src.generate_test_data import *
 
 if __name__ == '__main__':
     pass

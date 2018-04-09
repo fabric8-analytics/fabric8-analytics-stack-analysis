@@ -2,7 +2,7 @@
 
 import pytest
 
-from evaluation_platform.uranus.kronos_offline_evaluation import *
+from evaluation_platform.uranus.src.kronos_offline_evaluation import *
 
 if __name__ == '__main__':
     pass
