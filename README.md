@@ -229,7 +229,7 @@ BODY: JSON data
 ## Latest Deployment
 
 * Maven
-	* Retrained on: `2018-03-13 5:00 PM(IST)` with hyper-parameters:
+	* Retrained on: `2018-04-11 5:43 PM(IST)` with hyper-parameters:
         * `fp_min_support_count = 300`
         * `fp_intent_topic_count_threshold = 2`
         * `FP_TAG_INTENT_LIMIT = 4`
