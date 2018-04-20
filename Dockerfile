@@ -4,7 +4,7 @@ LABEL maintainer="Avishkar Gupta <avgupta@redhat.com>"
 # --------------------------------------------------------------------------------------------------
 # install python packages
 # --------------------------------------------------------------------------------------------------
-COPY ./analytics_platform/kronos/requirements.txt /
+COPY ./requirements.txt /
 # To accomodate for any additional requirements that are not
 # added to base for some reason, ex: local testing.
 RUN pip install -r /requirements.txt && rm /requirements.txt
