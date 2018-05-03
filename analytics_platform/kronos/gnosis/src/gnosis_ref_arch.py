@@ -221,6 +221,7 @@ class GnosisReferenceArchitecture(AbstractGnosis):
     def _generate_intent_component_class_dict_fp_growth(
             cls, model, min_intent_topic_count, package_list,
             fp_tag_intent_limit=None):
+        # TODO: reduce cyclomatic complexity
         fp_tag_intent_limit = fp_tag_intent_limit or gnosis_constants.FP_TAG_INTENT_LIMIT
         result = model.freqItemsets().collect()
 
