@@ -63,6 +63,7 @@ def returnContentIfAscii(text):
               default='')
 def main(bucket_name, package_name, manifest_path):
     """Process the selected manifest."""
+    # TODO: reduce cyclomatic complexity
     s3_bucket = s3_data_store.S3DataStore(src_bucket_name=bucket_name,
                                           access_key=config.AWS_S3_ACCESS_KEY_ID,
                                           secret_key=config.AWS_S3_SECRET_ACCESS_KEY)
@@ -107,6 +108,7 @@ def main(bucket_name, package_name, manifest_path):
 
 def process_readme(idx, readme_filename, s3_bucket):
     """Process the REAMDE file if exists."""
+    # TODO: reduce cyclomatic complexity
     if readme_filename.startswith('npm/'):
         package_name = readme_filename[len('npm/'):]
     if package_name.endswith('/README.json'):
