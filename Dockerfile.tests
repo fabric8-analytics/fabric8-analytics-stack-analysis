@@ -23,7 +23,11 @@ ENV SPARK_HOME=/usr/local/spark
 ENV PATH=/usr/local/maven/bin:$JAVA_HOME/bin:$SPARK_HOME/bin:/usr/local/scala/bin:$PATH
 ENV PYTHONPATH=.
 
-RUN python -m pip install pytest py4j pytest-cov coverage
+# --------------------------------------------------------------------------------------------------
+# install python packages
+# --------------------------------------------------------------------------------------------------
+COPY ./test_requirements.txt /
+RUN python -m pip install -r /test_requirements.txt
 
 # --------------------------------------------------------------------------------------------------
 # RUN THE UNIT TESTS
