@@ -8,74 +8,67 @@ metadata:
     description: bayesian-kronos
 objects:
 - apiVersion: v1
-  kind: DeploymentConfig
+  kind: Pod
   metadata:
     labels:
       service: bayesian-kronos-${KRONOS_SCORING_REGION}
     name: bayesian-kronos-${KRONOS_SCORING_REGION}
   spec:
-    replicas: "${{REPLICAS}}"
-    selector:
-      service: bayesian-kronos-${KRONOS_SCORING_REGION}
-    template:
-      metadata:
-        labels:
-          service: bayesian-kronos-${KRONOS_SCORING_REGION}
-      spec:
-        containers:
-        - command:
-          - /bin/entrypoint.sh
-          env:
-          - name: DEPLOYMENT_PREFIX
-            valueFrom:
-              configMapKeyRef:
-                name: bayesian-config
-                key: deployment-prefix
-          - name: SERVICE_PORT
-            value: "6006"
-          - name: SERVICE_TIMEOUT
-            value: "900"
-          - name: KRONOS_SCORING_REGION
-            value: "${KRONOS_SCORING_REGION}"
-          - name: USE_FILTERS
-            value: "${{USE_FILTERS}}"
-          - name: AWS_S3_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                key: s3-access-key-id
-                name: aws
-          - name: AWS_S3_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                key: s3-secret-access-key
-                name: aws
-          - name: FLASK_LOGGING_LEVEL
-            value: ${FLASK_LOGGING_LEVEL}
-          name: bayesian-kronos
-          image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
-          ports:
-          - containerPort: 6006
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 6006
-            initialDelaySeconds: 30
-            periodSeconds: 60
-            timeoutSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 6006
-            initialDelaySeconds: 30
-            periodSeconds: 60
-            timeoutSeconds: 30
-          resources:
-            requests:
-              cpu: ${CPU_REQUEST}
-              memory: ${MEMORY_REQUEST}
-            limits:
-              cpu: ${CPU_LIMIT}
-              memory: ${MEMORY_LIMIT}
+    restartPolicy: Never
+    containers:
+    - command:
+      - /bin/entrypoint.sh
+      env:
+      - name: DEPLOYMENT_PREFIX
+        valueFrom:
+          configMapKeyRef:
+            name: bayesian-config
+            key: deployment-prefix
+      - name: SERVICE_PORT
+        value: "6006"
+      - name: SERVICE_TIMEOUT
+        value: "900"
+      - name: KRONOS_SCORING_REGION
+        value: "${KRONOS_SCORING_REGION}"
+      - name: USE_FILTERS
+        value: "${{USE_FILTERS}}"
+      - name: AWS_S3_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            key: s3-access-key-id
+            name: aws
+      - name: AWS_S3_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            key: s3-secret-access-key
+            name: aws
+      - name: FLASK_LOGGING_LEVEL
+        value: ${FLASK_LOGGING_LEVEL}
+      name: bayesian-kronos
+      image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
+      ports:
+      - containerPort: 6006
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 6006
+        initialDelaySeconds: 30
+        periodSeconds: 60
+        timeoutSeconds: 30
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 6006
+        initialDelaySeconds: 30
+        periodSeconds: 60
+        timeoutSeconds: 30
+      resources:
+        requests:
+          cpu: ${CPU_REQUEST}
+          memory: ${MEMORY_REQUEST}
+        limits:
+          cpu: ${CPU_LIMIT}
+          memory: ${MEMORY_LIMIT}
 - apiVersion: v1
   kind: Service
   metadata:
