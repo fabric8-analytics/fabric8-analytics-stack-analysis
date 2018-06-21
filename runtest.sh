@@ -3,8 +3,8 @@
 TEST_IMAGE_NAME='kronos-tests'
 
 gc() {
-    docker rmi -f `make get-image-name`
-    docker rmi -f ${TEST_IMAGE_NAME}
+    docker rmi -f $(make get-image-name)
+    docker rmi -f "${TEST_IMAGE_NAME}"
 }
 
 if [[ "$CI" -eq "0" ]];
