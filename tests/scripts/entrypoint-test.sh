@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# test coverage threshold
+COVERAGE_THRESHOLD=50
+
 echo "*****************************************"
 echo "*** Cyclomatic complexity measurement ***"
 echo "*****************************************"
@@ -14,4 +17,4 @@ echo "*****************************************"
 echo "*** Unit tests ***"
 echo "*****************************************"
 
-python -m pytest -p no:cacheprovider --cov=analytics_platform/ --cov=util/ --cov=tagging_platform/ --cov=evaluation_platform/ --cov-report term-missing --ignore=evaluation_platform/uranus/src/evaluate_data.py -vv /tests/unit_tests/
+python -m pytest -p no:cacheprovider --cov=analytics_platform/ --cov=util/ --cov=tagging_platform/ --cov=evaluation_platform/ --cov-report term-missing --ignore=evaluation_platform/uranus/src/evaluate_data.py --cov-fail-under=$COVERAGE_THRESHOLD -vv /tests/unit_tests/
