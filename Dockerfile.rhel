@@ -1,6 +1,6 @@
 # base image source https://github.com/rhdt/EL-Dockerfiles/blob/master/base/fabric8-analytics-stack-analysis-base/Dockerfile
 
-FROM prod.registry.devshift.net/osio-prod/base/fabric8-analytics-stack-analysis-base:latest
+FROM quay.io/openshiftio/rhel-base-fabric8-analytics-stack-analysis-base:latest
 
 # --------------------------------------------------------------------------------------------------
 # install python packages

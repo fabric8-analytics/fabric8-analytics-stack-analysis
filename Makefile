@@ -1,12 +1,13 @@
+REGISTRY := quay.io
+DEFAULT_TAG=latest
+
 ifeq ($(TARGET),rhel)
   DOCKERFILE := Dockerfile.rhel
-  REGISTRY := push.registry.devshift.net/osio-prod
+  REPOSITORY := openshiftio/bayesian-kronos
 else
   DOCKERFILE := Dockerfile
-  REGISTRY := push.registry.devshift.net
+  REPOSITORY := openshiftio/rhel-bayesian-kronos
 endif
-REPOSITORY?=bayesian/kronos
-DEFAULT_TAG=latest
 
 .PHONY: all docker-build fast-docker-build get-image-name get-image-repository
 
