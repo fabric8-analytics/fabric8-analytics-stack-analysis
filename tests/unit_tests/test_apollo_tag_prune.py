@@ -1,6 +1,5 @@
 """Tests for the TagListPruner module."""
 
-from analytics_platform.kronos.src import config
 from util.data_store.local_filesystem import LocalFileSystem
 from analytics_platform.kronos.apollo.src.apollo_tag_prune import TagListPruner
 from analytics_platform.kronos.apollo.src.apollo_constants import (

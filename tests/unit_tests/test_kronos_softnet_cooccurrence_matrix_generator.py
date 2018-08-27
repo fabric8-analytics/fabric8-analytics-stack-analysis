@@ -1,8 +1,5 @@
 """Tests for the coocurrence matrix generator."""
 
-from pandas.util.testing import assert_frame_equal
-
-from analytics_platform.kronos.src import config
 from analytics_platform.kronos.softnet.src.cooccurrence_matrix_generator \
     import CooccurrenceMatrixGenerator
 from analytics_platform.kronos.softnet.src.offline_training \

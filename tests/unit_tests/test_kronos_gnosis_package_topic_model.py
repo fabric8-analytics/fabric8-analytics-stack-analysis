@@ -1,6 +1,5 @@
 """Tests for the class GnosisPackageTopicModel."""
 
-from analytics_platform.kronos.src import config
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
 from util.data_store.local_filesystem import LocalFileSystem
 from util.analytics_platform_util import create_tags_for_package

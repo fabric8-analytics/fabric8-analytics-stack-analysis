@@ -1,6 +1,5 @@
 """Tests for the Kronos dependency generator."""
 
-from analytics_platform.kronos.src import config
 from analytics_platform.kronos.softnet.src.kronos_dependency_generator \
     import KronosDependencyGenerator
 from util.data_store.local_filesystem import LocalFileSystem

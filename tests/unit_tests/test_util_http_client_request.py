@@ -1,8 +1,5 @@
 """Tests for the module utils.http_client.request."""
 
-import pytest
-import requests
-
 from util.http_client.request import *
 
 

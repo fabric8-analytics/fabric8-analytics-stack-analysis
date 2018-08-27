@@ -1,6 +1,5 @@
 """Tests for the GnosisReferenceArchitecture."""
 
-from analytics_platform.kronos.src import config
 from analytics_platform.kronos.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
 from util.data_store.local_filesystem import LocalFileSystem
 
