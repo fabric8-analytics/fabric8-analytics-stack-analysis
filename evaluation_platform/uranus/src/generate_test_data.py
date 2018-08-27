@@ -8,7 +8,6 @@ from analytics_platform.kronos.src.config import (
 from itertools import combinations
 import os
 import pickle
-import time
 import sys
 sys.path.insert(0, SPARK_HOME_PATH + "/python")
 sys.path.insert(0, os.path.join(SPARK_HOME_PATH, "python/lib/" + PY4J_VERSION))

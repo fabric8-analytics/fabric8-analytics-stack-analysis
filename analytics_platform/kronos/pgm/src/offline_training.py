@@ -1,7 +1,5 @@
 """Functions to perform offline training for Kronos PGM."""
 
-import sys
-import time
 import os
 from analytics_platform.kronos.src import config
 import analytics_platform.kronos.pgm.src.pgm_constants as pgm_constants

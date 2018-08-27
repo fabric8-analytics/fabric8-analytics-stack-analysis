@@ -6,8 +6,6 @@ import sys
 import time
 
 from evaluation_platform.uranus.src.evaluate_data import generate_evaluate_test_s3
-from util.data_store.s3_data_store import S3DataStore
-from util.analytics_platform_util import get_path_names
 import daiquiri
 import logging
 

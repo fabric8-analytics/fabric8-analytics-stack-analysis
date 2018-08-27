@@ -3,7 +3,6 @@
 # TODO: the implementation is not complete, so this class is not usable ATM
 
 from abstract_data_store import AbstractDataStore
-import json
 
 
 class GraphStore(AbstractDataStore):

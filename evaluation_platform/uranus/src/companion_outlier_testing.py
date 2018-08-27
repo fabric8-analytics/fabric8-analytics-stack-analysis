@@ -1,7 +1,6 @@
 """Score each test set and generate the recommendations."""
 
 # NOTE: Currently works only with S3DataStore
-from itertools import combinations
 import time
 import os
 

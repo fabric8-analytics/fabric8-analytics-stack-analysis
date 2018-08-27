@@ -2,7 +2,6 @@
 
 import daiquiri
 import logging
-import time
 
 import analytics_platform.kronos.softnet.src.softnet_constants as softnet_constants
 import util.softnet_util as utils

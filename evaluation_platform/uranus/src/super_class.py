@@ -1,17 +1,12 @@
 """Base class for other models."""
 
 # NOTE: Currently works only with S3DataStore
-import time
 import os
 
 from analytics_platform.kronos.src.config import (
     AWS_BUCKET_NAME,
-    AWS_S3_ACCESS_KEY_ID,
-    AWS_S3_SECRET_ACCESS_KEY,
     KRONOS_MODEL_PATH)
 from analytics_platform.kronos.pgm.src.offline_training import load_eco_to_kronos_dependency_dict_s3
-from util.data_store.s3_data_store import S3DataStore
-from util.analytics_platform_util import get_path_names
 from evaluation_platform.uranus.src.uranus_constants import URANUS_OUTPUT_PATH
 
 
