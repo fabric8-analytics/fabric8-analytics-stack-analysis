@@ -7,7 +7,6 @@ into the bucket from where the input missing package list was read.
 
 from util.data_store.s3_data_store import S3DataStore
 from analytics_platform.kronos.src import config
-import json
 import os
 import daiquiri
 import logging

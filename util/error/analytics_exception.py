@@ -1,7 +1,5 @@
 """Class that represents exception that can occur during analysis."""
 
-from util.error import error_codes
-
 
 class AnalyticsException(Exception):
     """Class that represents exception that can occur during analysis."""
