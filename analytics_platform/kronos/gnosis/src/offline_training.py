@@ -1,7 +1,6 @@
 """Gnosis module offline training."""
 
 import sys
-import time
 import os
 from analytics_platform.kronos.gnosis.src.gnosis_package_topic_model import GnosisPackageTopicModel
 from analytics_platform.kronos.gnosis.src.gnosis_ref_arch import GnosisReferenceArchitecture
