@@ -109,13 +109,14 @@ class GnosisReferenceArchitecture(AbstractGnosis):
         return self._dictionary
 
     @classmethod
-    def _generate_component_class_list(clas, gnosis_intent_component_class_dict):
+    def _generate_component_class_list(cls, gnosis_intent_component_class_dict):
         """Generate the component class list.
 
         :param gnosis_intent_component_class_dict: intent-component_class dict.
 
         :return: the list of component classes.
         """
+        assert cls is not None  # just make checkers happy
         component_class_list = utils.generate_value_list_from_dict(
             dictionary=gnosis_intent_component_class_dict)
         return component_class_list

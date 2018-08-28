@@ -45,7 +45,6 @@ class TestData(object):
             os.path.join(additional_path,
                          URANUS_INPUT_RAW_PATH))
         for manifest_filename in manifest_filenames:
-            user_category = manifest_filename.split("/")[-2]
             manifest_content_json_list = input_data_store.read_json_file(
                 filename=manifest_filename)
             for manifest_content_json in manifest_content_json_list:

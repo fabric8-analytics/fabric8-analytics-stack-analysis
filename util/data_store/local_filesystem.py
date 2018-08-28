@@ -62,12 +62,12 @@ class LocalFileSystem(AbstractDataStore):
             json.dump(contents, outfile)
         return None
 
-    def upload_file(self, src, target):
+    def upload_file(self, _src, _target):
         """Upload file into data store."""
         # self.bucket.upload_file(src, target)
         return None
 
-    def download_file(self, src, target):
+    def download_file(self, _src, _target):
         """Download file from data store."""
         # self.bucket.download_file(src, target)
         return None
@@ -109,6 +109,7 @@ class LocalFileSystem(AbstractDataStore):
     @classmethod
     def convert_list_of_tuples_to_string(cls, tuple_list):
         """Convert list of tuples into string."""
+        assert cls is not None  # just make checkers happy
         string_value = str(tuple_list)
         return string_value
 
@@ -116,4 +117,5 @@ class LocalFileSystem(AbstractDataStore):
     def convert_string_to_list_of_tuples(cls, tuple_list_string):
         """Convert string into list of tuples (if possible)."""
         # TODO: this function is duplicatd in the pgm_util.py, refactoring needed here
+        assert cls is not None  # just make checkers happy
         return list(ast.literal_eval(tuple_list_string))

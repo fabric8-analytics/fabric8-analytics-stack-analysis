@@ -1,6 +1,6 @@
 """Tests for the module utils.http_client.request."""
 
-from util.http_client.request import *
+from util.http_client.request import post
 
 
 def test_post_function():

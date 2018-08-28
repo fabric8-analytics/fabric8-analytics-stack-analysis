@@ -17,17 +17,17 @@ class GraphStore(AbstractDataStore):
         """Get the name that identifies the storage."""
         return "Graph:" + self.url
 
-    def read_json_file(self, filename):
+    def read_json_file(self, _filename):
         """Read JSON file from the Graph database."""
         # TODO: not implemented
         return None
 
-    def list_files(self, prefix=None):
+    def list_files(self, _prefix=None):
         """List all the files in the Graph database."""
         # TODO: not implemented
         return None
 
-    def write_json_file(self, filename, contents):
+    def write_json_file(self, _filename, _contents):
         """Write JSON file into data source."""
         # TODO: not implemented
         pass
