@@ -12,12 +12,12 @@ class AbstractDataStore(object):
         return
 
     @abc.abstractmethod
-    def list_files(self, prefix=None, max_count=None):
+    def list_files(self, _prefix=None, _max_count=None):
         """List all the files in the source directory."""
         return
 
     @abc.abstractmethod
-    def read_json_file(self, filename):
+    def read_json_file(self, _filename):
         """Read JSON file from the data source."""
         return
 
@@ -27,16 +27,16 @@ class AbstractDataStore(object):
         return
 
     @abc.abstractmethod
-    def write_json_file(self, filename, contents):
+    def write_json_file(self, _filename, _contents):
         """Write JSON file into data source."""
         return
 
     @abc.abstractmethod
-    def upload_file(self, src, target):
+    def upload_file(self, _src, _target):
         """Upload file into data store."""
         return
 
     @abc.abstractmethod
-    def download_file(self, src, target):
+    def download_file(self, _src, _target):
         """Download file from data store."""
         return
