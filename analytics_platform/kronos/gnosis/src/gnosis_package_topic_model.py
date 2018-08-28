@@ -25,7 +25,6 @@ class GnosisPackageTopicModel(AbstractGnosis):
         # package description, etc.
 
         raise NotImplementedError
-        return None
 
     @classmethod
     def curate(cls, data_store, filename, additional_path=""):
