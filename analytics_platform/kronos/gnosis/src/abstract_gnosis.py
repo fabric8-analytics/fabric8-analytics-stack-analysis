@@ -8,8 +8,8 @@ class AbstractGnosis(object):
 
     __metaclass__ = ABCMeta
 
-    @abstractmethod
-    def train(cls, data_store):
+    @classmethod
+    def train(cls, _data_store):
         """Train/De-dupe Gnosis from gnosis files.
 
         The files should be in the following json format:
@@ -18,14 +18,16 @@ class AbstractGnosis(object):
 
         :return: Gnosis object.
         """
+        assert cls is not None  # just make checkers happy
         return
 
-    @abstractmethod
-    def load(cls, data_store, filename):
+    @classmethod
+    def load(cls, _data_store, _filename):
         """Load already saved Gnosis."""
+        assert cls is not None  # just make checkers happy
         return
 
     @abstractmethod
-    def save(self, data_store, filename):
+    def save(self, _data_store, _filename):
         """Save the Gnosis in data_store."""
         return
