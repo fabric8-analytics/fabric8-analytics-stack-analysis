@@ -2,4 +2,5 @@ pytest
 py4j
 pytest-cov
 coverage
+codecov
 radon

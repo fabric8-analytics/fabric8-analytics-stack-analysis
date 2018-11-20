@@ -18,3 +18,4 @@ echo "*** Unit tests ***"
 echo "*****************************************"
 
 python -m pytest -p no:cacheprovider --cov=analytics_platform/ --cov=util/ --cov=tagging_platform/ --cov=evaluation_platform/ --cov-report term-missing --ignore=evaluation_platform/uranus/src/evaluate_data.py --cov-fail-under=$COVERAGE_THRESHOLD -vv /tests/unit_tests/
+codecov --token=5dae2a39-7166-4ce9-a6dc-f300c3beadab
