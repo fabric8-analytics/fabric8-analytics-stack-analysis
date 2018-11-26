@@ -14,6 +14,7 @@
 
 ## To Deploy Locally
 Set up .env file with environment variables, i.e (view docker-compose.yml for possible values)
+
 ```bash
 cat > .env <<-EOF
 # Amazon AWS s3 credentials
