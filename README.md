@@ -17,7 +17,7 @@ Set up .env file with environment variables, i.e (view docker-compose.yml for po
 
 ```bash
 cat > .env <<-EOF
-# Amazon AWS s3 credentials
+# Amazon AWS S3 credentials
 AWS_S3_ACCESS_KEY_ID=
 AWS_S3_SECRET_ACCESS_KEY=
 
