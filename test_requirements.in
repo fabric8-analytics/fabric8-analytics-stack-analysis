@@ -3,4 +3,4 @@ py4j
 pytest-cov
 coverage
 codecov
-radon
+radon==2.4.0
