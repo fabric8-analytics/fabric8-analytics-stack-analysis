@@ -13,4 +13,4 @@ pytest==3.3.1
 six==1.11.0               # via pytest
 pytest-cov==2.5.1
 py4j==0.10.7
-radon==2.0.0
+radon==3.0.1
