@@ -10,3 +10,5 @@ derby.log
 metastore_db/
 html/
 latex/
+
+.DS_Store
