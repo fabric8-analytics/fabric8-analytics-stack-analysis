@@ -5,6 +5,7 @@ MAINTAINER Avishkar Gupta <avgupta@redhat.com>
 # copy testing source code and scripts into root dir /
 # --------------------------------------------------------------------------------------------------
 ADD ./tests/ /tests
+ADD ./tools/ /tools
 ADD ./tests/scripts/entrypoint-test.sh /entrypoint-test.sh
 ADD .git /.git
 RUN chmod +x /entrypoint-test.sh
