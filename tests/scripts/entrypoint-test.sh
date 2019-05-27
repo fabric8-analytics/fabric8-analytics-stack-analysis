@@ -4,7 +4,7 @@
 COVERAGE_THRESHOLD=50
 
 check_python_version() {
-    python3 tools/check_python_version.py 3 6
+    python tools/check_python_version.py 3 6
 }
 
 check_python_version
