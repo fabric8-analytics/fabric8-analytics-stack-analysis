@@ -3,6 +3,12 @@
 # test coverage threshold
 COVERAGE_THRESHOLD=50
 
+check_python_version() {
+    python tools/check_python_version.py 3 6
+}
+
+check_python_version
+
 echo "*****************************************"
 echo "*** Cyclomatic complexity measurement ***"
 echo "*****************************************"

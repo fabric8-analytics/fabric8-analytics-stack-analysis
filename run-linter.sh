@@ -1,6 +1,6 @@
 #!/bin/bash
 
-directories="analytics_platform tagging_platform evaluation_platform util tests"
+directories="analytics_platform tagging_platform evaluation_platform util tests tools"
 
 pass=0
 fail=0
