@@ -40,6 +40,11 @@ objects:
             value: "${KRONOS_SCORING_REGION}"
           - name: USE_FILTERS
             value: "${{USE_FILTERS}}"
+          - name: AWS_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                key: kronos-stack-analysis-clean-data-s3
+                name: bucket
           - name: AWS_S3_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
