@@ -35,18 +35,18 @@ objects:
       - name: AWS_BUCKET_NAME
         valueFrom:
           secretKeyRef:
-            key: kronos-stack-analysis-clean-data-s3
-            name: bucket
+            key: bucket
+            name: kronos-stack-analysis-clean-data-s3
       - name: AWS_S3_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
-            key: s3-access-key-id
-            name: aws
+            key: aws-access-key-id
+            name: kronos-stack-analysis-clean-data-s3
       - name: AWS_S3_SECRET_ACCESS_KEY
         valueFrom:
           secretKeyRef:
-            key: s3-secret-access-key
-            name: aws
+            key: aws-secret-access-key
+            name: kronos-stack-analysis-clean-data-s3
       - name: FLASK_LOGGING_LEVEL
         value: ${FLASK_LOGGING_LEVEL}
       name: bayesian-kronos
