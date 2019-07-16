@@ -1,14 +1,18 @@
 #!/bin/bash
 
-directories="analytics_platform tagging_platform evaluation_platform util tests tools"
+IFS=$'\n'
+
+# list of directories with sources to check
+directories=$(cat directories.txt)
+
 pass=0
 fail=0
 
 function prepare_venv() {
-    VIRTUALENV=$(which virtualenv)
+    VIRTUALENV="$(which virtualenv)"
     if [ $? -eq 1 ]; then
         # python34 which is in CentOS does not have virtualenv binary
-        VIRTUALENV=$(which virtualenv-3)
+        VIRTUALENV="$(which virtualenv-3)"
     fi
 
     ${VIRTUALENV} -p python3 venv && source venv/bin/activate && python3 "$(which pip3)" install pyflakes
@@ -35,6 +39,7 @@ function check_files() {
     done
 }
 
+[ "$NOVENV" == "1" ] || prepare_venv || exit 1
 
 echo "----------------------------------------------------"
 echo "Checking source files for common errors in following"
@@ -42,8 +47,6 @@ echo "directories:"
 echo "$directories"
 echo "----------------------------------------------------"
 echo
-
-[ "$NOVENV" == "1" ] || prepare_venv || exit 1
 
 # checks for the whole directories
 for directory in $directories
