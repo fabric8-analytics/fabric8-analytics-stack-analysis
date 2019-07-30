@@ -264,7 +264,7 @@ Running all tests and checkers
     OK
 Done
 
-Overal result
+Overall result
   OK
 ```
 
