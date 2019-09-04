@@ -1,9 +1,13 @@
 #!/bin/bash
 
+SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+pushd "${SCRIPT_DIR}/.."
+
 function prepare_venv() {
     VIRTUALENV=$(which virtualenv)
     if [ $? -eq 1 ]; then
-        # python34 which is in CentOS does not have virtualenv binary
+        # python36 which is in CentOS does not have virtualenv binary
         VIRTUALENV=$(which virtualenv-3)
     fi
 
@@ -13,6 +17,8 @@ function prepare_venv() {
 [ "$NOVENV" == "1" ] || prepare_venv || exit 1
 
 radon mi -s -i venv .
+
+popd
 
 if [[ "$1" == "--fail-on-error" ]]
 then
