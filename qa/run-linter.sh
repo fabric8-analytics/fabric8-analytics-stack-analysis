@@ -1,22 +1,29 @@
 #!/bin/bash
 
+# Script to check all Python scripts for PEP-8 issues
+
+SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
 IFS=$'\n'
 
 # list of directories with sources to check
-directories=$(cat directories.txt)
+directories=$(cat ${SCRIPT_DIR}/directories.txt)
 
 pass=0
 fail=0
 
 function prepare_venv() {
-    VIRTUALENV=$(which virtualenv)
+    VIRTUALENV="$(which virtualenv)"
     if [ $? -eq 1 ]; then
-        # python34 which is in CentOS does not have virtualenv binary
-        VIRTUALENV=$(which virtualenv-3)
+        # python36 which is in CentOS does not have virtualenv binary
+        VIRTUALENV="$(which virtualenv-3)"
     fi
 
     ${VIRTUALENV} -p python3 venv && source venv/bin/activate && python3 "$(which pip3)" install pycodestyle
 }
+
+pushd "${SCRIPT_DIR}/.."
+
 
 echo "----------------------------------------------------"
 echo "Running Python linter against following directories:"
@@ -55,3 +62,5 @@ else
     echo "Linter fail, $fail source files out of $total source files need to be fixed"
     exit 1
 fi
+
+popd
