@@ -1,4 +1,4 @@
-FROM registry.devshift.net/bayesian/kronos:latest
+FROM quay.io/openshiftio/fabric8-analytics-stack-analysis:latest
 MAINTAINER Avishkar Gupta <avgupta@redhat.com>
 
 # --------------------------------------------------------------------------------------------------
