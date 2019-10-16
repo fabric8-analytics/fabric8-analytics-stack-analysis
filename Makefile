@@ -3,10 +3,10 @@ DEFAULT_TAG=latest
 
 ifeq ($(TARGET),rhel)
   DOCKERFILE := Dockerfile.rhel
-  REPOSITORY := openshiftio/bayesian-kronos
+  REPOSITORY := openshiftio/rhel-bayesian-kronos
 else
   DOCKERFILE := Dockerfile
-  REPOSITORY := openshiftio/rhel-bayesian-kronos
+  REPOSITORY := openshiftio/fabric8-analytics-stack-analysis
 endif
 
 .PHONY: all docker-build fast-docker-build get-image-name get-image-repository

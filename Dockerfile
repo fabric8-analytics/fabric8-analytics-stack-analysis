@@ -1,4 +1,4 @@
-FROM registry.devshift.net/fabric8-analytics/f8a-kronos-base:latest
+FROM quay.io/openshiftio/fabric8-analytics-stack-analysis-base:latest
 LABEL maintainer="Avishkar Gupta <avgupta@redhat.com>"
 
 # --------------------------------------------------------------------------------------------------
