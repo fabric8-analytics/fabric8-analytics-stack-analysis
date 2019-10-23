@@ -49,6 +49,11 @@ objects:
             name: kronos-stack-analysis-clean-data-s3
       - name: FLASK_LOGGING_LEVEL
         value: ${FLASK_LOGGING_LEVEL}
+      - name: SENTRY_DSN
+        valueFrom:
+          secretKeyRef:
+            name: worker
+            key: sentry_dsn
       name: bayesian-kronos
       image: "${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${IMAGE_TAG}"
       ports:

@@ -23,3 +23,4 @@ mistune==0.8.3
 beautifulsoup4==4.6.0     # via bs4
 bs4==0.0.1
 requests==2.11.1
+raven[flask]
