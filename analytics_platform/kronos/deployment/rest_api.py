@@ -30,6 +30,7 @@ from evaluation_platform.uranus.deployment.submit_evaluation_job import (
     submit_evaluation_job)
 from util.analytics_platform_util import convert_string2bool_env
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+from raven.contrib.flask import Sentry
 
 
 def setup_logging(flask_app):
@@ -45,6 +46,9 @@ def setup_logging(flask_app):
 
 app = Flask(__name__)
 setup_logging(app)
+SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
+sentry = Sentry(app, dsn=SENTRY_DSN, logging=True, level=logging.ERROR)
+app.logger.info('App initialized, ready to roll...')
 
 
 CORS(app)

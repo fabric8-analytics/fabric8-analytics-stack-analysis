@@ -64,3 +64,6 @@ werkzeug==0.14.1          # via flask
 wheel==0.29.0
 wrapt==1.10.11            # via thinc
 xgboost==0.6a2
+raven[flask]==6.10.0
+contextlib2==0.5.5        # via raven
+blinker==1.4              # via raven
