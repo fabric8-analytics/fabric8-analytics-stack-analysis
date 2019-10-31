@@ -127,7 +127,7 @@ parameters:
   displayName: Docker image
   required: true
   name: DOCKER_IMAGE
-  value: "openshiftio/bayesian-kronos"
+  value: "openshiftio/fabric8-analytics-stack-analysis"
 
 - description: Image tag
   displayName: Image tag
