@@ -48,12 +48,12 @@ objects:
           - name: AWS_S3_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
-                key: aws-access-key-id
+                key: aws_access_key_id
                 name: kronos-stack-analysis-clean-data-s3
           - name: AWS_S3_SECRET_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                key: aws-secret-access-key
+                key: aws_secret_access_key
                 name: kronos-stack-analysis-clean-data-s3
           - name: FLASK_LOGGING_LEVEL
             value: ${FLASK_LOGGING_LEVEL}
