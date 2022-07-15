@@ -4,13 +4,54 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-attrs==17.4.0             # via pytest
-coverage==4.5.1           # via pytest-cov
-codecov==2.0.15
-pluggy==0.6.0             # via pytest
-py==1.5.2                 # via pytest
-pytest==3.3.1
-six==1.11.0               # via pytest
-pytest-cov==2.5.1
+attrs==17.4.0
+    # via pytest
+certifi==2022.6.15
+    # via requests
+charset-normalizer==2.1.0
+    # via requests
+codecov==2.0.16
+    # via -r test_requirements.in
+colorama==0.4.5
+    # via radon
+coverage==4.5.1
+    # via
+    #   -r test_requirements.in
+    #   codecov
+    #   pytest-cov
+flake8==4.0.1
+    # via flake8-polyfill
+flake8-polyfill==1.0.2
+    # via radon
+idna==3.3
+    # via requests
+mando==0.6.4
+    # via radon
+mccabe==0.6.1
+    # via flake8
+pluggy==0.6.0
+    # via pytest
+py==1.5.2
+    # via pytest
 py4j==0.10.7
+    # via -r test_requirements.in
+pycodestyle==2.8.0
+    # via flake8
+pyflakes==2.4.0
+    # via flake8
+pytest==3.3.1
+    # via
+    #   -r test_requirements.in
+    #   pytest-cov
+pytest-cov==2.5.1
+    # via -r test_requirements.in
 radon==3.0.1
+    # via -r test_requirements.in
+requests==2.28.1
+    # via codecov
+six==1.11.0
+    # via
+    #   mando
+    #   pytest
+urllib3==1.26.10
+    # via requests
